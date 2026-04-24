@@ -1,0 +1,17 @@
+全部代码一共分四块
+1.一体板FPGA代码
+2.视频板FPGA代码
+3.基础板FPGA代码
+4.上位机代码，即交叉编译到RK3568上的QT程序
+评委老师若是想复现作品需要：
+1.固化一体板代码 dl 在40pin和fmc接口上插入双目摄像头
+2.烧录视频板代码 four_pinjie_video 在视频板io上插入双目摄像头 拿光纤线连接视频板和基础板 插入两路HDMI输入源
+3.烧录基础板代码 four_pinjie_basic 在基础板io上插入双目摄像头 拿光纤线连接基础板和一体板
+4.使用sudo insmod ./dl.ko 将上位机驱动dl.ko加载
+5.将上位机代码压缩包rk_new12放入RK3568中解压 进入目录 
+chmod +x RK3568_PCIE_SHOW赋予执行权限
+在命令行输入export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/linaro/REAL_FINAL/pcie_yolo/3rdparty/opencv_3.4.1/lib
+export PKG_CONFIG_PATH=/home/linaro/REAL_FINAL/pcie_yolo/3rdparty/opencv_3.4.1/lib/pkgconfig:$PKG_CONFIG_PATH（根据实际情况调整目录）
+然后使用sudo su进入root权限
+./RK3568_PCIE_SHOW执行可执行文件RK3568_PCIE_SHOW 
+即可打开ui界面 依次点击左侧按键 开始、采集视频、目标检测即可。
