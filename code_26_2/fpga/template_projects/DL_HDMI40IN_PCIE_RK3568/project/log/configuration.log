@@ -11461,3 +11461,63 @@ Cable index 0:USB Cable II/fffffffffffffffe
 [Debug] [2026-4-25 12:37:34] End to send programming cmd.
 [Debug] [2026-4-25 12:37:34] Log::Print : The done bit is 1
 [Debug] [2026-4-25 12:37:34] Log::Print : COMMAND[Program] execute successfully, takes 3.0 secs.
+[Debug] [2026-4-25 12:39:34] Begin to send programming cmd...
+[Debug] [2026-4-25 12:39:34] Send RPC:5
+[Debug] [2026-4-25 12:39:34] Begin to send program data.
+[Debug] [2026-4-25 12:39:34] End to send program data.
+[Debug] [2026-4-25 12:39:34] Send cmd [Program:20002] OK
+[Debug] [2026-4-25 12:39:34] The value of Progress is 6
+[Debug] [2026-4-25 12:39:34] The value of Progress is 10
+[Debug] [2026-4-25 12:39:34] The value of Progress is 15
+[Debug] [2026-4-25 12:39:34] The value of Progress is 20
+[Debug] [2026-4-25 12:39:35] The value of Progress is 25
+[Debug] [2026-4-25 12:39:35] The value of Progress is 30
+[Debug] [2026-4-25 12:39:35] The value of Progress is 35
+[Debug] [2026-4-25 12:39:35] The value of Progress is 40
+[Debug] [2026-4-25 12:39:35] The value of Progress is 45
+[Debug] [2026-4-25 12:39:35] The value of Progress is 50
+[Debug] [2026-4-25 12:39:35] The value of Progress is 55
+[Debug] [2026-4-25 12:39:35] The value of Progress is 60
+[Debug] [2026-4-25 12:39:35] The value of Progress is 65
+[Debug] [2026-4-25 12:39:35] The value of Progress is 70
+[Debug] [2026-4-25 12:39:36] The value of Progress is 75
+[Debug] [2026-4-25 12:39:36] The value of Progress is 80
+[Debug] [2026-4-25 12:39:36] The value of Progress is 85
+[Debug] [2026-4-25 12:39:36] The value of Progress is 90
+[Debug] [2026-4-25 12:39:36] The value of Progress is 95
+[Debug] [2026-4-25 12:39:36] The value of Progress is 100
+[Debug] [2026-4-25 12:39:37] COMMAND[Program] execute successfully, takes 3.0 secs.
+[Debug] [2026-4-25 12:39:37] End to send programming cmd.
+[Debug] [2026-4-25 12:39:37] Log::Print : The done bit is 1
+[Debug] [2026-4-25 12:39:37] Log::Print : COMMAND[Program] execute successfully, takes 3.0 secs.
+[Debug] [2026-4-25 12:48:34] begin to add pango device by bitstream file.
+[Debug] [2026-4-25 12:48:34] bin file name is empty and end add pango device.
+[Debug] [2026-4-25 12:48:36] Begin to send programming cmd...
+[Debug] [2026-4-25 12:48:36] Send RPC:6
+[Debug] [2026-4-25 12:48:36] Begin to send program data.
+[Debug] [2026-4-25 12:48:36] End to send program data.
+[Debug] [2026-4-25 12:48:36] Send cmd [Program:20002] OK
+[Debug] [2026-4-25 12:48:36] The value of Progress is 6
+[Debug] [2026-4-25 12:48:36] The value of Progress is 10
+[Debug] [2026-4-25 12:48:37] The value of Progress is 15
+[Debug] [2026-4-25 12:48:37] The value of Progress is 20
+[Debug] [2026-4-25 12:48:37] The value of Progress is 25
+[Debug] [2026-4-25 12:48:37] The value of Progress is 30
+[Debug] [2026-4-25 12:48:37] The value of Progress is 35
+[Debug] [2026-4-25 12:48:37] The value of Progress is 40
+[Debug] [2026-4-25 12:48:37] The value of Progress is 45
+[Debug] [2026-4-25 12:48:37] The value of Progress is 50
+[Debug] [2026-4-25 12:48:37] The value of Progress is 55
+[Debug] [2026-4-25 12:48:38] The value of Progress is 60
+[Debug] [2026-4-25 12:48:38] The value of Progress is 65
+[Debug] [2026-4-25 12:48:38] The value of Progress is 70
+[Debug] [2026-4-25 12:48:38] The value of Progress is 75
+[Debug] [2026-4-25 12:48:38] The value of Progress is 80
+[Debug] [2026-4-25 12:48:38] The value of Progress is 85
+[Debug] [2026-4-25 12:48:38] The value of Progress is 90
+[Debug] [2026-4-25 12:48:38] The value of Progress is 95
+[Debug] [2026-4-25 12:48:38] The value of Progress is 100
+[Debug] [2026-4-25 12:48:39] COMMAND[Program] execute successfully, takes 3.0 secs.
+[Debug] [2026-4-25 12:48:39] End to send programming cmd.
+[Debug] [2026-4-25 12:48:39] Log::Print : The done bit is 1
+[Debug] [2026-4-25 12:48:39] Log::Print : COMMAND[Program] execute successfully, takes 3.0 secs.

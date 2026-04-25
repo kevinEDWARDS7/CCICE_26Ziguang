@@ -1,5 +1,11 @@
 //FPGA我只用小眼睛队一体板FPGA工程
 `timescale 1ns / 1ps
+`ifndef SAFE_HDMI_I2C_DISABLED
+`define SAFE_HDMI_I2C_DISABLED 1
+`endif
+`ifndef USE_PCIE_COLORBAR_TEST
+`define USE_PCIE_COLORBAR_TEST 0
+`endif
 //===============================================================================
 // 模块声明：顶层FPGA工程模块
 //===============================================================================
@@ -130,13 +136,17 @@ assign tx_disable = 1'b1;
 
 assign hdmi_rgb565      = {hdmi_r[7:3], hdmi_g[7:2], hdmi_b[7:3]};
 assign hdmi_video_rst_n = lock && ddr_init_done && hdmi_rx_init_done;
-assign hdmi_rx_sda      = hdmi_sda_oe ? hdmi_sda_out : 1'bz;
+assign hdmi_rx_init_done = `SAFE_HDMI_I2C_DISABLED ? 1'b0 : hdmi_rx_init_done_i;
+assign hdmi_rx_scl      = `SAFE_HDMI_I2C_DISABLED ? 1'bz :
+                          ((hdmi_scl_raw == 1'b0) ? 1'b0 : 1'bz);
+assign hdmi_rx_sda      = `SAFE_HDMI_I2C_DISABLED ? 1'bz :
+                          ((hdmi_sda_oe && (hdmi_sda_out == 1'b0)) ? 1'b0 : 1'bz);
 assign hdmi_sda_in      = hdmi_rx_sda;
 
 ms7200_ctl u_hdmi_rx_ms7200_ctl (
     .clk        (clk_10m),
-    .rstn       (lock),
-    .init_over  (hdmi_rx_init_done),
+    .rstn       (lock && !`SAFE_HDMI_I2C_DISABLED),
+    .init_over  (hdmi_rx_init_done_i),
     .device_id  (hdmi_iic_device_id),
     .iic_trig   (hdmi_iic_trig),
     .w_r        (hdmi_iic_wr),
@@ -156,7 +166,7 @@ iic_dri #(
     .DATA_BYTE  (2'd1)
 ) u_hdmi_rx_iic_dri (
     .clk        (clk_10m),
-    .rstn       (lock),
+    .rstn       (lock && !`SAFE_HDMI_I2C_DISABLED),
     .pluse      (hdmi_iic_trig),
     .device_id  (hdmi_iic_device_id),
     .w_r        (hdmi_iic_wr),
@@ -166,7 +176,7 @@ iic_dri #(
     .busy       (hdmi_iic_busy),
     .byte_over  (hdmi_iic_byte_over),
     .data_out   (hdmi_iic_rdata),
-    .scl        (hdmi_rx_scl),
+    .scl        (hdmi_scl_raw),
     .sda_in     (hdmi_sda_in),
     .sda_out    (hdmi_sda_out),
     .sda_out_en (hdmi_sda_oe)
@@ -191,7 +201,7 @@ reg ref_led                    ;  // 参考时钟LED
 // DDR3控制相关信号
 //===============================================================================
 wire                        ddrphy_cpd_lock            ;    // DDR PHY校准锁定信号（相位校准完成）
-wire                        ddr_init_done              ;    // DDR初始化完成标志（高有效，表示DDR可用）
+wire                        ddr_init_done              /*synthesis PAP_MARK_DEBUG="1"*/;    // DDR初始化完成标志（高有效，表示DDR可用）
 wire                        pll_lock                   ;    // DDR PLL锁定信号（时钟稳定）
 wire                        core_clk                   ;    // DDR核心工作时钟（来自DDR控制器）
 
@@ -293,6 +303,8 @@ wire                        hdmi_iic_byte_over;
 wire                        hdmi_sda_in;
 wire                        hdmi_sda_out;
 wire                        hdmi_sda_oe;
+wire                        hdmi_scl_raw              /*synthesis PAP_MARK_DEBUG="1"*/;
+wire                        hdmi_rx_init_done_i       /*synthesis PAP_MARK_DEBUG="1"*/;
 
 //===============================================================================
 // PLL输出时钟信号
@@ -489,8 +501,8 @@ wire          ch0_write_data_valid      ;       // 写入数据有效信号
 wire [15:0]   ch0_write_data            ;      // 写入数据（16bit）
 reg           ch0_read_frame_req;               // 读帧请求信号
 wire          ch0_read_req_ack;                 // 读请求应答信号
-wire          ch0_read_data_en;                 // 读数据使能信号
-wire  [127:0] ch0_read_data;                    // 读数据（128bit，AXI总线宽度）
+wire          ch0_read_data_en /*synthesis PAP_MARK_DEBUG="1"*/;                 // 读数据使能信号
+wire  [127:0] ch0_read_data /*synthesis PAP_MARK_DEBUG="1"*/;                    // 读数据（128bit，AXI总线宽度）
 wire          ch0_read_data_valid;              // 读数据有效信号
 
 // 通道1（摄像头1通道2）：图像数据写入和读取
@@ -524,7 +536,7 @@ wire          ch3_read_data_valid;
 // PCIe DMA接口信号定义
 //===============================================================================
 // DMA控制器基地址：0x8000
-wire            dma_write_req;                   // DMA写数据请求信号
+wire            dma_write_req /*synthesis PAP_MARK_DEBUG="1"*/;                   // DMA写数据请求信号
 wire [11:0]     dma_write_addr;                 // DMA写地址（12bit，最大4KB）
 wire [127:0]    dma_write_data;                  // DMA写数据（128bit，AXI-Stream宽度）
 
@@ -557,21 +569,23 @@ reg   [7:0]     cam_fmc_data_d2;
 
 
 // 行缓冲区满标志：用于指示各通道的行缓冲区是否已满
-wire            ch0_line_full_flag;            // 通道0行缓冲满标志
+wire            ch0_line_full_flag /*synthesis PAP_MARK_DEBUG="1"*/;            // 通道0行缓冲满标志
 wire            ch1_line_full_flag;            // 通道1行缓冲满标志
 wire            ch2_line_full_flag;            // 通道2行缓冲满标志
 wire            ch3_line_full_flag;            // 通道3行缓冲满标志
-wire [11:0]     debug_read_line_index;
-wire [11:0]     debug_read_beat_index;
-wire [31:0]     debug_dma_req_line_count;
-wire [31:0]     debug_dma_req_beat_count;
-wire [31:0]     debug_dma_underflow_count;
-wire [31:0]     debug_dma_zero_output_count;
-wire            debug_read_frame_active;
+wire [11:0]     debug_read_line_index /*synthesis PAP_MARK_DEBUG="1"*/;
+wire [11:0]     debug_read_beat_index /*synthesis PAP_MARK_DEBUG="1"*/;
+wire [31:0]     debug_dma_req_line_count /*synthesis PAP_MARK_DEBUG="1"*/;
+wire [31:0]     debug_dma_req_beat_count /*synthesis PAP_MARK_DEBUG="1"*/;
+wire [31:0]     debug_dma_underflow_count /*synthesis PAP_MARK_DEBUG="1"*/;
+wire [31:0]     debug_dma_zero_output_count /*synthesis PAP_MARK_DEBUG="1"*/;
+wire [31:0]     debug_ch0_data_nonzero_count /*synthesis PAP_MARK_DEBUG="1"*/;
+wire            debug_read_frame_active /*synthesis PAP_MARK_DEBUG="1"*/;
 reg  [31:0]     hdmi_pix_clk_alive             /*synthesis PAP_MARK_DEBUG="1"*/;
 reg  [31:0]     hdmi_vs_counter                /*synthesis PAP_MARK_DEBUG="1"*/;
 reg  [31:0]     hdmi_hs_counter                /*synthesis PAP_MARK_DEBUG="1"*/;
 reg  [31:0]     hdmi_de_pixel_counter          /*synthesis PAP_MARK_DEBUG="1"*/;
+reg  [31:0]     hdmi_rgb_nonzero_counter       /*synthesis PAP_MARK_DEBUG="1"*/;
 reg  [31:0]     hdmi_frame_count               /*synthesis PAP_MARK_DEBUG="1"*/;
 reg             hdmi_vs_d0;
 reg             hdmi_vs_d1;
@@ -1102,11 +1116,12 @@ ddr3 #(
 // 图像整形模块：将图像数据格式化为适合DDR写入的格式
 //*==============================================================================
 always @(posedge hdmi_pix_clk) begin
-    if (!hdmi_video_rst_n) begin
+    if (!lock) begin
         hdmi_pix_clk_alive <= 32'd0;
         hdmi_vs_counter <= 32'd0;
         hdmi_hs_counter <= 32'd0;
         hdmi_de_pixel_counter <= 32'd0;
+        hdmi_rgb_nonzero_counter <= 32'd0;
         hdmi_frame_count <= 32'd0;
         hdmi_vs_d0 <= 1'b0;
         hdmi_vs_d1 <= 1'b0;
@@ -1127,6 +1142,9 @@ always @(posedge hdmi_pix_clk) begin
         end
         else if (hdmi_de) begin
             hdmi_de_pixel_counter <= hdmi_de_pixel_counter + 32'd1;
+            if (hdmi_rgb565 != 16'd0) begin
+                hdmi_rgb_nonzero_counter <= hdmi_rgb_nonzero_counter + 32'd1;
+            end
         end
 
         if (hdmi_hs_d0 && !hdmi_hs_d1) begin
@@ -1253,6 +1271,7 @@ pcie_image_channel_selector dl_pcie_img_select_inst(
     .debug_dma_req_beat_count    (debug_dma_req_beat_count                ),
     .debug_dma_underflow_count   (debug_dma_underflow_count               ),
     .debug_dma_zero_output_count (debug_dma_zero_output_count             ),
+    .debug_ch0_data_nonzero_count(debug_ch0_data_nonzero_count            ),
     .debug_read_frame_active     (debug_read_frame_active                 )
 );
 //*==============================================================================

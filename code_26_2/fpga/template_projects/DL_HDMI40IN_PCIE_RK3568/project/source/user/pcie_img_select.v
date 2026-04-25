@@ -29,6 +29,7 @@ module pcie_image_channel_selector (
     output reg [31:0]               debug_dma_req_beat_count /*synthesis PAP_MARK_DEBUG="1"*/,
     output reg [31:0]               debug_dma_underflow_count /*synthesis PAP_MARK_DEBUG="1"*/,
     output reg [31:0]               debug_dma_zero_output_count /*synthesis PAP_MARK_DEBUG="1"*/,
+    output reg [31:0]               debug_ch0_data_nonzero_count /*synthesis PAP_MARK_DEBUG="1"*/,
     output reg                      debug_read_frame_active /*synthesis PAP_MARK_DEBUG="1"*/
 );
 
@@ -51,6 +52,7 @@ reg                   dma_data_req_ahead  ;
 reg                   dma_data_req_ahead_dly;
 wire                  read_frame_done;
 wire                  dma_underflow;
+wire                  dma_zero_output;
 
 // ch_data_dly;
 reg [127:0]           ch0_data_dly        ;
@@ -63,6 +65,10 @@ reg [11:0]            row_cnt             ;
 
 assign read_frame_done = dma_wr_data_req && (col_cnt == COL_NUM) && (row_cnt == ROW_NUM);
 assign dma_underflow   = dma_wr_data_req && !line_full_flag;
+assign dma_zero_output = dma_wr_data_req &&
+                         (dma_underflow ||
+                          ((~(ch0_data_req || ch1_data_req || ch2_data_req || ch3_data_req)) ?
+                           (ch0_data_dly == 128'd0) : (ch0_data == 128'd0)));
 
 always @(posedge clk)begin
     if (!rst_n)begin
@@ -284,6 +290,7 @@ always @(posedge clk)begin
         debug_dma_req_beat_count <= 32'd0;
         debug_dma_underflow_count <= 32'd0;
         debug_dma_zero_output_count <= 32'd0;
+        debug_ch0_data_nonzero_count <= 32'd0;
         debug_read_frame_active <= 1'b0;
     end
     else begin
@@ -308,7 +315,14 @@ always @(posedge clk)begin
 
             if (dma_underflow) begin
                 debug_dma_underflow_count <= debug_dma_underflow_count + 32'd1;
+            end
+
+            if (dma_zero_output) begin
                 debug_dma_zero_output_count <= debug_dma_zero_output_count + 32'd1;
+            end
+
+            if (ch0_data_req && (ch0_data != 128'd0)) begin
+                debug_ch0_data_nonzero_count <= debug_ch0_data_nonzero_count + 32'd1;
             end
         end
     end
