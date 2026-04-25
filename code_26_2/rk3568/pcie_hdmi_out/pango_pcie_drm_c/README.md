@@ -93,6 +93,7 @@ ioctl(fd, PCI_UMAP_ADDR_CMD, &dma);
 
 - RK3568 当前内核对应 headers
 - 默认路径 `/lib/modules/$(uname -r)/build`
+- 如果板端 `/lib/modules/$(uname -r)/build` 不存在，但 `/usr/src/linux-headers-6.1-rockchip` 存在，驱动编译必须显式指定 `KDIR=/usr/src/linux-headers-6.1-rockchip`。
 
 ## 编译
 
@@ -100,13 +101,15 @@ ioctl(fd, PCI_UMAP_ADDR_CMD, &dma);
 
 ```sh
 cd pango_pcie_drm_c/driver
-make
+make KDIR=/usr/src/linux-headers-6.1-rockchip clean
+make KDIR=/usr/src/linux-headers-6.1-rockchip -j$(nproc)
 ```
 
 如 headers 在自定义路径：
 
 ```sh
-make KDIR=/usr/src/linux-headers-6.1-rockchip
+make KDIR=/path/to/linux-headers clean
+make KDIR=/path/to/linux-headers -j$(nproc)
 ```
 
 用户态：
@@ -267,7 +270,8 @@ RK3568 卡死或 Oops：
 
 ```sh
 cd pango_pcie_drm_c/driver
-make
+make KDIR=/usr/src/linux-headers-6.1-rockchip clean
+make KDIR=/usr/src/linux-headers-6.1-rockchip -j$(nproc)
 sudo ./../scripts/unload_driver.sh
 sudo ./../scripts/load_driver.sh
 cd ..

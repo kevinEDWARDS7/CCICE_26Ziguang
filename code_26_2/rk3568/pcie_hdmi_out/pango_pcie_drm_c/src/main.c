@@ -10,8 +10,8 @@
 #include <time.h>
 #include <unistd.h>
 
-#include <drm/drm.h>
-#include <drm/drm_mode.h>
+#include <drm.h>
+#include <drm_mode.h>
 #include <drm_fourcc.h>
 #include <xf86drm.h>
 #include <xf86drmMode.h>
