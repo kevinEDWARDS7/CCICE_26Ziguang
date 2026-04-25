@@ -210,16 +210,23 @@ static void print_pci_info(const PCI_DEVICE_INFO *info)
 static int pcie_probe_or_fail(int fd)
 {
     COMMAND_OPERATION cmd;
-    ssize_t n;
 
     memset(&cmd, 0, sizeof(cmd));
-    n = read(fd, &cmd, sizeof(cmd));
-    if (n <= 0) {
-        fprintf(stderr, "read PCIe device info failed: %s\n", n < 0 ? strerror(errno) : "short read");
-        return -1;
+
+    if (ioctl(fd, PCI_READ_DATA_CMD, &cmd) < 0) {
+        ssize_t n;
+
+        fprintf(stderr, "PCI_READ_DATA_CMD failed, fallback to read(): %s\n", strerror(errno));
+        n = read(fd, &cmd, sizeof(cmd));
+        if (n <= 0) {
+            fprintf(stderr, "read PCIe device info failed: %s\n", n < 0 ? strerror(errno) : "short read");
+            return -1;
+        }
+        printf("PCIe probe read_return=%zd user_struct_size=%zu\n", n, sizeof(cmd));
+    } else {
+        printf("PCIe probe via PCI_READ_DATA_CMD OK, user_struct_size=%zu\n", sizeof(cmd));
     }
 
-    printf("PCIe probe read_return=%zd user_struct_size=%zu\n", n, sizeof(cmd));
     print_pci_info(&cmd.get_pci_dev_info);
 
     if (!pci_info_valid(&cmd.get_pci_dev_info)) {
@@ -228,6 +235,29 @@ static int pcie_probe_or_fail(int fd)
         return -1;
     }
 
+    return 0;
+}
+
+static int pcie_prepare_after_probe(int fd)
+{
+    DMA_OPERATION dma;
+    COMMAND_OPERATION cmd;
+
+    memset(&dma, 0, sizeof(dma));
+    if (ioctl(fd, PCI_SET_CONFIG, &dma) < 0) {
+        fprintf(stderr, "PCI_SET_CONFIG failed: %s\n", strerror(errno));
+        return -1;
+    }
+
+    memset(&cmd, 0, sizeof(cmd));
+    if (ioctl(fd, PCI_MAP_BAR0_CMD, &cmd) < 0) {
+        fprintf(stderr, "PCI_MAP_BAR0_CMD failed: %s\n", strerror(errno));
+        return -1;
+    }
+
+    printf("PCIe BAR0 base=0x%lx len=0x%lx\n",
+           cmd.get_pci_dev_info.bar[0].bar_base,
+           cmd.get_pci_dev_info.bar[0].bar_len);
     return 0;
 }
 
@@ -634,6 +664,9 @@ int main(int argc, char **argv)
     int pcie_fd = -1;
     int ret = 1;
 
+    memset(&display, 0, sizeof(display));
+    display.fd = -1;
+
     if (parse_args(argc, argv, &opts) != 0) {
         usage(argv[0]);
         return 2;
@@ -657,6 +690,10 @@ int main(int argc, char **argv)
     }
 
     if (pcie_probe_or_fail(pcie_fd) != 0) {
+        goto out;
+    }
+
+    if (pcie_prepare_after_probe(pcie_fd) != 0) {
         goto out;
     }
 
@@ -704,9 +741,8 @@ int main(int argc, char **argv)
     printf("Exit display loop, displayed_frames=%u\n", frame_index);
     ret = 0;
 
-    drm_display_close(&display);
-
 out:
+    drm_display_close(&display);
     if (pcie_fd >= 0) {
         close(pcie_fd);
     }

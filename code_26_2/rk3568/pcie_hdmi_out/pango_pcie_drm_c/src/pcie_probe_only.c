@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/ioctl.h>
 #include <unistd.h>
 
 #include "pango_pcie_abi.h"
@@ -18,18 +19,30 @@ static int pci_info_valid(const PCI_DEVICE_INFO *info)
     if (info->link_speed == 0U || info->link_width == 0U) {
         return 0;
     }
+    if (info->mps == 0U) {
+        return 0;
+    }
     return 1;
 }
 
 static void print_pci_info(const PCI_DEVICE_INFO *info)
 {
-    printf("vendor=0x%04x device=0x%04x revision=0x%02x class=0x%04x prog=0x%02x\n",
+    printf("vendor_id=0x%04x\n"
+           "device_id=0x%04x\n"
+           "revision_id=0x%02x\n"
+           "class=0x%04x\n"
+           "class_prog=0x%02x\n",
            info->vendor_id,
            info->device_id,
            info->revision_id,
            info->class_device,
            info->class_prog);
-    printf("link=gen%u x%u mps=%u mrrs=%u cmd=0x%04x status=0x%04x\n",
+    printf("link_speed=gen%u\n"
+           "link_width=x%u\n"
+           "mps=%u\n"
+           "mrrs=%u\n"
+           "cmd_reg=0x%04x\n"
+           "status_reg=0x%04x\n",
            info->link_speed,
            info->link_width,
            info->mps,
@@ -37,7 +50,7 @@ static void print_pci_info(const PCI_DEVICE_INFO *info)
            info->cmd_reg,
            info->status_reg);
     for (unsigned int i = 0; i < 6U; ++i) {
-        printf("bar%u base=0x%lx len=0x%lx\n", i, info->bar[i].bar_base, info->bar[i].bar_len);
+        printf("BAR%u base=0x%lx len=0x%lx\n", i, info->bar[i].bar_base, info->bar[i].bar_len);
     }
 }
 
@@ -71,14 +84,20 @@ int main(int argc, char **argv)
     COMMAND_OPERATION cmd;
     memset(&cmd, 0, sizeof(cmd));
 
-    ssize_t n = read(fd, &cmd, sizeof(cmd));
-    if (n < 0) {
-        fprintf(stderr, "read PCIe device info failed: %s\n", strerror(errno));
-        close(fd);
-        return 1;
-    }
+    if (ioctl(fd, PCI_READ_DATA_CMD, &cmd) < 0) {
+        ssize_t n;
 
-    printf("read_return=%zd expected_struct_size=%zu\n", n, sizeof(cmd));
+        fprintf(stderr, "PCI_READ_DATA_CMD failed, fallback to read(): %s\n", strerror(errno));
+        n = read(fd, &cmd, sizeof(cmd));
+        if (n < 0) {
+            fprintf(stderr, "read PCIe device info failed: %s\n", strerror(errno));
+            close(fd);
+            return 1;
+        }
+        printf("read_return=%zd expected_struct_size=%zu\n", n, sizeof(cmd));
+    } else {
+        printf("PCI_READ_DATA_CMD OK, user_struct_size=%zu\n", sizeof(cmd));
+    }
     print_pci_info(&cmd.get_pci_dev_info);
 
     if (!pci_info_valid(&cmd.get_pci_dev_info)) {
