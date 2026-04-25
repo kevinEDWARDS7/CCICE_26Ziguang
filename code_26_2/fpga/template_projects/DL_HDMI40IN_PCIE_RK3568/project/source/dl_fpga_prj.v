@@ -561,6 +561,22 @@ wire            ch0_line_full_flag;            // 通道0行缓冲满标志
 wire            ch1_line_full_flag;            // 通道1行缓冲满标志
 wire            ch2_line_full_flag;            // 通道2行缓冲满标志
 wire            ch3_line_full_flag;            // 通道3行缓冲满标志
+wire [11:0]     debug_read_line_index;
+wire [11:0]     debug_read_beat_index;
+wire [31:0]     debug_dma_req_line_count;
+wire [31:0]     debug_dma_req_beat_count;
+wire [31:0]     debug_dma_underflow_count;
+wire [31:0]     debug_dma_zero_output_count;
+wire            debug_read_frame_active;
+reg  [31:0]     hdmi_pix_clk_alive             /*synthesis PAP_MARK_DEBUG="1"*/;
+reg  [31:0]     hdmi_vs_counter                /*synthesis PAP_MARK_DEBUG="1"*/;
+reg  [31:0]     hdmi_hs_counter                /*synthesis PAP_MARK_DEBUG="1"*/;
+reg  [31:0]     hdmi_de_pixel_counter          /*synthesis PAP_MARK_DEBUG="1"*/;
+reg  [31:0]     hdmi_frame_count               /*synthesis PAP_MARK_DEBUG="1"*/;
+reg             hdmi_vs_d0;
+reg             hdmi_vs_d1;
+reg             hdmi_hs_d0;
+reg             hdmi_hs_d1;
 
 // 摄像头1数据同步：两级寄存器同步，消除亚稳态
 always @(posedge cam1_pclk)begin
@@ -1085,6 +1101,40 @@ ddr3 #(
 //*==============================================================================
 // 图像整形模块：将图像数据格式化为适合DDR写入的格式
 //*==============================================================================
+always @(posedge hdmi_pix_clk) begin
+    if (!hdmi_video_rst_n) begin
+        hdmi_pix_clk_alive <= 32'd0;
+        hdmi_vs_counter <= 32'd0;
+        hdmi_hs_counter <= 32'd0;
+        hdmi_de_pixel_counter <= 32'd0;
+        hdmi_frame_count <= 32'd0;
+        hdmi_vs_d0 <= 1'b0;
+        hdmi_vs_d1 <= 1'b0;
+        hdmi_hs_d0 <= 1'b0;
+        hdmi_hs_d1 <= 1'b0;
+    end
+    else begin
+        hdmi_pix_clk_alive <= hdmi_pix_clk_alive + 32'd1;
+        hdmi_vs_d0 <= hdmi_vs;
+        hdmi_vs_d1 <= hdmi_vs_d0;
+        hdmi_hs_d0 <= hdmi_hs;
+        hdmi_hs_d1 <= hdmi_hs_d0;
+
+        if (hdmi_vs_d0 && !hdmi_vs_d1) begin
+            hdmi_vs_counter <= hdmi_vs_counter + 32'd1;
+            hdmi_frame_count <= hdmi_frame_count + 32'd1;
+            hdmi_de_pixel_counter <= 32'd0;
+        end
+        else if (hdmi_de) begin
+            hdmi_de_pixel_counter <= hdmi_de_pixel_counter + 32'd1;
+        end
+
+        if (hdmi_hs_d0 && !hdmi_hs_d1) begin
+            hdmi_hs_counter <= hdmi_hs_counter + 32'd1;
+        end
+    end
+end
+
 // 通道0图像整形：处理摄像头1的RGB565数据，输出16bit格式化的图像数据
 //vs同步
 //reg    sfpin_vs_d0;
@@ -1182,7 +1232,7 @@ pcie_image_channel_selector dl_pcie_img_select_inst(
     
     // DMA触发信号
     .dma_sim_vs                  (ch0_read_frame_req                            ),     // 输入：模拟场同步（帧读请求）
-    .line_full_flag              (ch0_line_full_flag && ch1_line_full_flag && ch2_line_full_flag && ch3_line_full_flag ),     // 输入：所有通道行缓冲满标志
+    .line_full_flag              (ch0_line_full_flag                            ),     // 输入：单路HDMI IN通道0行缓冲满标志
 
     // 通道数据接口：从DDR读取的128bit宽数据
     .ch0_data_req                (ch0_read_data_en                        ),     // 输入：通道0数据请求使能
@@ -1196,7 +1246,14 @@ pcie_image_channel_selector dl_pcie_img_select_inst(
 
     // DMA写接口：输出到PCIe DMA控制器
     .dma_wr_data_req             (dma_write_req                      ),     // 输出：DMA写数据请求
-    .dma_wr_data                 (dma_write_data                          )      // 输出：DMA写数据（128bit）
+    .dma_wr_data                 (dma_write_data                          ),     // 输出：DMA写数据（128bit）
+    .debug_read_line_index       (debug_read_line_index                   ),
+    .debug_read_beat_index       (debug_read_beat_index                   ),
+    .debug_dma_req_line_count    (debug_dma_req_line_count                ),
+    .debug_dma_req_beat_count    (debug_dma_req_beat_count                ),
+    .debug_dma_underflow_count   (debug_dma_underflow_count               ),
+    .debug_dma_zero_output_count (debug_dma_zero_output_count             ),
+    .debug_read_frame_active     (debug_read_frame_active                 )
 );
 //*==============================================================================
 // AXI控制器例化：管理DDR3的读写操作，支持4个通道的图像数据缓存
@@ -1278,8 +1335,8 @@ mem_axi_burst_ctrl_core dl_axi_ctrl_inst
 
       .ch1_rframe_pclk             (pclk_div2                                 ),   
       .ch1_rframe_rst_n            (ddr_init_done                             ), 
-      .ch1_rframe_vsync            (ch0_read_frame_req                            ),
-      .ch1_rframe_req              (ch0_read_frame_req                            ),
+      .ch1_rframe_vsync            (1'b0                                      ),
+      .ch1_rframe_req              (1'b0                                      ),
       .ch1_rframe_req_ack          (                                          ),
       .ch1_rframe_data_en          (ch1_read_data_en                        ),
       .ch1_rframe_data             (ch1_read_data                           ),      
@@ -1295,8 +1352,8 @@ mem_axi_burst_ctrl_core dl_axi_ctrl_inst
 
       .ch2_rframe_pclk             (pclk_div2                                 ),   
       .ch2_rframe_rst_n            (ddr_init_done                             ), 
-      .ch2_rframe_vsync            (ch0_read_frame_req                            ),
-      .ch2_rframe_req              (ch0_read_frame_req                            ),
+      .ch2_rframe_vsync            (1'b0                                      ),
+      .ch2_rframe_req              (1'b0                                      ),
       .ch2_rframe_req_ack          (                                          ),
       .ch2_rframe_data_en          (ch2_read_data_en                        ),
       .ch2_rframe_data             (ch2_read_data                           ),      
@@ -1312,8 +1369,8 @@ mem_axi_burst_ctrl_core dl_axi_ctrl_inst
 
       .ch3_rframe_pclk             (pclk_div2                                 ),   
       .ch3_rframe_rst_n            (ddr_init_done                             ), 
-      .ch3_rframe_vsync            (ch0_read_frame_req                            ),
-      .ch3_rframe_req              (ch0_read_frame_req                            ),
+      .ch3_rframe_vsync            (1'b0                                      ),
+      .ch3_rframe_req              (1'b0                                      ),
       .ch3_rframe_req_ack          (                                          ),
       .ch3_rframe_data_en          (ch3_read_data_en                        ),
       .ch3_rframe_data             (ch3_read_data                           ),      
@@ -1621,56 +1678,84 @@ pcie_test dl_u_ips2l_pcie_wrap (
 
 
 //===============================================================================
-// DMA写地址延迟和帧请求控制逻辑
+// HDMI frame-ready to DDR read-frame request control
 //===============================================================================
-// DMA写地址延迟寄存器：用于检测地址回绕（一帧写入完成）
-reg  [11:0]  dma_write_addr_dly1;              // 延迟一拍
-reg  [11:0]  dma_write_addr_dly2;              // 延迟两拍
-// DMA写帧计数器：用于计数写入的帧数，每完成一帧（720行）发送一次读请求
-reg  [11:0]  dma_frame_write_cnt;              // 计数dma写入的帧数（720行/帧）
+reg         hdmi_vs_pclk_meta;
+reg         hdmi_vs_pclk_d0;
+reg         hdmi_vs_pclk_d1;
+reg         frame_ready                     /*synthesis PAP_MARK_DEBUG="1"*/;
+reg         read_frame_active               /*synthesis PAP_MARK_DEBUG="1"*/;
+reg [11:0]  read_line_index                 /*synthesis PAP_MARK_DEBUG="1"*/;
+reg [11:0]  read_beat_index                 /*synthesis PAP_MARK_DEBUG="1"*/;
+reg [31:0]  ddr_write_frame_count           /*synthesis PAP_MARK_DEBUG="1"*/;
+reg [31:0]  ddr_read_frame_count            /*synthesis PAP_MARK_DEBUG="1"*/;
 
-// DMA写地址延迟：用于检测地址从0x9f到0xa0的跳变（表示一帧写入完成）
 always @(posedge pclk_div2) begin
     if (!core_rst_n) begin
-        dma_write_addr_dly1 <= 12'd0;
-        dma_write_addr_dly2 <= 12'd0;
-    end else begin
-        dma_write_addr_dly1 <= dma_write_addr;
-        dma_write_addr_dly2 <= dma_write_addr_dly1;
-    end
-end
-
-// DMA帧写入计数器：检测到地址回绕时（0x9f -> 0xa0）计数加1，完成720帧后清零
-always @(posedge pclk_div2) begin
-    if (!core_rst_n) begin
-        dma_frame_write_cnt <= 12'd0;
-    end else if (dma_write_addr_dly1 == 12'ha0 && dma_write_addr_dly2 == 12'h9f) begin
-        // 检测到地址从0x9f跳变到0xa0，表示完成一帧写入
-        dma_frame_write_cnt <= dma_frame_write_cnt + 1'b1;
-    end
-    else if (dma_frame_write_cnt == 12'd720)begin
-        // 完成720帧写入后清零
-        dma_frame_write_cnt <= 12'd0;
+        hdmi_vs_pclk_meta <= 1'b0;
+        hdmi_vs_pclk_d0 <= 1'b0;
+        hdmi_vs_pclk_d1 <= 1'b0;
     end
     else begin
-        dma_frame_write_cnt <= dma_frame_write_cnt;
+        hdmi_vs_pclk_meta <= hdmi_vs;
+        hdmi_vs_pclk_d0 <= hdmi_vs_pclk_meta;
+        hdmi_vs_pclk_d1 <= hdmi_vs_pclk_d0;
     end
 end
 
-// 通道0读帧请求控制：完成720帧写入后，发送读帧请求
 always @(posedge pclk_div2) begin
     if (!core_rst_n) begin
-        ch0_read_frame_req <=1'b0;
-    end else if (dma_frame_write_cnt == 12'd720) begin
-       // 完成720帧写入，发送读帧请求
-       ch0_read_frame_req <= 1'b1;
+        frame_ready <= 1'b0;
+        ddr_write_frame_count <= 32'd0;
     end
-    else if (ch0_read_req_ack) begin
-        // 收到读请求应答后，清除请求信号
+    else if (hdmi_vs_pclk_d0 && !hdmi_vs_pclk_d1) begin
+        frame_ready <= 1'b1;
+        ddr_write_frame_count <= ddr_write_frame_count + 32'd1;
+    end
+    else if (ch0_read_frame_req) begin
+        frame_ready <= 1'b0;
+    end
+end
+
+always @(posedge pclk_div2) begin
+    if (!core_rst_n) begin
+        read_line_index <= 12'd0;
+        read_beat_index <= 12'd0;
+        read_frame_active <= 1'b0;
+        ddr_read_frame_count <= 32'd0;
+    end
+    else if (ch0_read_frame_req) begin
+        read_line_index <= 12'd0;
+        read_beat_index <= 12'd0;
+        read_frame_active <= 1'b1;
+        ddr_read_frame_count <= ddr_read_frame_count + 32'd1;
+    end
+    else if (dma_write_req) begin
+        if (read_beat_index == 12'd79) begin
+            read_beat_index <= 12'd0;
+            if (read_line_index == 12'd359) begin
+                read_line_index <= 12'd0;
+                read_frame_active <= 1'b0;
+            end
+            else begin
+                read_line_index <= read_line_index + 12'd1;
+            end
+        end
+        else begin
+            read_beat_index <= read_beat_index + 12'd1;
+        end
+    end
+end
+
+always @(posedge pclk_div2) begin
+    if (!core_rst_n) begin
         ch0_read_frame_req <= 1'b0;
     end
-    else begin
-        ch0_read_frame_req <= ch0_read_frame_req;
+    else if (ch0_read_req_ack) begin
+        ch0_read_frame_req <= 1'b0;
+    end
+    else if (frame_ready && !read_frame_active && !ch0_read_frame_req) begin
+        ch0_read_frame_req <= 1'b1;
     end
 end
 

@@ -21,14 +21,20 @@ module pcie_image_channel_selector (
 
     // dma写数据接口
     input                           dma_wr_data_req        /*synthesis PAP_MARK_DEBUG="1"*/,
-    output reg [127:0]              dma_wr_data            /*synthesis PAP_MARK_DEBUG="1"*/
+    output reg [127:0]              dma_wr_data            /*synthesis PAP_MARK_DEBUG="1"*/,
+
+    output reg [11:0]               debug_read_line_index  /*synthesis PAP_MARK_DEBUG="1"*/,
+    output reg [11:0]               debug_read_beat_index  /*synthesis PAP_MARK_DEBUG="1"*/,
+    output reg [31:0]               debug_dma_req_line_count /*synthesis PAP_MARK_DEBUG="1"*/,
+    output reg [31:0]               debug_dma_req_beat_count /*synthesis PAP_MARK_DEBUG="1"*/,
+    output reg [31:0]               debug_dma_underflow_count /*synthesis PAP_MARK_DEBUG="1"*/,
+    output reg [31:0]               debug_dma_zero_output_count /*synthesis PAP_MARK_DEBUG="1"*/,
+    output reg                      debug_read_frame_active /*synthesis PAP_MARK_DEBUG="1"*/
 );
 
 
-localparam  [11:0]  COL_NUM = 12'd160;         //1280*16/128=160
-localparam  [11:0]  HALF_COL_NUM = 12'd80;    //1280*8/128=80
-localparam  [11:0]  ROW_NUM = 12'd720;         //传输图像是720p
-localparam  [11:0]  HALF_ROW_NUM = 12'd360;
+localparam  [11:0]  COL_NUM = 12'd80;          // 640*16/128=80
+localparam  [11:0]  ROW_NUM = 12'd360;         // reducer outputs 640x360
 
 
 
@@ -43,6 +49,8 @@ reg                   dma_sim_vs_neg      ;
 reg                   dma_sim_vs_neg_flag ; 
 reg                   dma_data_req_ahead  ;    
 reg                   dma_data_req_ahead_dly;
+wire                  read_frame_done;
+wire                  dma_underflow;
 
 // ch_data_dly;
 reg [127:0]           ch0_data_dly        ;
@@ -53,7 +61,8 @@ reg [127:0]           ch3_data_dly        ;
 reg [11:0]            col_cnt             ;
 reg [11:0]            row_cnt             ;
 
-
+assign read_frame_done = dma_wr_data_req && (col_cnt == COL_NUM) && (row_cnt == ROW_NUM);
+assign dma_underflow   = dma_wr_data_req && !line_full_flag;
 
 always @(posedge clk)begin
     if (!rst_n)begin
@@ -181,42 +190,15 @@ always @(posedge clk)begin
     end
     else if (dma_data_req_ahead == 1'b1 || dma_data_req_ahead_dly == 1'b1)begin //通道选择判断会消耗一个时钟，因此需要预取数据
         ch0_data_req <= 1'b1;
-        ch1_data_req <= 1'b1;
-        ch2_data_req <= 1'b1;
-        ch3_data_req <= 1'b1;
+        ch1_data_req <= 1'b0;
+        ch2_data_req <= 1'b0;
+        ch3_data_req <= 1'b0;
     end
-    else if(dma_wr_data_req == 1'b1)begin
-        if (col_cnt <= HALF_COL_NUM && row_cnt <= HALF_ROW_NUM)begin
-            ch0_data_req <= 1'b1;
-            ch1_data_req <= 1'b0;
-            ch2_data_req <= 1'b0;
-            ch3_data_req <= 1'b0;
-            
-        end
-        else if (col_cnt > HALF_COL_NUM && row_cnt <= HALF_ROW_NUM)begin
-            ch0_data_req <= 1'b0;
-            ch1_data_req <= 1'b1;
-            ch2_data_req <= 1'b0;
-            ch3_data_req <= 1'b0;
-        end
-        else if (col_cnt <= HALF_COL_NUM && row_cnt > HALF_ROW_NUM)begin
-            ch0_data_req <= 1'b0;
-            ch1_data_req <= 1'b0;
-            ch2_data_req <= 1'b1;
-            ch3_data_req <= 1'b0;
-        end
-        else if (col_cnt > HALF_COL_NUM && row_cnt > HALF_ROW_NUM)begin
-            ch0_data_req <= 1'b0;
-            ch1_data_req <= 1'b0;
-            ch2_data_req <= 1'b0;
-            ch3_data_req <= 1'b1;
-        end
-        else begin
-            ch0_data_req <= 1'b0;
-            ch1_data_req <= 1'b0;
-            ch2_data_req <= 1'b0;
-            ch3_data_req <= 1'b0;
-        end
+    else if(dma_wr_data_req == 1'b1 && line_full_flag == 1'b1)begin
+        ch0_data_req <= 1'b1;
+        ch1_data_req <= 1'b0;
+        ch2_data_req <= 1'b0;
+        ch3_data_req <= 1'b0;
     end
     else begin
         ch0_data_req <= 1'b0;
@@ -280,44 +262,56 @@ always @(posedge clk)begin
     if (!rst_n)begin
         dma_wr_data <= 128'b0;
     end
+    else if(dma_underflow == 1'b1)begin
+        dma_wr_data <= 128'b0;
+    end
     else if(dma_wr_data_req == 1'b1 && ~(ch0_data_req || ch1_data_req || ch2_data_req || ch3_data_req))begin  //通道选择判断会消耗一个时钟，因此需要预取数据
-        if (col_cnt <= HALF_COL_NUM && row_cnt <= HALF_ROW_NUM)begin
-            dma_wr_data <= ch0_data_dly;
-        end
-        else if (col_cnt > HALF_COL_NUM && row_cnt <= HALF_ROW_NUM)begin
-            dma_wr_data <= ch1_data_dly;
-        end
-        else if (col_cnt <= HALF_COL_NUM && row_cnt > HALF_ROW_NUM)begin
-            dma_wr_data <= ch2_data_dly;
-        end
-        else if (col_cnt > HALF_COL_NUM && row_cnt > HALF_ROW_NUM)begin
-            dma_wr_data <= ch3_data_dly;
-        end
-        else begin
-            dma_wr_data <= ch0_data_dly;
-        end
+        dma_wr_data <= ch0_data_dly;
     end
     else if (dma_wr_data_req == 1'b1)begin
-        if (col_cnt <= HALF_COL_NUM && row_cnt <= HALF_ROW_NUM)begin
-            dma_wr_data <= ch0_data;
-        end
-        else if (col_cnt > HALF_COL_NUM && row_cnt <= HALF_ROW_NUM)begin
-            dma_wr_data <= ch1_data;
-        end
-        else if (col_cnt <= HALF_COL_NUM && row_cnt > HALF_ROW_NUM)begin
-            dma_wr_data <= ch2_data;
-        end
-        else if (col_cnt > HALF_COL_NUM && row_cnt > HALF_ROW_NUM)begin
-            dma_wr_data <= ch3_data;
-        end
-        else begin
-            dma_wr_data <= ch0_data;
-        end
+        dma_wr_data <= ch0_data;
     end
     else begin
         dma_wr_data <= 128'b0;
     end
 end
 
+always @(posedge clk)begin
+    if (!rst_n)begin
+        debug_read_line_index <= 12'd0;
+        debug_read_beat_index <= 12'd0;
+        debug_dma_req_line_count <= 32'd0;
+        debug_dma_req_beat_count <= 32'd0;
+        debug_dma_underflow_count <= 32'd0;
+        debug_dma_zero_output_count <= 32'd0;
+        debug_read_frame_active <= 1'b0;
+    end
+    else begin
+        if (dma_sim_vs_pos) begin
+            debug_read_line_index <= 12'd0;
+            debug_read_beat_index <= 12'd0;
+            debug_read_frame_active <= 1'b1;
+        end
+        else if (dma_wr_data_req) begin
+            debug_dma_req_beat_count <= debug_dma_req_beat_count + 32'd1;
+            debug_read_beat_index <= col_cnt - 12'd1;
+            debug_read_line_index <= row_cnt - 12'd1;
+
+            if (col_cnt == COL_NUM) begin
+                debug_dma_req_line_count <= debug_dma_req_line_count + 32'd1;
+                debug_read_beat_index <= 12'd0;
+            end
+
+            if (read_frame_done) begin
+                debug_read_frame_active <= 1'b0;
+            end
+
+            if (dma_underflow) begin
+                debug_dma_underflow_count <= debug_dma_underflow_count + 32'd1;
+                debug_dma_zero_output_count <= debug_dma_zero_output_count + 32'd1;
+            end
+        end
+    end
+end
 
 endmodule

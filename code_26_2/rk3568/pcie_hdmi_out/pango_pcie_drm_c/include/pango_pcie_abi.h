@@ -24,9 +24,9 @@ extern "C" {
 #define PCI_MAP_BAR0_CMD              _IOWR(PANGO_PCIE_IOCTL_TYPE, 10, int)
 #define PCI_SET_CONFIG                _IOWR(PANGO_PCIE_IOCTL_TYPE, 11, int)
 
-#define IMAGE_WIDTH                   1280U
-#define IMAGE_HEIGHT                  720U
-#define LINE_BYTES                    2560U
+#define IMAGE_WIDTH                   640U
+#define IMAGE_HEIGHT                  360U
+#define LINE_BYTES                    1280U
 
 #define MAX_BLOCK_SIZE                1024U
 #define DMA_MAX_PACKET_SIZE           4096U

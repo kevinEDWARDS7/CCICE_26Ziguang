@@ -37,6 +37,9 @@ struct app_options {
     unsigned int line_bytes;
     unsigned int frame_count;
     unsigned int delay_loops;
+    int no_display;
+    const char *dump_frame_path;
+    unsigned int dump_lines;
 };
 
 struct dumb_buffer {
@@ -80,6 +83,9 @@ static void usage(const char *prog)
             "  --line-bytes N       Input line bytes. Default: %u\n"
             "  --frames N           Frames to display. 0 means run until Ctrl+C. Default: %u\n"
             "  --delay-loops N      Busy-wait loops after PCI_DMA_WRITE_CMD. Default: %u\n"
+            "  --no-display         Read PCIe frames and print statistics without opening DRM.\n"
+            "  --dump-frame PATH    Dump raw RGB565 bytes read from PCIe.\n"
+            "  --dump-lines N       Dump only the first N lines. Default with --dump-frame: full frame.\n"
             "  -h, --help           Show this help.\n",
             prog,
             PCIE_DRIVER_FILE_PATH,
@@ -123,6 +129,9 @@ static int parse_args(int argc, char **argv, struct app_options *opts)
     opts->line_bytes = LINE_BYTES;
     opts->frame_count = DEFAULT_FRAME_COUNT;
     opts->delay_loops = DEFAULT_DELAY_LOOPS;
+    opts->no_display = 0;
+    opts->dump_frame_path = NULL;
+    opts->dump_lines = 0U;
 
     for (int i = 1; i < argc; ++i) {
         if (strcmp(argv[i], "--pcie") == 0 && i + 1 < argc) {
@@ -149,6 +158,14 @@ static int parse_args(int argc, char **argv, struct app_options *opts)
             if (parse_u32(argv[++i], &opts->delay_loops) != 0) {
                 return -1;
             }
+        } else if (strcmp(argv[i], "--no-display") == 0) {
+            opts->no_display = 1;
+        } else if (strcmp(argv[i], "--dump-frame") == 0 && i + 1 < argc) {
+            opts->dump_frame_path = argv[++i];
+        } else if (strcmp(argv[i], "--dump-lines") == 0 && i + 1 < argc) {
+            if (parse_u32(argv[++i], &opts->dump_lines) != 0) {
+                return -1;
+            }
         } else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
             usage(argv[0]);
             exit(0);
@@ -171,6 +188,10 @@ static int parse_args(int argc, char **argv, struct app_options *opts)
     }
     if (opts->line_bytes < opts->input_width * 2U) {
         fprintf(stderr, "line bytes must be at least width * 2 for RGB565 input\n");
+        return -1;
+    }
+    if (opts->dump_lines > opts->input_height) {
+        fprintf(stderr, "dump lines must be less than or equal to height\n");
         return -1;
     }
 
@@ -335,6 +356,121 @@ out:
     }
     free(dma);
     return ret;
+}
+
+static void print_hex_bytes(const unsigned char *data, size_t count)
+{
+    for (size_t i = 0; i < count; ++i) {
+        printf("%02x%s", data[i], ((i + 1U) == count) ? "" : " ");
+    }
+}
+
+static void print_line_pixels(const char *label,
+                              const unsigned char *frame,
+                              unsigned int line,
+                              const struct app_options *opts)
+{
+    if (line >= opts->input_height) {
+        return;
+    }
+
+    const unsigned char *row = frame + (size_t)line * opts->line_bytes;
+    unsigned int pixels = opts->input_width < 16U ? opts->input_width : 16U;
+
+    printf("%s first_%u_rgb565:", label, pixels);
+    for (unsigned int x = 0; x < pixels; ++x) {
+        const unsigned char *p = row + (size_t)x * 2U;
+        uint16_t rgb565 = (uint16_t)p[0] | ((uint16_t)p[1] << 8);
+        printf(" %04x", rgb565);
+    }
+    printf("\n");
+}
+
+static void print_line_samples(const unsigned char *frame, const struct app_options *opts)
+{
+    const unsigned char *row = frame;
+    unsigned int samples = opts->input_width < 16U ? opts->input_width : 16U;
+
+    printf("line0 sampled_rgb565:");
+    for (unsigned int i = 0; i < samples; ++i) {
+        unsigned int x = (unsigned int)(((uint64_t)i * opts->input_width) / samples);
+        if (x >= opts->input_width) {
+            x = opts->input_width - 1U;
+        }
+        const unsigned char *p = row + (size_t)x * 2U;
+        uint16_t rgb565 = (uint16_t)p[0] | ((uint16_t)p[1] << 8);
+        printf(" x%u=%04x", x, rgb565);
+    }
+    printf("\n");
+}
+
+static int dump_frame_if_requested(const unsigned char *frame,
+                                   size_t frame_bytes,
+                                   const struct app_options *opts)
+{
+    FILE *fp;
+    size_t dump_bytes;
+    unsigned int lines;
+
+    if (!opts->dump_frame_path) {
+        return 0;
+    }
+
+    lines = opts->dump_lines == 0U ? opts->input_height : opts->dump_lines;
+    dump_bytes = (size_t)lines * opts->line_bytes;
+    if (dump_bytes > frame_bytes) {
+        dump_bytes = frame_bytes;
+    }
+
+    fp = fopen(opts->dump_frame_path, "wb");
+    if (!fp) {
+        fprintf(stderr, "open dump frame %s failed: %s\n", opts->dump_frame_path, strerror(errno));
+        return -1;
+    }
+    if (fwrite(frame, 1U, dump_bytes, fp) != dump_bytes) {
+        fprintf(stderr, "write dump frame %s failed: %s\n", opts->dump_frame_path, strerror(errno));
+        fclose(fp);
+        return -1;
+    }
+    if (fclose(fp) != 0) {
+        fprintf(stderr, "close dump frame %s failed: %s\n", opts->dump_frame_path, strerror(errno));
+        return -1;
+    }
+
+    printf("dump_path=%s dump_bytes=%zu\n", opts->dump_frame_path, dump_bytes);
+    return 0;
+}
+
+static void print_frame_stats(const unsigned char *frame, size_t frame_bytes, const struct app_options *opts)
+{
+    size_t nonzero_bytes = 0U;
+    size_t first_count = frame_bytes < 64U ? frame_bytes : 64U;
+    unsigned int lines = opts->dump_lines == 0U ? opts->input_height : opts->dump_lines;
+    size_t dump_bytes = (size_t)lines * opts->line_bytes;
+
+    if (dump_bytes > frame_bytes) {
+        dump_bytes = frame_bytes;
+    }
+
+    for (size_t i = 0; i < frame_bytes; ++i) {
+        if (frame[i] != 0U) {
+            ++nonzero_bytes;
+        }
+    }
+
+    printf("frame_bytes=%zu dump_bytes=%zu nonzero_bytes=%zu\n",
+           frame_bytes,
+           dump_bytes,
+           nonzero_bytes);
+    printf("first_64_bytes:");
+    if (first_count > 0U) {
+        printf(" ");
+        print_hex_bytes(frame, first_count);
+    }
+    printf("\n");
+    print_line_pixels("line0", frame, 0U, opts);
+    print_line_pixels("line1", frame, 1U, opts);
+    print_line_samples(frame, opts);
 }
 
 static uint32_t rgb565_to_xrgb8888(uint16_t p)
@@ -701,11 +837,14 @@ int main(int argc, char **argv)
         goto out;
     }
 
-    if (drm_display_open(&display, opts.drm_path, opts.input_width, opts.input_height) != 0) {
-        goto out;
+    if (!opts.no_display) {
+        if (drm_display_open(&display, opts.drm_path, opts.input_width, opts.input_height) != 0) {
+            goto out;
+        }
     }
 
-    printf("Start display loop: input=%ux%u line_bytes=%u frames=%u delay_loops=%u\n",
+    printf("Start %s loop: input=%ux%u line_bytes=%u frames=%u delay_loops=%u\n",
+           opts.no_display ? "capture" : "display",
            opts.input_width,
            opts.input_height,
            opts.line_bytes,
@@ -722,17 +861,26 @@ int main(int argc, char **argv)
             break;
         }
 
-        blit_rgb565_to_xrgb8888_scaled(frame_rgb565,
-                                       opts.input_width,
-                                       opts.input_height,
-                                       opts.line_bytes,
-                                       display.buf.map,
-                                       display.buf.width,
-                                       display.buf.height,
-                                       display.buf.pitch);
+        if (opts.no_display || opts.dump_frame_path) {
+            print_frame_stats(frame_rgb565, frame_bytes, &opts);
+            if (dump_frame_if_requested(frame_rgb565, frame_bytes, &opts) != 0) {
+                break;
+            }
+        }
+
+        if (!opts.no_display) {
+            blit_rgb565_to_xrgb8888_scaled(frame_rgb565,
+                                           opts.input_width,
+                                           opts.input_height,
+                                           opts.line_bytes,
+                                           display.buf.map,
+                                           display.buf.width,
+                                           display.buf.height,
+                                           display.buf.pitch);
+        }
 
         ++frame_index;
-        if ((frame_index % 30U) == 0U) {
+        if (!opts.no_display && (frame_index % 30U) == 0U) {
             printf("displayed %u frames\n", frame_index);
             fflush(stdout);
         }
@@ -742,7 +890,7 @@ int main(int argc, char **argv)
         }
     }
 
-    printf("Exit display loop, displayed_frames=%u\n", frame_index);
+    printf("Exit %s loop, frames=%u\n", opts.no_display ? "capture" : "display", frame_index);
     ret = 0;
 
 out:
