@@ -95,6 +95,8 @@ ioctl(fd, PCI_UMAP_ADDR_CMD, &dma);
 - 默认路径 `/lib/modules/$(uname -r)/build`
 - 如果板端 `/lib/modules/$(uname -r)/build` 不存在，但 `/usr/src/linux-headers-6.1-rockchip` 存在，驱动编译必须显式指定 `KDIR=/usr/src/linux-headers-6.1-rockchip`。
 
+用户态 libdrm 头文件由 `pkg-config --cflags libdrm` 提供 include 路径。源码中应包含 `<drm.h>`、`<drm_mode.h>`、`<drm_fourcc.h>`，不要在源码或 Makefile 中写死板端系统 include 路径。
+
 ## 编译
 
 驱动在 RK3568 板端编译：
@@ -112,12 +114,22 @@ make KDIR=/path/to/linux-headers clean
 make KDIR=/path/to/linux-headers -j$(nproc)
 ```
 
+如果目标板存在 `/lib/modules/$(uname -r)/build`，也可以在 `driver/` 目录直接执行 `make`；如果该路径不存在，不要直接执行 `make clean`，必须指定 `KDIR`，否则 clean 阶段也会访问不存在的默认 headers 路径。
+
 用户态：
 
 ```sh
 cd pango_pcie_drm_c
 make clean
 make
+```
+
+也可以在 RK3568 板端使用统一构建脚本，它会先编译用户态，再自动选择内核 headers 编译驱动：
+
+```sh
+cd pango_pcie_drm_c
+chmod +x scripts/*.sh
+./scripts/build_on_rk3568.sh
 ```
 
 生成：
