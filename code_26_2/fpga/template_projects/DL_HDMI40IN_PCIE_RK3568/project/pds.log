@@ -22228,3 +22228,4 @@ I: Flow-6004: Design file modified: "F:/Codex/CCICE_26Ziguang/code_26_2/fpga/tem
 E: Verilog-4119: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/source/dl_fpga_prj.v(line number: 1247)] Referenced port name 'debug_ch0_data_nonzero_count' was not defined in module 'pcie_image_channel_selector'
 Parse module hierarchy of project 'F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/temp_projects/Main_Flow/Main_Flow.pds' (ADS Parser)
 I: Flow-6004: Design file modified: "F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/source/user/pcie_img_select.v". 
+Process exit normally.

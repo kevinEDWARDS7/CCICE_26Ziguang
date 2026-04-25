@@ -11521,3 +11521,4 @@ Cable index 0:USB Cable II/fffffffffffffffe
 [Debug] [2026-4-25 12:48:39] End to send programming cmd.
 [Debug] [2026-4-25 12:48:39] Log::Print : The done bit is 1
 [Debug] [2026-4-25 12:48:39] Log::Print : COMMAND[Program] execute successfully, takes 3.0 secs.
+[Info] [2026-4-25 13:55:06] /***************************End Configration***************************/
