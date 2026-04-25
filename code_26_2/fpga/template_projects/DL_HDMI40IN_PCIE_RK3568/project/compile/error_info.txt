@@ -1,0 +1,15 @@
+Verilog-4039: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/source/dl_fpga_prj.v(line number: 460)] Identifier cnt is not declared
+Verilog-4039: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/source/dl_fpga_prj.v(line number: 461)] Identifier cnt is not declared
+Verilog-4039: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/source/dl_fpga_prj.v(line number: 461)] Identifier TH_1S is not declared
+Verilog-4039: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/source/dl_fpga_prj.v(line number: 462)] Identifier cnt is not declared
+Verilog-4039: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/source/dl_fpga_prj.v(line number: 463)] Identifier cnt is not declared
+Verilog-4039: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/source/dl_fpga_prj.v(line number: 463)] Identifier cnt is not declared
+Verilog-4039: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/source/dl_fpga_prj.v(line number: 470)] Identifier cnt is not declared
+Verilog-4039: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/source/dl_fpga_prj.v(line number: 470)] Identifier TH_1S is not declared
+Verilog-4039: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/source/dl_fpga_prj.v(line number: 885)] Identifier pclk_led_cnt is not declared
+Verilog-4039: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/source/dl_fpga_prj.v(line number: 885)] Identifier pclk_led_cnt is not declared
+Verilog-4039: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/source/dl_fpga_prj.v(line number: 886)] Identifier pclk_led_cnt is not declared
+Verilog-4039: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/source/dl_fpga_prj.v(line number: 950)] Identifier p_addr is not declared
+Verilog-4073: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/source/dl_fpga_prj.v(line number: 1171)] Assignment target ch0_read_frame_req must be of type reg or genvar
+Verilog-4073: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/source/dl_fpga_prj.v(line number: 1174)] Assignment target ch0_read_frame_req must be of type reg or genvar
+Verilog-4073: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/source/dl_fpga_prj.v(line number: 1177)] Assignment target ch0_read_frame_req must be of type reg or genvar
