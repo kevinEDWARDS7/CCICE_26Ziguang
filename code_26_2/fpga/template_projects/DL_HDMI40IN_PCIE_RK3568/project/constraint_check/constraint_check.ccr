@@ -1,4 +1,4 @@
-##### Written on 2026/04/25 12:32:54 ###############################
+##### Written on 2026/04/26 02:59:03 ###############################
 
 
 ##### INFO ##################################################
@@ -10,7 +10,7 @@ Top Module :
 	dl_fpga_prj
 
 Constraint File(s) : 
-	F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc
+	E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc
 
 ##### SUMMARY ######################################################
 
@@ -21,70 +21,70 @@ Inapplicable constraints(except overwritten constraints):
 ********************************************
 
 define_attribute {p:sys_rst_n} {PAP_IO_LOC} {M15}        
-	C: ConstraintEditor-2002: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 531)] | Port sys_rst_n has been placed at location M15, whose type is share pin.
+	C: ConstraintEditor-2002: [E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 531)] | Port sys_rst_n has been placed at location M15, whose type is share pin.
 
 define_attribute {p:pcie_perst_n} {PAP_IO_LOC} {M16}
-	C: ConstraintEditor-2002: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 583)] | Port pcie_perst_n has been placed at location M16, whose type is share pin.
+	C: ConstraintEditor-2002: [E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 583)] | Port pcie_perst_n has been placed at location M16, whose type is share pin.
 
 define_attribute {p:hdmi_de} {PAP_IO_LOC} {P16}
-	C: ConstraintEditor-2002: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 912)] | Port hdmi_de has been placed at location P16, whose type is share pin.
+	C: ConstraintEditor-2002: [E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 912)] | Port hdmi_de has been placed at location P16, whose type is share pin.
 
 define_attribute {p:hdmi_hs} {PAP_IO_LOC} {U17}
-	C: ConstraintEditor-2002: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 919)] | Port hdmi_hs has been placed at location U17, whose type is share pin.
+	C: ConstraintEditor-2002: [E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 919)] | Port hdmi_hs has been placed at location U17, whose type is share pin.
 
 define_attribute {p:hdmi_vs} {PAP_IO_LOC} {R17}
-	C: ConstraintEditor-2002: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 926)] | Port hdmi_vs has been placed at location R17, whose type is share pin.
+	C: ConstraintEditor-2002: [E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 926)] | Port hdmi_vs has been placed at location R17, whose type is share pin.
 
 define_attribute {p:hdmi_rx_sda} {PAP_IO_LOC} {AA20}
-	C: ConstraintEditor-2002: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 939)] | Port hdmi_rx_sda has been placed at location AA20, whose type is share pin.
+	C: ConstraintEditor-2002: [E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 939)] | Port hdmi_rx_sda has been placed at location AA20, whose type is share pin.
 
 define_attribute {p:hdmi_rx_scl} {PAP_IO_LOC} {AA21}
-	C: ConstraintEditor-2002: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 948)] | Port hdmi_rx_scl has been placed at location AA21, whose type is share pin.
+	C: ConstraintEditor-2002: [E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 948)] | Port hdmi_rx_scl has been placed at location AA21, whose type is share pin.
 
 define_attribute {p:hdmi_r[7]} {PAP_IO_LOC} {AB21}
-	C: ConstraintEditor-2002: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 960)] | Port hdmi_r[7] has been placed at location AB21, whose type is share pin.
+	C: ConstraintEditor-2002: [E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 960)] | Port hdmi_r[7] has been placed at location AB21, whose type is share pin.
 
 define_attribute {p:hdmi_r[5]} {PAP_IO_LOC} {AB22}
-	C: ConstraintEditor-2002: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 970)] | Port hdmi_r[5] has been placed at location AB22, whose type is share pin.
+	C: ConstraintEditor-2002: [E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 970)] | Port hdmi_r[5] has been placed at location AB22, whose type is share pin.
 
 define_attribute {p:hdmi_r[1]} {PAP_IO_LOC} {AA19}
-	C: ConstraintEditor-2002: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 990)] | Port hdmi_r[1] has been placed at location AA19, whose type is share pin.
+	C: ConstraintEditor-2002: [E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 990)] | Port hdmi_r[1] has been placed at location AA19, whose type is share pin.
 
 define_attribute {p:hdmi_g[7]} {PAP_IO_LOC} {AB20}
-	C: ConstraintEditor-2002: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 1002)] | Port hdmi_g[7] has been placed at location AB20, whose type is share pin.
+	C: ConstraintEditor-2002: [E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 1002)] | Port hdmi_g[7] has been placed at location AB20, whose type is share pin.
 
 define_attribute {p:hdmi_g[6]} {PAP_IO_LOC} {R18}
-	C: ConstraintEditor-2002: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 1007)] | Port hdmi_g[6] has been placed at location R18, whose type is share pin.
+	C: ConstraintEditor-2002: [E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 1007)] | Port hdmi_g[6] has been placed at location R18, whose type is share pin.
 
 define_attribute {p:hdmi_g[5]} {PAP_IO_LOC} {V17}
-	C: ConstraintEditor-2002: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 1012)] | Port hdmi_g[5] has been placed at location V17, whose type is share pin.
+	C: ConstraintEditor-2002: [E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 1012)] | Port hdmi_g[5] has been placed at location V17, whose type is share pin.
 
 define_attribute {p:hdmi_g[4]} {PAP_IO_LOC} {T18}
-	C: ConstraintEditor-2002: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 1017)] | Port hdmi_g[4] has been placed at location T18, whose type is share pin.
+	C: ConstraintEditor-2002: [E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 1017)] | Port hdmi_g[4] has been placed at location T18, whose type is share pin.
 
 define_attribute {p:hdmi_g[3]} {PAP_IO_LOC} {W17}
-	C: ConstraintEditor-2002: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 1022)] | Port hdmi_g[3] has been placed at location W17, whose type is share pin.
+	C: ConstraintEditor-2002: [E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 1022)] | Port hdmi_g[3] has been placed at location W17, whose type is share pin.
 
 define_attribute {p:hdmi_g[1]} {PAP_IO_LOC} {AA18}
-	C: ConstraintEditor-2002: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 1032)] | Port hdmi_g[1] has been placed at location AA18, whose type is share pin.
+	C: ConstraintEditor-2002: [E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 1032)] | Port hdmi_g[1] has been placed at location AA18, whose type is share pin.
 
 define_attribute {p:hdmi_g[0]} {PAP_IO_LOC} {P17}
-	C: ConstraintEditor-2002: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 1037)] | Port hdmi_g[0] has been placed at location P17, whose type is share pin.
+	C: ConstraintEditor-2002: [E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 1037)] | Port hdmi_g[0] has been placed at location P17, whose type is share pin.
 
 define_attribute {p:hdmi_b[7]} {PAP_IO_LOC} {AB18}
-	C: ConstraintEditor-2002: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 1046)] | Port hdmi_b[7] has been placed at location AB18, whose type is share pin.
+	C: ConstraintEditor-2002: [E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 1046)] | Port hdmi_b[7] has been placed at location AB18, whose type is share pin.
 
 define_attribute {p:hdmi_b[6]} {PAP_IO_LOC} {P15}
-	C: ConstraintEditor-2002: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 1051)] | Port hdmi_b[6] has been placed at location P15, whose type is share pin.
+	C: ConstraintEditor-2002: [E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 1051)] | Port hdmi_b[6] has been placed at location P15, whose type is share pin.
 
 define_attribute {p:hdmi_b[4]} {PAP_IO_LOC} {R16}
-	C: ConstraintEditor-2002: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 1061)] | Port hdmi_b[4] has been placed at location R16, whose type is share pin.
+	C: ConstraintEditor-2002: [E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 1061)] | Port hdmi_b[4] has been placed at location R16, whose type is share pin.
 
 define_attribute {p:hdmi_b[2]} {PAP_IO_LOC} {N13}
-	C: ConstraintEditor-2002: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 1071)] | Port hdmi_b[2] has been placed at location N13, whose type is share pin.
+	C: ConstraintEditor-2002: [E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 1071)] | Port hdmi_b[2] has been placed at location N13, whose type is share pin.
 
 define_attribute {p:hdmi_b[0]} {PAP_IO_LOC} {N14}
-	C: ConstraintEditor-2002: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 1081)] | Port hdmi_b[0] has been placed at location N14, whose type is share pin.
+	C: ConstraintEditor-2002: [E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc(line number: 1081)] | Port hdmi_b[0] has been placed at location N14, whose type is share pin.
 
 
 Constraints with issues:
