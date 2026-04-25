@@ -19,3 +19,5 @@ This device configure situation (done bit): 1
 COMMAND[Open config cable] execute successfully, takes 3.8 secs.
 The done bit is 1
 COMMAND[Program] execute successfully, takes 3.2 secs.
+The done bit is 1
+COMMAND[Program] execute successfully, takes 3.0 secs.
