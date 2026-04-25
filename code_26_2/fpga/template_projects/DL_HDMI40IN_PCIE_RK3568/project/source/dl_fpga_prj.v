@@ -450,13 +450,16 @@ image_filter u_image_fliter_3
 );
 
 
-always@(posedge core_clk or negedge ddr_init_done)
-begin
-   if (!ddr_init_done)
+always @(posedge core_clk or negedge ddr_init_done) begin
+   if (!ddr_init_done) begin
       cnt <= 27'd0;
-   else if ( cnt >= TH_1S )
+   end
+   else if (cnt >= TH_1S) begin
       cnt <= 27'd0;
+   end
+   else begin
       cnt <= cnt + 27'd1;
+   end
 end
 
 always @(posedge core_clk or negedge ddr_init_done)
