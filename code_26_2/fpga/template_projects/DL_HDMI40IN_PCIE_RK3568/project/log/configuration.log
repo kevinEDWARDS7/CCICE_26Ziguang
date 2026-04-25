@@ -11133,3 +11133,141 @@ Cable index 0:USB Cable II/fffffffffffffffe
 [Debug] [2025-11-7 15:21:49] end to send jtag flash program cmd.
 [Debug] [2025-11-7 15:21:49] Log::Print : COMMAND[Verify Outer Flash] execute successfully, takes 3.8 secs.
 [Info] [2025-11-7 15:39:28] /***************************End Configration***************************/
+[Info] [2026-4-25 10:19:51] /***************************Start Configuration***************************/
+[Info] [2026-4-25 10:19:51] Path: F:/Ziguang/PDS_2022.2-SP6.4/bin
+[Info] [2026-4-25 10:19:51] Version: 146967
+[Info] [2026-4-25 10:19:52] Current Path: F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project
+[Info] [2026-4-25 10:19:52] PDS Dir Path: F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project
+[Debug] [2026-4-25 10:20:00] begin to add pango device by bitstream file.
+[Info] [2026-4-25 10:20:06] set OpenLastPath: F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/generate_bitstream/dl_fpga_prj.sbit
+[Debug] [2026-4-25 10:20:06] begin to get device info from CFG file...
+[Debug] [2026-4-25 10:20:06] end to get device info from CFG file...
+[Info] [2026-4-25 10:20:06] Loading file done : F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/generate_bitstream/dl_fpga_prj.sbit
+[Info] [2026-4-25 10:20:06] Added device successfully : Logos2-PG2L100H
+[Debug] [2026-4-25 10:20:06] Begin to update graphic item and tree item ...
+[Debug] [2026-4-25 10:20:06] End to update graphic item and tree item ...
+[Debug] [2026-4-25 10:20:06] end to add pango device by bitstream file.
+[Debug] [2026-4-25 10:20:06] Log::Print : Loading file 'F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/generate_bitstream/dl_fpga_prj.sbit' done!
+[Debug] [2026-4-25 10:20:06] Log::Print : Added Device Logos2-PG2L100H successfully!
+[Info] [2026-4-25 10:21:32] /***************************End Configration***************************/
+[Info] [2026-4-25 10:21:34] /***************************Start Configuration***************************/
+[Info] [2026-4-25 10:21:34] Path: F:/Ziguang/PDS_2022.2-SP6.4/bin
+[Info] [2026-4-25 10:21:34] Version: 146967
+[Info] [2026-4-25 10:21:35] Current Path: F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project
+[Info] [2026-4-25 10:21:35] PDS Dir Path: F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project
+[Debug] [2026-4-25 10:21:39] begin to add pango device by bitstream file.
+[Info] [2026-4-25 10:21:40] set OpenLastPath: F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/generate_bitstream/dl_fpga_prj.sbit
+[Debug] [2026-4-25 10:21:40] begin to get device info from CFG file...
+[Debug] [2026-4-25 10:21:40] end to get device info from CFG file...
+[Info] [2026-4-25 10:21:40] Loading file done : F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/generate_bitstream/dl_fpga_prj.sbit
+[Info] [2026-4-25 10:21:40] Added device successfully : Logos2-PG2L100H
+[Debug] [2026-4-25 10:21:40] Begin to update graphic item and tree item ...
+[Debug] [2026-4-25 10:21:40] End to update graphic item and tree item ...
+[Debug] [2026-4-25 10:21:40] end to add pango device by bitstream file.
+[Debug] [2026-4-25 10:21:40] Log::Print : Loading file 'F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/generate_bitstream/dl_fpga_prj.sbit' done!
+[Debug] [2026-4-25 10:21:40] Log::Print : Added Device Logos2-PG2L100H successfully!
+[Info] [2026-4-25 10:22:09] Configuration is not connect with server. connect first then scan chain.
+[Debug] [2026-4-25 10:22:10] Client Local host name:KevinEdwards
+[Debug] [2026-4-25 10:22:10] Client Local Address:192.168.1.10
+[Debug] [2026-4-25 10:22:10] Client Local Address:10.140.238.217
+[Debug] [2026-4-25 10:22:10] Client Local Address:192.168.231.1
+[Debug] [2026-4-25 10:22:10] Server Address:127.0.0.1, Port:65420
+[Debug] [2026-4-25 10:22:10] Log::Print : Connecting to server[127.0.0.1 : 65420].
+[Info] [2026-4-25 10:22:10] Connect OK, Server: 127.0.0.1  Port: 65420
+[Debug] [2026-4-25 10:22:10] Finish.
+[Info] [2026-4-25 10:22:10] Connect server succeeded
+[Debug] [2026-4-25 10:22:10] Send RPC:1
+[Debug] [2026-4-25 10:22:10] Send cmd [check version information:40004] OK
+[Debug] [2026-4-25 10:22:10] Log::Print : Connect to server[127.0.0.1 : 65420] successfully.
+[Debug] [2026-4-25 10:22:12] Send RPC:2
+[Debug] [2026-4-25 10:22:12] Send cmd [get_cable_paras:40010] OK
+[Debug] [2026-4-25 10:22:12] Begin to send initialize chain cmd...
+[Debug] [2026-4-25 10:22:12] Send RPC:3
+[Debug] [2026-4-25 10:22:12] Send cmd [Open config cable:20001] OK
+[Debug] [2026-4-25 10:22:12] End to send initialize chain cmd.
+[Debug] [2026-4-25 10:22:12] COMMAND[check version information] execute successfully, takes 2.1 secs.
+[Debug] [2026-4-25 10:22:12] Log::Print : COMMAND[check version information] execute successfully, takes 2.1 secs.
+[Debug] [2026-4-25 10:22:15] COMMAND[get_cable_paras] execute successfully, takes 2.4 secs.
+[Debug] [2026-4-25 10:22:15] Log::Print : The cable List : 
+Cable index 0:USB Cable II/fffffffffffffffe 
+
+[Debug] [2026-4-25 10:22:15] Log::Print : COMMAND[get_cable_paras] execute successfully, takes 2.4 secs.
+[Debug] [2026-4-25 10:22:16] begin the exec of open cable cmd...
+[Debug] [2026-4-25 10:22:16] Begin to deal with chain from server...
+[Debug] [2026-4-25 10:22:16] Begin to set user chain...
+[Debug] [2026-4-25 10:22:16] End to set user chain.
+[Debug] [2026-4-25 10:22:16] Begin to update graphic item and tree item ...
+[Debug] [2026-4-25 10:22:16] End to update graphic item and tree item ...
+[Debug] [2026-4-25 10:22:16] Log::Print : PANGO USB CABLE II cable driver: D2XX DLL
+[Debug] [2026-4-25 10:22:16] Log::Print : PG2L100H
+[Debug] [2026-4-25 10:22:16] Log::Print : This device configure situation (done bit): 1
+[Info] [2026-4-25 10:22:18] set OpenLastPath: F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/generate_bitstream/dl_fpga_prj.sbit
+[Debug] [2026-4-25 10:22:18] begin to get device info from CFG file...
+[Debug] [2026-4-25 10:22:18] end to get device info from CFG file...
+[Debug] [2026-4-25 10:22:18] Begin to update graphic item and tree item ...
+[Debug] [2026-4-25 10:22:18] End to update graphic item and tree item ...
+[Debug] [2026-4-25 10:22:18] Begin to update graphic item and tree item ...
+[Debug] [2026-4-25 10:22:18] End to update graphic item and tree item ...
+[Debug] [2026-4-25 10:22:18] End to deal wiht chain from server.
+[Debug] [2026-4-25 10:22:18] end the exec of open cable cmd.
+[Debug] [2026-4-25 10:22:18] COMMAND[Open config cable] execute successfully, takes 5.4 secs.
+[Debug] [2026-4-25 10:22:18] Log::Print : COMMAND[Open config cable] execute successfully, takes 5.4 secs.
+[Debug] [2026-4-25 10:22:24] Begin to send programming cmd...
+[Debug] [2026-4-25 10:22:24] Send RPC:4
+[Debug] [2026-4-25 10:22:24] Begin to send program data.
+[Debug] [2026-4-25 10:22:24] End to send program data.
+[Debug] [2026-4-25 10:22:24] Send cmd [Program:20002] OK
+[Debug] [2026-4-25 10:22:24] The value of Progress is 6
+[Debug] [2026-4-25 10:22:25] The value of Progress is 10
+[Debug] [2026-4-25 10:22:25] The value of Progress is 15
+[Debug] [2026-4-25 10:22:25] The value of Progress is 20
+[Debug] [2026-4-25 10:22:25] The value of Progress is 25
+[Debug] [2026-4-25 10:22:25] The value of Progress is 30
+[Debug] [2026-4-25 10:22:25] The value of Progress is 35
+[Debug] [2026-4-25 10:22:25] The value of Progress is 40
+[Debug] [2026-4-25 10:22:25] The value of Progress is 45
+[Debug] [2026-4-25 10:22:26] The value of Progress is 50
+[Debug] [2026-4-25 10:22:26] The value of Progress is 55
+[Debug] [2026-4-25 10:22:26] The value of Progress is 60
+[Debug] [2026-4-25 10:22:26] The value of Progress is 65
+[Debug] [2026-4-25 10:22:26] The value of Progress is 70
+[Debug] [2026-4-25 10:22:26] The value of Progress is 75
+[Debug] [2026-4-25 10:22:26] The value of Progress is 80
+[Debug] [2026-4-25 10:22:26] The value of Progress is 85
+[Debug] [2026-4-25 10:22:26] The value of Progress is 90
+[Debug] [2026-4-25 10:22:27] The value of Progress is 95
+[Debug] [2026-4-25 10:22:27] The value of Progress is 100
+[Debug] [2026-4-25 10:22:27] COMMAND[Program] execute successfully, takes 3.0 secs.
+[Debug] [2026-4-25 10:22:27] End to send programming cmd.
+[Debug] [2026-4-25 10:22:27] Log::Print : The done bit is 1
+[Debug] [2026-4-25 10:22:27] Log::Print : COMMAND[Program] execute successfully, takes 3.0 secs.
+[Debug] [2026-4-25 10:22:58] Begin to send programming cmd...
+[Debug] [2026-4-25 10:22:58] Send RPC:5
+[Debug] [2026-4-25 10:22:58] Begin to send program data.
+[Debug] [2026-4-25 10:22:58] End to send program data.
+[Debug] [2026-4-25 10:22:58] Send cmd [Program:20002] OK
+[Debug] [2026-4-25 10:22:58] The value of Progress is 6
+[Debug] [2026-4-25 10:22:58] The value of Progress is 10
+[Debug] [2026-4-25 10:22:58] The value of Progress is 15
+[Debug] [2026-4-25 10:22:59] The value of Progress is 20
+[Debug] [2026-4-25 10:22:59] The value of Progress is 25
+[Debug] [2026-4-25 10:22:59] The value of Progress is 30
+[Debug] [2026-4-25 10:22:59] The value of Progress is 35
+[Debug] [2026-4-25 10:22:59] The value of Progress is 40
+[Debug] [2026-4-25 10:22:59] The value of Progress is 45
+[Debug] [2026-4-25 10:22:59] The value of Progress is 50
+[Debug] [2026-4-25 10:22:59] The value of Progress is 55
+[Debug] [2026-4-25 10:23:00] The value of Progress is 60
+[Debug] [2026-4-25 10:23:00] The value of Progress is 65
+[Debug] [2026-4-25 10:23:00] The value of Progress is 70
+[Debug] [2026-4-25 10:23:00] The value of Progress is 75
+[Debug] [2026-4-25 10:23:00] The value of Progress is 80
+[Debug] [2026-4-25 10:23:00] The value of Progress is 85
+[Debug] [2026-4-25 10:23:00] The value of Progress is 90
+[Debug] [2026-4-25 10:23:00] The value of Progress is 95
+[Debug] [2026-4-25 10:23:00] The value of Progress is 100
+[Debug] [2026-4-25 10:23:01] COMMAND[Program] execute successfully, takes 3.0 secs.
+[Debug] [2026-4-25 10:23:01] End to send programming cmd.
+[Debug] [2026-4-25 10:23:01] Log::Print : The done bit is 1
+[Debug] [2026-4-25 10:23:01] Log::Print : COMMAND[Program] execute successfully, takes 3.0 secs.
+[Info] [2026-4-25 10:23:11] /***************************End Configration***************************/
