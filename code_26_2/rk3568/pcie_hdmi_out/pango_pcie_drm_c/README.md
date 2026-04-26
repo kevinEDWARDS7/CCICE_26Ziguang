@@ -138,7 +138,7 @@ chmod +x scripts/*.sh
 - `pango_pcie_drm_c`
 - `driver/pango_pci_driver.ko`
 
-## 加载/卸载驱动
+## 启动/关闭脚本
 
 如果脚本没有执行权限：
 
@@ -146,27 +146,25 @@ chmod +x scripts/*.sh
 chmod +x scripts/*.sh
 ```
 
-卸载旧驱动：
+启动脚本会自动加载本工程 `./driver/pango_pci_driver.ko`，加载前若已有 `pango_pci_driver` 模块，会先卸载旧模块再加载本目录驱动：
 
 ```sh
-sudo ./scripts/unload_driver.sh
+sudo ./scripts/run_display.sh --frames 1
 ```
 
-加载本工程驱动：
+只关闭显示应用程序：
 
 ```sh
-sudo ./scripts/load_driver.sh
+sudo ./scripts/run_display.sh -c
+```
+
+关闭显示应用程序并卸载已加载的 `pango_pci_driver`：
+
+```sh
+sudo ./scripts/run_display.sh -c all
 ```
 
 必须确认当前加载的是本目录 `./driver/pango_pci_driver.ko`，不是 code_26 旧驱动。
-
-## 运行前检查
-
-```sh
-sudo ./scripts/check_runtime.sh
-```
-
-该脚本只检查环境，不启动 DMA。
 
 ## PCIe 安全探测
 
@@ -204,11 +202,13 @@ hexdump -C /tmp/hdmi_pcie_8lines.rgb565 | head -40
 sudo ./pango_pcie_drm_c
 ```
 
-也可以使用脚本，脚本会先运行 `pcie_probe_only`：
+也可以使用启动脚本，脚本会自动加载驱动并先运行 `pcie_probe_only`：
 
 ```sh
 sudo ./scripts/run_display.sh --frames 1
 sudo ./scripts/run_display.sh
+sudo ./scripts/run_display.sh -c
+sudo ./scripts/run_display.sh -c all
 ```
 
 参数：
@@ -295,16 +295,14 @@ RK3568 卡死或 Oops：
 cd pango_pcie_drm_c/driver
 make KDIR=/usr/src/linux-headers-6.1-rockchip clean
 make KDIR=/usr/src/linux-headers-6.1-rockchip -j$(nproc)
-sudo ./../scripts/unload_driver.sh
-sudo ./../scripts/load_driver.sh
 cd ..
 make clean
 make
 chmod +x scripts/*.sh
-sudo ./scripts/check_runtime.sh
 sudo ./pcie_probe_only
-sudo ./pango_pcie_drm_c --frames 1
-sudo ./pango_pcie_drm_c
+sudo ./scripts/run_display.sh --frames 1
+sudo ./scripts/run_display.sh
+sudo ./scripts/run_display.sh -c all
 ```
 
 ## FPGA 侧依赖

@@ -71,7 +71,7 @@ RK3568 侧 C 工程，包含 PCIe 字符设备 ABI、用户态收帧显示程序
 - `src/pcie_probe_only.c` 做 PCIe 安全探测。
 - `src/main.c` 做 PCIe DMA 读帧、RGB565 转 XRGB8888 和 DRM 显示。
 - `driver/pango_pci_driver.c` 与 `driver/pango_pci_driver.h` 是本工程配套驱动源码。
-- `scripts/` 存放板端构建、加载、检查和运行脚本。
+- `scripts/` 存放板端构建和启动/关闭脚本。
 
 ## 推荐阅读顺序
 

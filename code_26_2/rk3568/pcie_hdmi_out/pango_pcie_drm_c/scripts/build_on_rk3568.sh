@@ -3,7 +3,11 @@ set -eu
 
 cd "$(dirname "$0")/.."
 
-JOBS="$(nproc)"
+if command -v nproc >/dev/null 2>&1; then
+    JOBS="$(nproc)"
+else
+    JOBS=1
+fi
 
 echo "== build user programs =="
 make clean

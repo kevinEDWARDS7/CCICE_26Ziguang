@@ -97,7 +97,7 @@ pango_pcie_drm_c/
 - `src/pcie_probe_only.c`：只做 PCIe 枚举和链路有效性检查，安全确认后再跑 DMA。
 - `src/main.c`：逐行触发 `PCI_DMA_WRITE_CMD`，读取 RGB565 帧，转换为 XRGB8888，并通过 DRM dumb buffer 显示。
 - `driver/pango_pci_driver.c`：本工程配套 PCIe 字符设备驱动实现。
-- `scripts/`：板端构建、加载、卸载、运行和运行前检查脚本。
+- `scripts/`：板端构建和启动/关闭脚本。
 
 ## 数据流对应关系
 
@@ -132,7 +132,7 @@ make KDIR=/usr/src/linux-headers-6.1-rockchip clean
 make KDIR=/usr/src/linux-headers-6.1-rockchip -j$(nproc)
 ```
 
-也可以按 [pango_pcie_drm_c/README.md](rk3568/pcie_hdmi_out/pango_pcie_drm_c/README.md) 使用 `scripts/build_on_rk3568.sh`、`scripts/check_runtime.sh` 和 `scripts/run_display.sh`。
+也可以按 [pango_pcie_drm_c/README.md](rk3568/pcie_hdmi_out/pango_pcie_drm_c/README.md) 使用 `scripts/build_on_rk3568.sh` 和 `scripts/run_display.sh`；`run_display.sh -c` 关闭显示应用，`run_display.sh -c all` 同时卸载驱动。
 
 ## 修改优先级
 
