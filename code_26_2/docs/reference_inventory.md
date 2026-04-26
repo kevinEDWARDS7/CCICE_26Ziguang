@@ -97,27 +97,52 @@ Use in current plan:
 - Reuse ioctl layout and DMA transaction style.
 - Do not carry over the Qt and YOLO dependencies into the HDMI-out-only stage.
 
-## New files in this workspace
+## Current workspace landing points
 
-### FPGA integration shell
+### FPGA PDS projects
 
-- `fpga/hdmi_pcie_bridge/rtl/frame_packet_defs.vh`
-- `fpga/hdmi_pcie_bridge/rtl/hdmi_frame_packetizer.v`
-- `fpga/hdmi_pcie_bridge/rtl/stream_width_adapter_32to128.v`
-- `fpga/hdmi_pcie_bridge/rtl/traffic_hdmi_pcie_top.v`
+Current FPGA code lives in two similar PDS project copies:
+
+- `fpga/FPGA_HDMIIN_1/`
+- `fpga/FPGA_HDMININ/`
+
+Key files:
+
+- `source/dl_fpga_prj.v`
+- `source/user/img_data_stream_reducer.v`
+- `source/user/pcie_image_channel_selector.v`
+- `source/pcie/pcie_dma_core.v`
+- `source/pcie/ips2l_pcie_dma.v`
+- `source/frame_ddr3/frame_read_write_256_burst.v`
+- `project/source/word_align.v`
+- `project/source/video_packet_rec.v`
+- `project/source/iamge_fliter.v`
 
 Purpose:
 
-- Define a stable frame header.
-- Convert live HDMI pixels into a deterministic packet stream.
-- Present a 128-bit stream shape that is easier to map into the PCIe DMA datapath.
+- `dl_fpga_prj.v` integrates HDMI input, DDR3 buffering, and PCIe DMA.
+- `img_data_stream_reducer.v` downsamples 1280x720 RGB565 video to 640x360.
+- `pcie_image_channel_selector.v` pulls 128-bit image data from DDR3 and feeds the DMA write-data path.
 
-### RK3568 local app shell
+### RK3568 local app and driver
 
-- `rk3568/pcie_hdmi_out/include/pango_pcie_ioctl.h`
-- `rk3568/pcie_hdmi_out/Makefile`
-- `rk3568/pcie_hdmi_out/README.md`
+Current RK3568 code lives in:
+
+- `rk3568/pcie_hdmi_out/pango_pcie_drm_c/`
+
+Key files:
+
+- `include/pango_pcie_abi.h`
+- `src/main.c`
+- `src/pcie_probe_only.c`
+- `driver/pango_pci_driver.c`
+- `driver/pango_pci_driver.h`
+- `Makefile`
+- `README.md`
+- `scripts/`
 
 Purpose:
 
-- Make the copied DRM app locally buildable and decouple it from the original demo folder.
+- Keep PCIe ioctl ABI and DMA data structures centralized in `pango_pcie_abi.h`.
+- Use `pcie_probe_only.c` for a safe pre-DMA link probe.
+- Use `main.c` for line-by-line PCIe frame receive, RGB565 to XRGB8888 conversion, and DRM/KMS HDMI output.

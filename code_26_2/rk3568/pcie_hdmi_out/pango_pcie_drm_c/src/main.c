@@ -24,7 +24,7 @@
 
 #define DEFAULT_DRM_CARD "/dev/dri/card0"
 #define DEFAULT_FRAME_COUNT 0U
-#define DEFAULT_DELAY_LOOPS 4000U
+#define DEFAULT_DELAY_LOOPS 50000U
 #define XRGB_ALPHA 0xff000000U
 
 static volatile sig_atomic_t g_stop = 0;
@@ -82,7 +82,7 @@ static void usage(const char *prog)
             "  --height N           Input image height. Default: %u\n"
             "  --line-bytes N       Input line bytes. Default: %u\n"
             "  --frames N           Frames to display. 0 means run until Ctrl+C. Default: %u\n"
-            "  --delay-loops N      Busy-wait loops after PCI_DMA_WRITE_CMD. Default: %u\n"
+            "  --delay-loops N      Busy-wait loops before and after PCI_DMA_WRITE_CMD. Default: %u\n"
             "  --no-display         Read PCIe frames and print statistics without opening DRM.\n"
             "  --dump-frame PATH    Dump raw RGB565 bytes read from PCIe.\n"
             "  --dump-lines N       Dump only the first N lines. Default with --dump-frame: full frame.\n"
@@ -327,7 +327,9 @@ static int pcie_read_frame_rgb565(int fd, unsigned char *frame, const struct app
 
         memset(dma->data.read_buf, 0, DMA_MAX_PACKET_SIZE);
 
-        /* Match the proven senior flow: device writes one line into the kernel DMA buffer. */
+        busy_delay(opts->delay_loops);
+
+        /* Device writes one line into the kernel DMA buffer. */
         if (ioctl(fd, PCI_DMA_WRITE_CMD, dma) < 0) {
             fprintf(stderr, "PCI_DMA_WRITE_CMD failed at line %u: %s\n", line, strerror(errno));
             goto out;

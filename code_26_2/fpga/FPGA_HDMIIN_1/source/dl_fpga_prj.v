@@ -181,6 +181,19 @@ reg          ch0_read_frame_req;
 wire         ch0_read_req_ack, ch0_read_data_en, ch0_line_full_flag;
 wire [127:0] ch0_read_data;
 
+reg ch0_read_req_ack_d1, ch0_read_req_ack_d2;
+wire ch0_read_req_ack_pclk = ch0_read_req_ack_d2;
+
+always @(posedge pclk_div2) begin
+    if (!core_rst_n) begin
+        ch0_read_req_ack_d1 <= 1'b0;
+        ch0_read_req_ack_d2 <= 1'b0;
+    end else begin
+        ch0_read_req_ack_d1 <= ch0_read_req_ack;
+        ch0_read_req_ack_d2 <= ch0_read_req_ack_d1;
+    end
+end
+
 // 1. 将 hdmi_vs 信号跨时钟域同步到 PCIe 时钟域 (pclk_div2)，并消除亚稳态
 reg hdmi_vs_d1, hdmi_vs_d2, hdmi_vs_d3;
 always @(posedge pclk_div2) begin
@@ -205,7 +218,7 @@ always @(posedge pclk_div2) begin
     end else if (frame_done_pulse) begin
         // 真正的“发令枪”！一帧存满，立刻通知 PCIe 抽水！
         ch0_read_frame_req <= 1'b1; 
-    end else if (ch0_read_req_ack) begin
+    end else if (ch0_read_req_ack_pclk) begin
         ch0_read_frame_req <= 1'b0;
     end
 end
@@ -475,7 +488,7 @@ pcie_dma_core #(
 pcie_test dl_u_ips2l_pcie_wrap (
 	.button_rst_n				(1'b1),	
 	.power_up_rst_n				(1'b1),			
-	.perst_n					(1'b1),			
+	.perst_n					(sync_perst_n),
 	.pclk						(pclk),					
 	.pclk_div2					(pclk_div2),			
 	.ref_clk					(ref_clk),				

@@ -293,7 +293,7 @@ always @(posedge read_clk or posedge rst) begin
 	if (rst == 1'b1) begin
 		read_line_full <= 1'b0;
 	end
-	else if (rfifo_rdusedw[11:0] >= 12'd160 ) begin   // 256*2=512,这里是一次突发结束，因为pcie是128，因此乘2
+	else if (rfifo_rdusedw[11:0] >= 12'd80 ) begin
 		read_line_full <= 1'b1;
 	end
 	else begin
@@ -319,7 +319,7 @@ burst_image_fifo_reader
 	.ADDR_BITS                  (ADDR_BITS                ),
 	.BUSRT_BITS                 (BUSRT_BITS               ),
 	.FIFO_DEPTH                 (128                      ),
-	.BURST_SIZE                 (160              	      )
+	.BURST_SIZE                 (80               	      )
 )
 frame_fifo_read_m0
 (

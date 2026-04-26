@@ -373,8 +373,8 @@ long pango_cdev_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		}
 		dma_info.cmd.data.op_type = 0;
 		dma_info.cmd.data.addr_type = dma_info.addr_r.addr_size;
-		set_dma_w_r(dma_info.cmd.value, pci_pango);
 		set_dma_addr(&dma_info.addr_r, pci_pango);
+		set_dma_w_r(dma_info.cmd.value, pci_pango);
 		break;
 
 	case PCI_DMA_WRITE_CMD:
@@ -388,8 +388,8 @@ long pango_cdev_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		memset(dma_info.addr_w.data_buf, 0, dma_operation.current_len * 4U);
 		dma_info.cmd.data.op_type = 1;
 		dma_info.cmd.data.addr_type = dma_info.addr_w.addr_size;
-		set_dma_w_r(dma_info.cmd.value, pci_pango);
 		set_dma_addr(&dma_info.addr_w, pci_pango);
+		set_dma_w_r(dma_info.cmd.value, pci_pango);
 		break;
 
 	case PCI_READ_FROM_KERNEL_CMD:
@@ -440,8 +440,8 @@ long pango_cdev_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		performance_config.cmd.data.length = performance_operation.current_len - 1;
 		performance_config.cmd.data.addr_type = performance_config.addr.addr_size;
 		performance_config.cmd.data.op_type = performance_operation.cmd;
-		set_dma_w_r(performance_config.cmd.value, pci_pango);
 		set_dma_addr(&performance_config.addr, pci_pango);
+		set_dma_w_r(performance_config.cmd.value, pci_pango);
 		break;
 
 	case PCI_PERFORMANCE_END_CMD:

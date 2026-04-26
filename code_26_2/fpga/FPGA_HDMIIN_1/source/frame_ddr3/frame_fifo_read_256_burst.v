@@ -151,7 +151,7 @@ begin
 					state <= S_ACK;
 				end
 				//if the FIFO space is a burst read request, goto burst read state
-				else if(wrusedw < 16'd160)  //当小于一次突发就请求突发  255*3
+				else if(wrusedw < 16'd80)
 				begin
 					state <= S_READ_BURST;
 					rd_burst_len <= BURST_SIZE[BUSRT_BITS - 1:0];

@@ -97,28 +97,52 @@
 - 复用 ioctl 定义和 DMA 事务风格。
 - 当前 HDMI OUT 阶段不继续带入 Qt 和 YOLO 依赖。
 
-## 本工作区新增文件
+## 当前工作区落地点
 
-### FPGA 集成壳
+### FPGA PDS 工程
 
-- `fpga/hdmi_pcie_bridge/rtl/frame_packet_defs.vh`
-- `fpga/hdmi_pcie_bridge/rtl/hdmi_frame_packetizer.v`
-- `fpga/hdmi_pcie_bridge/rtl/stream_width_adapter_32to128.v`
-- `fpga/hdmi_pcie_bridge/rtl/traffic_hdmi_pcie_top.v`
+当前 FPGA 代码落在两个结构相近的 PDS 工程副本中：
+
+- `fpga/FPGA_HDMIIN_1/`
+- `fpga/FPGA_HDMININ/`
+
+重点文件：
+
+- `source/dl_fpga_prj.v`
+- `source/user/img_data_stream_reducer.v`
+- `source/user/pcie_image_channel_selector.v`
+- `source/pcie/pcie_dma_core.v`
+- `source/pcie/ips2l_pcie_dma.v`
+- `source/frame_ddr3/frame_read_write_256_burst.v`
+- `project/source/word_align.v`
+- `project/source/video_packet_rec.v`
+- `project/source/iamge_fliter.v`
 
 作用：
 
-- 定义统一帧头格式。
-- 把实时 HDMI 像素流整理成可控的数据包流。
-- 提供 128 位流接口形态，便于后续映射到 PCIe DMA 数据通路。
+- `dl_fpga_prj.v` 集成 HDMI 输入、DDR3 和 PCIe DMA。
+- `img_data_stream_reducer.v` 将 1280x720 RGB565 图像抽样为 640x360。
+- `pcie_image_channel_selector.v` 从 DDR3 取出 128 位图像数据并送入 DMA 写数据路径。
 
-### RK3568 本地应用壳
+### RK3568 本地应用和驱动
 
-- `rk3568/pcie_hdmi_out/include/pango_pcie_ioctl.h`
-- `rk3568/pcie_hdmi_out/Makefile`
-- `rk3568/pcie_hdmi_out/README.md`
+当前 RK3568 代码位于：
+
+- `rk3568/pcie_hdmi_out/pango_pcie_drm_c/`
+
+重点文件：
+
+- `include/pango_pcie_abi.h`
+- `src/main.c`
+- `src/pcie_probe_only.c`
+- `driver/pango_pci_driver.c`
+- `driver/pango_pci_driver.h`
+- `Makefile`
+- `README.md`
+- `scripts/`
 
 作用：
 
-- 让复制过来的 DRM 应用可以在本目录独立构建。
-- 为后续接入帧头解析和更严格的收帧校验做准备。
+- 保持 PCIe ioctl ABI 和 DMA 结构体定义集中在 `pango_pcie_abi.h`。
+- `pcie_probe_only.c` 用于 DMA 前的安全探测。
+- `main.c` 完成 PCIe 逐行收帧、RGB565 到 XRGB8888 转换和 DRM/KMS HDMI 输出。

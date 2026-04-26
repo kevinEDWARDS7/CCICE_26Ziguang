@@ -1,184 +1,106 @@
-﻿# CCICE_26Ziguang 工程索引
+# CCICE_26Ziguang 工程索引
 
-本仓库用于整理和推进 2026 紫光同创相关赛题工程，当前主线目标是打通：
+本仓库用于整理和推进 2026 紫光同创赛题工程。当前工作区的主线目标是打通：
 
 ```text
 HDMI IN / 摄像头输入
 -> FPGA 视频采集、帧整理、可选预处理
 -> PCIe DMA
--> RK3568 接收、显示、AI 推理或 HDMI OUT
+-> RK3568 接收
+-> DRM/KMS HDMI OUT，后续可接 AI 推理
 ```
 
-仓库同时保留了上一届可复用代码、官方示例工程、当前集成工作区和板端调试命令。根目录 `README.md` 作为 GitHub 首页索引，帮助新成员快速定位资料、源码和复现入口。
+## 当前工作区结构
+
+```text
+CCICE_26Ziguang/
+├─ README.md
+├─ 赛题资源相关文档/
+│  ├─ 资源说明readme.txt
+│  ├─ 紫光同创公司官方赛题解析.md
+│  └─ 赛题 PDF、硬件资源手册、历史报告和压缩包
+└─ code_26_2/
+   ├─ README.md
+   ├─ docs/
+   │  ├─ reference_inventory.md
+   │  └─ reference_inventory.zh.md
+   ├─ fpga/
+   │  ├─ FPGA_HDMIIN_1/
+   │  └─ FPGA_HDMININ/
+   └─ rk3568/
+      └─ pcie_hdmi_out/
+         └─ pango_pcie_drm_c/
+```
 
 ## 快速入口
 
 | 用途 | 入口 |
 | --- | --- |
-| 当前集成主工作区 | [`code_26_2/`](code_26_2/) |
-| 当前 FPGA 单路 HDMI 到 PCIe 集成层 | [`code_26_2/fpga/hdmi_pcie_bridge/`](code_26_2/fpga/hdmi_pcie_bridge/) |
-| 当前 RK3568 PCIe 接收与 HDMI OUT 程序 | [`code_26_2/rk3568/pcie_hdmi_out/`](code_26_2/rk3568/pcie_hdmi_out/) |
-| 参考代码盘点 | [`code_26_2/docs/reference_inventory.md`](code_26_2/docs/reference_inventory.md) |
-| 学长 FPGA + RK3568/YOLO 代码说明 | [`code_25/README_dl_pcie_yolo_notes.md`](code_25/README_dl_pcie_yolo_notes.md) |
-| 板端 PCIe 调试命令 | [`RK_CLI/PCIE.md`](RK_CLI/PCIE.md) |
-| HDMI 最小链路快速烟测 | [`RK_CLI/HDMI_MINLINK_QUICK.md`](RK_CLI/HDMI_MINLINK_QUICK.md) |
-| 赛题和硬件资源文档 | [`code_26/赛题资源相关文档/`](code_26/%E8%B5%9B%E9%A2%98%E8%B5%84%E6%BA%90%E7%9B%B8%E5%85%B3%E6%96%87%E6%A1%A3/) |
+| 当前集成主工作区 | [code_26_2/README.md](code_26_2/README.md) |
+| 参考代码盘点 | [code_26_2/docs/reference_inventory.zh.md](code_26_2/docs/reference_inventory.zh.md) |
+| FPGA HDMI/DDR3/PCIe 工程 | [code_26_2/fpga/](code_26_2/fpga/) |
+| RK3568 PCIe 接收与 HDMI OUT | [code_26_2/rk3568/pcie_hdmi_out/pango_pcie_drm_c/README.md](code_26_2/rk3568/pcie_hdmi_out/pango_pcie_drm_c/README.md) |
+| 赛题和硬件资料 | [赛题资源相关文档/](%E8%B5%9B%E9%A2%98%E8%B5%84%E6%BA%90%E7%9B%B8%E5%85%B3%E6%96%87%E6%A1%A3/) |
 
-## 目录索引
+## 目录职责
 
-### `code_26_2/`：当前集成工作区
+### [赛题资源相关文档/](%E8%B5%9B%E9%A2%98%E8%B5%84%E6%BA%90%E7%9B%B8%E5%85%B3%E6%96%87%E6%A1%A3/)
 
-[`code_26_2/`](code_26_2/) 是当前建议优先阅读和推进的工作区，目标链路为：
+存放赛题、官方解析、板卡资源手册、上一届技术报告和代码压缩包。这里是需求和硬件约束来源，优先阅读 [资源说明readme.txt](%E8%B5%9B%E9%A2%98%E8%B5%84%E6%BA%90%E7%9B%B8%E5%85%B3%E6%96%87%E6%A1%A3/%E8%B5%84%E6%BA%90%E8%AF%B4%E6%98%8Ereadme.txt) 与 [紫光同创公司官方赛题解析.md](%E8%B5%9B%E9%A2%98%E8%B5%84%E6%BA%90%E7%9B%B8%E5%85%B3%E6%96%87%E6%A1%A3/%E7%B4%AB%E5%85%89%E5%90%8C%E5%88%9B%E5%85%AC%E5%8F%B8%E5%AE%98%E6%96%B9%E8%B5%9B%E9%A2%98%E8%A7%A3%E6%9E%90.md)。
 
-```text
-HDMI IN -> FPGA 帧整理 -> PCIe DMA -> RK3568 接收 -> DRM HDMI OUT
-```
+### [code_26_2/](code_26_2/)
 
-主要子目录：
+当前真正推进的集成工作区，包含 FPGA 工程、RK3568 端程序和参考代码盘点。新开发、移植和文档沉淀优先放在这里。
 
-- [`code_26_2/docs/`](code_26_2/docs/)：参考代码盘点和集成说明。
-- [`code_26_2/fpga/imported/`](code_26_2/fpga/imported/)：从历史工程和官方示例中筛选出的 FPGA 参考代码快照。
-- [`code_26_2/fpga/hdmi_pcie_bridge/`](code_26_2/fpga/hdmi_pcie_bridge/)：新增的 FPGA 单路 HDMI 到 PCIe 接口层，包含帧头定义、帧打包、32bit 到 128bit 流适配和顶层壳。
-- [`code_26_2/fpga/template_projects/`](code_26_2/fpga/template_projects/)：PDS 模板工程和参考工程副本。
-- [`code_26_2/rk3568/pcie_hdmi_out/`](code_26_2/rk3568/pcie_hdmi_out/)：RK3568 用户态 PCIe 接收、DRM framebuffer 显示和 HDMI OUT 程序。
+### [code_26_2/fpga/](code_26_2/fpga/)
 
-建议新开发优先在该目录下组织，避免直接改动历史参考目录。
+FPGA 侧有两个相近的 PDS 工程目录：[FPGA_HDMIIN_1](code_26_2/fpga/FPGA_HDMIIN_1/) 和 [FPGA_HDMININ](code_26_2/fpga/FPGA_HDMININ/)。它们都按 `project/` 加 `source/` 组织：
 
-### `code_25/`：上一届历史工程和可复用代码
+- `source/` 是主要 RTL 源码，顶层模块是 `dl_fpga_prj.v`。
+- `source/hdmi/` 是 HDMI 接收芯片 MS7200 的 I2C 初始化。
+- `source/frame_ddr3/` 是 DDR3 帧缓存和 AXI 读写逻辑。
+- `source/pcie/` 是 PCIe DMA 核和控制逻辑。
+- `source/user/` 是当前视频缩放、通道选择和 PCIe 取图相关胶水逻辑。
+- `project/` 是 PDS 工程文件、约束、IP 和工具输出。
 
-[`code_25/`](code_25/) 保存上一届工程、技术报告、板端软件和 FPGA 项目。该目录体量较大，包含源码、PDS 工程、生成文件、第三方库和临时解包文件。
+### [code_26_2/rk3568/pcie_hdmi_out/pango_pcie_drm_c/](code_26_2/rk3568/pcie_hdmi_out/pango_pcie_drm_c/)
 
-重点入口：
+RK3568 侧 C 工程，包含 PCIe 字符设备 ABI、用户态收帧显示程序和内核驱动源码：
 
-- [`code_25/README_dl_pcie_yolo_notes.md`](code_25/README_dl_pcie_yolo_notes.md)：对 `dl/dl` 和 `rk_new12/pcie_yolo` 的结构阅读说明。
-- [`code_25/dl/dl/`](code_25/dl/dl/)：历史 FPGA 图像采集、DDR3 帧缓存、PCIe DMA 工程。
-- [`code_25/rk_new12/pcie_yolo/`](code_25/rk_new12/pcie_yolo/)：RK3568 端 Qt/OpenCV/RKNN YOLO 应用和 PCIe 用户态封装。
-- [`code_25/four_pinjie_video/`](code_25/four_pinjie_video/)：历史视频输入、DDR3、拼接/处理和发送相关工程。
-- [`code_25/four_pinjie_basic/`](code_25/four_pinjie_basic/)：历史多板级联/中间板相关工程。
-- [`code_25/快速开始（评委老师想要复现项目可以看）.txt`](code_25/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B%EF%BC%88%E8%AF%84%E5%A7%94%E8%80%81%E5%B8%88%E6%83%B3%E8%A6%81%E5%A4%8D%E7%8E%B0%E9%A1%B9%E7%9B%AE%E5%8F%AF%E4%BB%A5%E7%9C%8B%EF%BC%89.txt)：历史复现说明。
-- [`code_25/初赛技术报告_final.docx`](code_25/%E5%88%9D%E8%B5%9B%E6%8A%80%E6%9C%AF%E6%8A%A5%E5%91%8A_final.docx)：历史技术报告。
-
-阅读时建议优先看源码和说明文件，不优先阅读 `compile/`、`synthesize/`、`generate_bitstream/`、`place_route/`、`logbackup/`、`build-fixed/`、`3rdparty/` 等生成或依赖目录。
-
-### `code_26/`：官方资料和示例工程
-
-[`code_26/`](code_26/) 主要保存 2026 赛题资料、官方示例和调试报告。
-
-重点入口：
-
-- [`code_26/赛题资源相关文档/`](code_26/%E8%B5%9B%E9%A2%98%E8%B5%84%E6%BA%90%E7%9B%B8%E5%85%B3%E6%96%87%E6%A1%A3/)：赛题、官方解析、RK3568/MES 板卡资源手册、HDMI 硬件资源手册等。
-- [`code_26/Test_demo/`](code_26/Test_demo/)：官方 PCIe、HDMI、RK 端测试示例和板端应用参考。
-- [`code_26/PCIe_RK3568_DRM_HDMI_Debug_Report.md`](code_26/PCIe_RK3568_DRM_HDMI_Debug_Report.md)：PCIe、RK3568、DRM/HDMI 调试记录。
-
-该目录更适合作为权威资料和官方基线来源。当前集成代码应优先沉淀到 `code_26_2/`。
-
-### `RK_CLI/`：板端命令和验证脚本说明
-
-[`RK_CLI/`](RK_CLI/) 保存 RK3568 板端常用命令说明，适合上板调试时直接查阅。
-
-主要文件：
-
-- [`RK_CLI/PCIE.md`](RK_CLI/PCIE.md)：PCIe 枚举、BAR、驱动加载、设备节点、应用运行和验收检查。
-- [`RK_CLI/HDMI.md`](RK_CLI/HDMI.md)：HDMI 相关调试命令。
-- [`RK_CLI/HDMI_MINLINK_QUICK.md`](RK_CLI/HDMI_MINLINK_QUICK.md)：最小 HDMI 链路 8 秒烟测。
-- [`RK_CLI/HDMI_MINLINK_FULL.md`](RK_CLI/HDMI_MINLINK_FULL.md)：更完整的 HDMI 最小链路验证流程。
-- [`RK_CLI/rk3568_onekey_run.sh`](RK_CLI/rk3568_onekey_run.sh)：RK3568 一键运行脚本。
+- `include/pango_pcie_abi.h` 定义 ioctl、结构体、分辨率和 DMA 包大小。
+- `src/pcie_probe_only.c` 做 PCIe 安全探测。
+- `src/main.c` 做 PCIe DMA 读帧、RGB565 转 XRGB8888 和 DRM 显示。
+- `driver/pango_pci_driver.c` 与 `driver/pango_pci_driver.h` 是本工程配套驱动源码。
+- `scripts/` 存放板端构建、加载、检查和运行脚本。
 
 ## 推荐阅读顺序
 
-1. 先看赛题和硬件资料：[`code_26/赛题资源相关文档/`](code_26/%E8%B5%9B%E9%A2%98%E8%B5%84%E6%BA%90%E7%9B%B8%E5%85%B3%E6%96%87%E6%A1%A3/)。
-2. 再看当前主工作区说明：[`code_26_2/README.md`](code_26_2/README.md)。
-3. 阅读参考代码盘点：[`code_26_2/docs/reference_inventory.md`](code_26_2/docs/reference_inventory.md)。
-4. 阅读历史 FPGA/RK 软件说明：[`code_25/README_dl_pcie_yolo_notes.md`](code_25/README_dl_pcie_yolo_notes.md)。
-5. 如果推进 FPGA 侧，进入 [`code_26_2/fpga/hdmi_pcie_bridge/`](code_26_2/fpga/hdmi_pcie_bridge/)。
-6. 如果推进 RK3568 侧，进入 [`code_26_2/rk3568/pcie_hdmi_out/`](code_26_2/rk3568/pcie_hdmi_out/)。
-7. 上板验证时查阅 [`RK_CLI/`](RK_CLI/) 下的命令说明。
+1. 先读赛题和资源说明：[赛题资源相关文档/资源说明readme.txt](%E8%B5%9B%E9%A2%98%E8%B5%84%E6%BA%90%E7%9B%B8%E5%85%B3%E6%96%87%E6%A1%A3/%E8%B5%84%E6%BA%90%E8%AF%B4%E6%98%8Ereadme.txt)。
+2. 再读当前主工作区说明：[code_26_2/README.md](code_26_2/README.md)。
+3. FPGA 侧从 `dl_fpga_prj.v`、`source/user/`、`source/frame_ddr3/`、`source/pcie/` 开始。
+4. RK3568 侧从 [pango_pcie_drm_c/README.md](code_26_2/rk3568/pcie_hdmi_out/pango_pcie_drm_c/README.md) 开始。
+5. 需要理解来源和复用思路时，再看 [reference_inventory.zh.md](code_26_2/docs/reference_inventory.zh.md)。
 
-## 当前工程主线
+## 生成文件和源码边界
 
-当前建议按以下顺序推进：
-
-1. 确认板卡、40PIN 转 HDMI、PCIe 和 DRM/HDMI OUT 的硬件链路。
-2. 以官方 PCIe DMA 示例作为可靠基线。
-3. 将 `code_26_2/fpga/hdmi_pcie_bridge/rtl/traffic_hdmi_pcie_top.v` 接入实际 PDS 工程。
-4. 在 FPGA 侧完成 HDMI 像素流到带帧头数据流的整理。
-5. 在 RK3568 侧使用 `pcie_hdmi_out` 完成 PCIe DMA 读取和 DRM 显示。
-6. 主链路稳定后，再接入 RKNN/YOLO 或赛题要求的 AI 模型。
-
-## 构建和运行入口
-
-### RK3568 PCIe HDMI OUT
-
-```bash
-cd code_26_2/rk3568/pcie_hdmi_out
-make
-```
-
-该程序用于：
-
-- 打开 `/dev/pango_pci_driver`
-- 触发 FPGA 到 RK3568 的 DMA 读回
-- 将 RGB565/RGB888 行数据转换为 XRGB8888
-- 通过 DRM framebuffer 输出到 HDMI
-
-### FPGA HDMI PCIe Bridge
-
-主要 RTL 文件位于：
+FPGA 工程里的这些目录主要是 PDS 工具输出或中间结果，阅读结构时一般先跳过：
 
 ```text
-code_26_2/fpga/hdmi_pcie_bridge/rtl/
+compile/
+constraint_check/
+device_map/
+generate_bitstream/
+log/
+logbackup/
+place_route/
+report_timing/
+synthesize/
 ```
 
-核心文件：
+优先关注 `source/`、`project/source/`、`project/project.fdc`、`project/impl.tcl` 和 RK3568 工程下的 `src/`、`include/`、`driver/`、`scripts/`。
 
-- `frame_packet_defs.vh`
-- `hdmi_frame_packetizer.v`
-- `stream_width_adapter_32to128.v`
-- `traffic_hdmi_pcie_top.v`
+## 当前注意点
 
-PDS 导入辅助脚本：
-
-```text
-code_26_2/fpga/hdmi_pcie_bridge/scripts/impl.tcl
-```
-
-注意：该脚本不自动生成 DDR3、PCIe IP 或最终板级管脚约束，仍需在 PDS 中结合已验证 IP 和实际硬件约束使用。
-
-### RK3568 板端 PCIe 调试
-
-常用检查入口：
-
-```bash
-lspci -nn
-lspci -vv -s 0002:21:00.0
-lsmod | grep pango_pci_driver
-ls -l /dev/pango_pci_driver
-```
-
-完整说明见 [`RK_CLI/PCIE.md`](RK_CLI/PCIE.md)。
-
-## 文件阅读注意事项
-
-- 仓库中存在 PDS、综合、布局布线、bitstream、日志、临时解包、第三方库和构建产物。
-- GitHub 首页索引只列出关键入口，不逐项列出所有生成文件。
-- 部分历史文档存在编码显示问题，优先以路径、源码、模块名和当前新增说明为准。
-- `code_25/` 和 `code_26/` 更偏参考与资料，当前新增集成建议放在 `code_26_2/`。
-- 上板运行结果受驱动版本、内核头文件、设备树、PDS 工程、bitstream 和硬件连接影响，不能只凭静态源码判断闭环已完成。
-
-## Contributing
-
-欢迎按以下方式维护本索引和工程内容：
-
-1. 新增重要目录或文档后，同步更新根目录 `README.md` 的“快速入口”或“目录索引”。
-2. 新增可复现实验、上板命令或调试结论时，优先放入 `RK_CLI/` 或对应子目录 README。
-3. 新增 FPGA/RK3568 主线代码时，优先放入 `code_26_2/`，并在子目录 README 中说明用途、构建方式和当前状态。
-4. 提交前尽量区分源码、文档、生成文件和大型二进制产物，避免无关日志或临时文件污染提交。
-5. 如果修改了 PCIe 数据格式、图像分辨率、像素格式或 ioctl ABI，请同时更新 FPGA 侧、RK3568 侧和文档中的接口说明。
-
-建议提交信息使用明确的中文或英文动词开头，例如：
-
-```text
-docs: update root project index
-fpga: add HDMI frame packet bridge
-rk3568: document PCIe HDMI smoke test
-```
+- 当前工作区没有展开历史 `code_25/`、官方 `code_26/`、`RK_CLI/` 等目录；如果后续需要对照历史代码，需要先补齐对应资料或解压赛题资源。
+- [code_26_2/fpga/FPGA_HDMIIN_1/](code_26_2/fpga/FPGA_HDMIIN_1/) 和 [code_26_2/fpga/FPGA_HDMININ/](code_26_2/fpga/FPGA_HDMININ/) 是相近工程副本，实际烧录和上板版本需要以 PDS 工程、bitstream 时间和板端现象共同确认。
+- FPGA/RK3568 的接口约定包括分辨率、像素格式、DMA 行字节数和 ioctl ABI；任一侧修改后，需要同步更新另一侧和文档。
