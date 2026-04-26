@@ -90,6 +90,7 @@ wire                device_ep;
 
 wire                apb_write;
 wire                apb_read;
+wire                dma_ctrl_low_dw_wr;
 
 wire                cmd_reg_cfg_done;
 wire                l_addr_cfg_done;
@@ -110,6 +111,7 @@ wire                dma_check_success;
 
 assign device_rc = (DEVICE_TYPE == 3'b100 ) ? 1'b1 : 1'b0;
 assign device_ep = (DEVICE_TYPE == 3'b000 || DEVICE_TYPE == 3'b001) ? 1'b1 : 1'b0;
+assign dma_ctrl_low_dw_wr = i_bar1_wr_en && (i_bar1_wr_byte_en[3:0] == 4'hf);
 
 //req_ack
 assign ack_rcv = i_mwr32_req_ack | i_mwr64_req_ack | i_mrd32_req_ack | i_mrd64_req_ack;
@@ -132,7 +134,7 @@ begin
     else if(dma_cmd_reg_vld)
         dma_cmd_reg_vld <= 1'b0;
     else
-        dma_cmd_reg_vld <= &i_bar1_wr_byte_en && i_bar1_wr_en && (i_bar1_wr_addr[8:0] == 9'h100);
+        dma_cmd_reg_vld <= dma_ctrl_low_dw_wr && (i_bar1_wr_addr[8:0] == 9'h100);
 end
 
 always@(posedge clk or negedge rst_n)
@@ -161,7 +163,7 @@ begin
     else if(dma_cmd_l_addr_vld)
         dma_cmd_l_addr_vld <= 1'b0;
     else
-        dma_cmd_l_addr_vld <= &i_bar1_wr_byte_en && i_bar1_wr_en && (i_bar1_wr_addr[8:0] == 9'h110);
+        dma_cmd_l_addr_vld <= dma_ctrl_low_dw_wr && (i_bar1_wr_addr[8:0] == 9'h110);
 end
 
 always@(posedge clk or negedge rst_n)
@@ -191,7 +193,7 @@ begin
     else if(dma_cmd_l_addr_vld)
         dma_cmd_h_addr_vld <= 1'b0;
     else
-        dma_cmd_h_addr_vld <= &i_bar1_wr_byte_en && i_bar1_wr_en && (i_bar1_wr_addr[8:0] == 9'h120);
+        dma_cmd_h_addr_vld <= dma_ctrl_low_dw_wr && (i_bar1_wr_addr[8:0] == 9'h120);
 end
 
 always@(posedge clk or negedge rst_n)

@@ -45,7 +45,7 @@ module ips2l_pcie_cfg_init_v1_2b #(
     parameter BAR1_TYPE                         = 2'b0          ,
     parameter BAR1_MEM_IO                       = 1'b0          ,
     parameter BAR1_ENABLED                      = 1'b1          ,
-    parameter BAR1_MASK                         = 31'h0000_07ff ,
+    parameter BAR1_MASK                         = 31'h0000_0fff ,
     parameter BAR2_PREFETCH                     = 1'b0          ,
     parameter BAR2_TYPE                         = 2'b10         ,
     parameter BAR2_MEM_IO                       = 1'b0          ,

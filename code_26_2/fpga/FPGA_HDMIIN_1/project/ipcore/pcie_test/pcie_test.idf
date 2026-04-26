@@ -225,7 +225,7 @@
         </param>
         <param>
             <name>BAR1_MASK</name>
-            <value>31'h7ff</value>
+            <value>31'hfff</value>
         </param>
         <param>
             <name>Subsystem_ID</name>

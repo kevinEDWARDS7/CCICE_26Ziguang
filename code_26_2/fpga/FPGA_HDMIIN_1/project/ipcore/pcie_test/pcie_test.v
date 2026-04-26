@@ -207,7 +207,7 @@ module pcie_test
 
     localparam               BAR1_ENABLED                   = 1'b1    ;   //@IPC bool
 
-    localparam               BAR1_MASK                      = 31'h7ff   ; //@IPC string
+    localparam               BAR1_MASK                      = 31'hfff   ; //@IPC string
 
     localparam               BAR2_PREFETCH                  = 1'b0   ;   //@IPC enum 1'b0,1'b1
 

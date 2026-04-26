@@ -58,8 +58,11 @@ MODULE_DEVICE_TABLE(pci, pci_pango_device_ids);
 static struct PciPango pci_info = {
 	.pango_pci_driver = {
 		.pci_bar = 0,
+		.pci_ctrl_bar = 1,
 		.pci_io_size = 0,
+		.pci_ctrl_io_size = 0,
 		.pci_io = NULL,
+		.pci_ctrl_io = NULL,
 		.pci_io_buff = NULL,
 		.pci_driver = {
 			.name = PCI_DRIVER_DEV_NAME,
@@ -86,9 +89,14 @@ static int hw_ready(struct PciPango *pci_pango)
 {
 	if (!op_dev)
 		return -ENODEV;
-	if (!pci_pango->pango_pci_driver.pci_io)
+	if (!pci_pango->pango_pci_driver.pci_ctrl_io)
 		return -ENODEV;
 	return 0;
+}
+
+static bool bar_has_dma_ctrl_regs(struct pci_dev *pdev, int bar)
+{
+	return pci_resource_len(pdev, bar) >= RW_ADDR_HI_OFFSET + sizeof(u32);
 }
 
 static void free_dma_buffers(void)
@@ -111,16 +119,16 @@ static void free_dma_buffers(void)
 
 static void set_dma_w_r(unsigned int value, struct PciPango *pci_pango)
 {
-	iowrite32(value, pci_pango->pango_pci_driver.pci_io + CMD_REG_OFFSET);
+	iowrite32(value, pci_pango->pango_pci_driver.pci_ctrl_io + CMD_REG_OFFSET);
 }
 
 static void set_dma_addr(const DMA_ADDR *dma_addr, struct PciPango *pci_pango)
 {
 	iowrite32(lower_32_bits(dma_addr->addr),
-		  pci_pango->pango_pci_driver.pci_io + RW_ADDR_LO_OFFSET);
+		  pci_pango->pango_pci_driver.pci_ctrl_io + RW_ADDR_LO_OFFSET);
 	if (dma_addr->addr_size)
 		iowrite32(upper_32_bits(dma_addr->addr),
-			  pci_pango->pango_pci_driver.pci_io + RW_ADDR_HI_OFFSET);
+			  pci_pango->pango_pci_driver.pci_ctrl_io + RW_ADDR_HI_OFFSET);
 }
 
 loff_t pango_cdev_llseek(struct file *filp, loff_t off, int whence)
@@ -532,7 +540,7 @@ static void pci_keep_intx_enabled(struct pci_dev *pdev)
 int pci_driver_probe(struct pci_dev *dev, const struct pci_device_id *device_id)
 {
 	struct PangoPciDriver *drv = &pci_info.pango_pci_driver;
-	unsigned long bar_address;
+	resource_size_t bar_address;
 	int result;
 
 	(void)device_id;
@@ -568,12 +576,41 @@ int pci_driver_probe(struct pci_dev *dev, const struct pci_device_id *device_id)
 		goto fail_iounmap;
 	}
 
+	if (bar_has_dma_ctrl_regs(dev, drv->pci_ctrl_bar)) {
+		result = pci_request_region(dev, drv->pci_ctrl_bar, PCI_DRIVER_DEV_NAME);
+		if (result)
+			goto fail_free_io_buff;
+		drv->pci_ctrl_io_size = pci_resource_len(dev, drv->pci_ctrl_bar);
+		bar_address = pci_resource_start(dev, drv->pci_ctrl_bar);
+		drv->pci_ctrl_io = ioremap(bar_address, drv->pci_ctrl_io_size);
+		if (!drv->pci_ctrl_io) {
+			result = -ENOMEM;
+			goto fail_ctrl_region;
+		}
+		LOG("DMA control mapped from BAR%d addr=0x%llx size=0x%llx\n",
+		    drv->pci_ctrl_bar, (unsigned long long)bar_address,
+		    (unsigned long long)drv->pci_ctrl_io_size);
+	} else if (bar_has_dma_ctrl_regs(dev, drv->pci_bar)) {
+		drv->pci_ctrl_bar = drv->pci_bar;
+		drv->pci_ctrl_io_size = drv->pci_io_size;
+		drv->pci_ctrl_io = drv->pci_io;
+		LOG("BAR1 unavailable; DMA control falls back to BAR%d\n", drv->pci_bar);
+	} else {
+		result = -ENODEV;
+		goto fail_free_io_buff;
+	}
+
 	spin_lock_init(&dma_info.addr_r.lock);
 	spin_lock_init(&dma_info.addr_w.lock);
 	spin_lock_init(&performance_config.addr.lock);
 	pci_keep_intx_enabled(dev);
 	return 0;
 
+fail_ctrl_region:
+	pci_release_region(dev, drv->pci_ctrl_bar);
+fail_free_io_buff:
+	kfree(drv->pci_io_buff);
+	drv->pci_io_buff = NULL;
 fail_iounmap:
 	iounmap(drv->pci_io);
 	drv->pci_io = NULL;
@@ -602,6 +639,13 @@ void pci_driver_remove(struct pci_dev *dev)
 
 	kfree(drv->pci_io_buff);
 	drv->pci_io_buff = NULL;
+	if (drv->pci_ctrl_io && drv->pci_ctrl_io != drv->pci_io) {
+		iounmap(drv->pci_ctrl_io);
+		pci_release_region(dev, drv->pci_ctrl_bar);
+	}
+	drv->pci_ctrl_io = NULL;
+	drv->pci_ctrl_io_size = 0;
+	drv->pci_ctrl_bar = 1;
 	if (drv->pci_io) {
 		iounmap(drv->pci_io);
 		drv->pci_io = NULL;

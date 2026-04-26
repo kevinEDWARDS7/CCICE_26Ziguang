@@ -97,6 +97,8 @@ wire    [ADDR_WIDTH-1:0]    bar2_wr_addr;
 wire    [127:0]             bar2_wr_data;
 wire    [15:0]              bar2_wr_byte_en;
 
+// The RK3568 board currently enumerates only BAR0. Route BAR0 writes to the
+// DMA control path as well, while keeping the original BAR1 control path valid.
 assign control_bar_wr_hit = (bar_hit == 2'b00) || (bar_hit == 2'b01);
 
 ips2l_pcie_dma_tlp_rcv #(

@@ -46,8 +46,11 @@ struct PciDriverDevInfo {
 
 struct PangoPciDriver {
 	int pci_bar;
-	int pci_io_size;
+	int pci_ctrl_bar;
+	resource_size_t pci_io_size;
+	resource_size_t pci_ctrl_io_size;
 	void __iomem *pci_io;
+	void __iomem *pci_ctrl_io;
 	void *pci_io_buff;
 	struct pci_driver pci_driver;
 };

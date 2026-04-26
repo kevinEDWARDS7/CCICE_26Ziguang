@@ -44,8 +44,9 @@ module dl_fpga_prj #(
     input       [7:0]                    hdmi_r                        ,
     input       [7:0]                    hdmi_g                        ,
     input       [7:0]                    hdmi_b                        ,
-    inout                                hdmi_rx_scl                   ,
+    output                               hdmi_rx_scl                   ,
     inout                                hdmi_rx_sda                   ,
+    output                               rstn_out                      ,
     
     //===========================================================================
     // PCIe物理接口信号
@@ -80,15 +81,19 @@ wire       hdmi_sda_oe;
 assign hdmi_rgb565      = {hdmi_r[7:3], hdmi_g[7:2], hdmi_b[7:3]};
 assign hdmi_rx_sda      = hdmi_sda_oe ? hdmi_sda_out : 1'bz;
 assign hdmi_sda_in      = hdmi_rx_sda;
+assign rstn_out         = hdmi_power_stable;
 
 localparam [19:0] HDMI_POWER_STABLE_CYCLES = 20'd200_000;
 localparam [19:0] HDMI_IIC_STARTUP_CYCLES = 20'd1_000_000;
 reg [19:0] hdmi_startup_cnt;
 reg        hdmi_power_stable;
 reg        hdmi_iic_rstn;
+wire       hdmi_cfg_rst_n;
 
-always @(posedge clk_10m or negedge lock) begin
-    if (!lock) begin
+assign hdmi_cfg_rst_n = lock && sys_rst_n;
+
+always @(posedge clk_10m or negedge hdmi_cfg_rst_n) begin
+    if (!hdmi_cfg_rst_n) begin
         hdmi_startup_cnt  <= 20'd0;
         hdmi_power_stable <= 1'b0;
         hdmi_iic_rstn     <= 1'b0;
