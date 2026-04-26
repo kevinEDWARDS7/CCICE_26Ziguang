@@ -1,3 +1,13 @@
+#region agent log
+proc agent_debug_log {runId hypothesisId location message} {
+    if {[catch {
+        set f [open {F:/CursorProject/CCICE_26Ziguang/debug-6f1e7e.log} a]
+        puts $f "{\"sessionId\":\"6f1e7e\",\"runId\":\"$runId\",\"hypothesisId\":\"$hypothesisId\",\"location\":\"$location\",\"message\":\"$message\",\"data\":{},\"timestamp\":[clock milliseconds]}"
+        close $f
+    }]} {}
+}
+agent_debug_log post-fix H5 project/project.fdc:1 {project.fdc loaded}
+#endregion
 create_clock -name {ref_clk} [get_ports {sys_clk}] -period {40.000} -waveform {0.000 20.000}
 
 create_generated_clock -name {rst_clk} -source [get_ports {sys_clk}] [get_pins {dl_I_ips_ddr_top.u_ddrphy_top.rst_clk_gpll/clkout0}] -master_clock [get_clocks {ref_clk}] -multiply_by {84} -divide_by {84}
@@ -494,13 +504,20 @@ define_attribute {p:hdmi_rx_scl} {PAP_IO_DRIVE} {4}
 define_attribute {p:hdmi_rx_scl} {PAP_IO_NONE} {TRUE}
 define_attribute {p:hdmi_rx_scl} {PAP_IO_SLEW} {FAST}
 
-define_attribute {p:rstn_out} {PAP_IO_DIRECTION} {OUTPUT}
-define_attribute {p:rstn_out} {PAP_IO_LOC} {G25}
-define_attribute {p:rstn_out} {PAP_IO_VCCIO} {3.3}
-define_attribute {p:rstn_out} {PAP_IO_STANDARD} {LVCMOS33}
-define_attribute {p:rstn_out} {PAP_IO_DRIVE} {8}
-define_attribute {p:rstn_out} {PAP_IO_NONE} {TRUE}
-define_attribute {p:rstn_out} {PAP_IO_SLEW} {SLOW}
+# G25 is not placeable for the current device/package. Leave rstn_out
+# unconstrained until the board-specific MS7200 reset pin is confirmed.
+# A partial IO constraint block (VCCIO/IOSTANDARD without LOC) is rejected
+# by ConstraintEditor-0040 during synthesize.
+# define_attribute {p:rstn_out} {PAP_IO_DIRECTION} {OUTPUT}
+# define_attribute {p:rstn_out} {PAP_IO_LOC} {G25}
+# define_attribute {p:rstn_out} {PAP_IO_VCCIO} {3.3}
+# define_attribute {p:rstn_out} {PAP_IO_STANDARD} {LVCMOS33}
+# define_attribute {p:rstn_out} {PAP_IO_DRIVE} {8}
+# define_attribute {p:rstn_out} {PAP_IO_NONE} {TRUE}
+# define_attribute {p:rstn_out} {PAP_IO_SLEW} {SLOW}
+#region agent log
+agent_debug_log post-fix H6 project/project.fdc:rstn_out {rstn_out constraint block intentionally disabled}
+#endregion
 
 # =========================================================
 # HDMI 数据通道约束

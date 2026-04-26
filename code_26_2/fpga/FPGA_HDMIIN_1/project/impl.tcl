@@ -1032,7 +1032,7 @@ set_arch -family Logos2 -device PG2L100H -speedgrade -6 -package FBG484
 compile 
 set_arch -family Logos2 -device PG2L100H -speedgrade -6 -package FBG484
 compile -top_module dl_fpga_prj
-synthesize -dir {E:/pds/PDS_2022.2-SP6.4/syn/bin/synplify_pro.exe} -ads -selected_syn_tool_opt 2 
+synthesize -dir {E:/pds/PDS_2022.2-SP6.4/syn/bin/synplify_pro.exe} -ads -selected_syn_tool_opt 2
 set_arch -family Logos2 -device PG2L100H -speedgrade -6 -package FBG484
 compile -top_module dl_fpga_prj
 synthesize -dir {E:/pds/PDS_2022.2-SP6.4/syn/bin/synplify_pro.exe} -ads -selected_syn_tool_opt 2 
@@ -1092,9 +1092,39 @@ report_timing
 report_power 
 gen_netlist 
 gen_bit_stream -compress_bitstream true -master_configuration_clock_frequency {40M} 
+#region agent log
+proc agent_debug_log {hypothesisId message} {
+    if {[catch {
+        set f [open {F:/CursorProject/CCICE_26Ziguang/debug-6f1e7e.log} a]
+        puts $f "{\"sessionId\":\"6f1e7e\",\"runId\":\"pre-fix\",\"hypothesisId\":\"$hypothesisId\",\"location\":\"project/impl.tcl:final-flow\",\"message\":\"$message\",\"data\":{},\"timestamp\":[clock milliseconds]}"
+        close $f
+    }]} {}
+}
+#endregion
+set_arch -family Logos2 -device PG2L100H -speedgrade -6 -package FBG484
+agent_debug_log H1 {compile start}
+compile -top_module dl_fpga_prj
+agent_debug_log H4 {synthesize start}
+synthesize -dir {E:/pds/PDS_2022.2-SP6.4/syn/bin/synplify_pro.exe} -ads -selected_syn_tool_opt 2 
+agent_debug_log H1 {dev_map start}
+dev_map 
+agent_debug_log H1 {pnr start}
+pnr 
+agent_debug_log H3 {report_timing start}
+report_timing 
+agent_debug_log H1 {gen_bit_stream start}
+gen_bit_stream -compress_bitstream true -master_configuration_clock_frequency {40M} 
+agent_debug_log H1 {final flow completed}
 set_arch -family Logos2 -device PG2L100H -speedgrade -6 -package FBG484
 compile -top_module dl_fpga_prj
 synthesize -dir {E:/pds/PDS_2022.2-SP6.4/syn/bin/synplify_pro.exe} -ads -selected_syn_tool_opt 2 
+dev_map 
+pnr 
+report_timing 
+gen_bit_stream -compress_bitstream true -master_configuration_clock_frequency {40M} 
+set_arch -family Logos2 -device PG2L100H -speedgrade -6 -package FBG484
+compile -top_module dl_fpga_prj
+synthesize -ads -selected_syn_tool_opt 2 
 dev_map 
 pnr 
 report_timing 
