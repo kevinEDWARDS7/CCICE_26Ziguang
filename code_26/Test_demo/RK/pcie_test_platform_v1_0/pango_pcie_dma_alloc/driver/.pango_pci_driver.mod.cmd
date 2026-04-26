@@ -1,1 +1,0 @@
-cmd_/home/linaro/test_demo/pcie_test_platform_v1_0/pango_pcie_dma_alloc/driver/pango_pci_driver.mod := printf '%s\n'   pango_pci_driver.o | awk '!x[$$0]++ { print("/home/linaro/test_demo/pcie_test_platform_v1_0/pango_pcie_dma_alloc/driver/"$$0) }' > /home/linaro/test_demo/pcie_test_platform_v1_0/pango_pcie_dma_alloc/driver/pango_pci_driver.mod
