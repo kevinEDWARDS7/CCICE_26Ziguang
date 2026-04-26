@@ -45,7 +45,6 @@ module mem_write_arbiter
 );
 
 reg[5:0] write_state = 6'd0;
-reg[5:0] write_state_next = 6'd0/*synthesis PAP_MARK_DEBUG="true"*/;
 reg[15:0] cnt_timer = 16'd0;
 localparam IDLE = 6'd0;
 
