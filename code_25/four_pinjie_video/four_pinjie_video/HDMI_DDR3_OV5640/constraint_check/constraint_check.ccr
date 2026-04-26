@@ -1,0 +1,216 @@
+##### Written on 2025/11/07 00:56:20 ###############################
+
+
+##### INFO ##################################################
+
+Current device : 
+	PGL50H-6FBG484
+
+Top Module : 
+	hdmi_ddr_ov5640_top
+
+Constraint File(s) : 
+	D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc
+
+##### SUMMARY ######################################################
+
+Found 0 error(s), 47 critical warning(s), 22 warning(s), out of 1399 constraint(s)
+
+
+Inapplicable constraints(except overwritten constraints):
+********************************************
+
+define_attribute {p:pixclk_in} {PAP_IO_DIRECTION} {INPUT}
+	W: ConstraintEditor-4026: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 894)] PAP_IO_DIRECTION is already defined in p:pixclk_in, new value INPUT will overwrite the current value.
+
+define_attribute {p:pixclk_in} {PAP_IO_VCCIO} {3.3}
+	W: ConstraintEditor-4026: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 896)] PAP_IO_VCCIO is already defined in p:pixclk_in, new value 3.3 will overwrite the current value.
+
+define_attribute {p:pixclk_in} {PAP_IO_STANDARD} {LVCMOS33}
+	W: ConstraintEditor-4026: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 897)] PAP_IO_STANDARD is already defined in p:pixclk_in, new value LVCMOS33 will overwrite the current value.
+
+define_attribute {p:pixclk_in} {PAP_IO_NONE} {TRUE}
+	W: ConstraintEditor-4026: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 898)] PAP_IO_NONE is already defined in p:pixclk_in, new value TRUE will overwrite the current value.
+
+define_attribute {p:pixclk_in2} {PAP_IO_DIRECTION} {INPUT}
+	W: ConstraintEditor-4026: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1046)] PAP_IO_DIRECTION is already defined in p:pixclk_in2, new value INPUT will overwrite the current value.
+
+define_attribute {p:pixclk_in2} {PAP_IO_VCCIO} {3.3}
+	W: ConstraintEditor-4026: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1048)] PAP_IO_VCCIO is already defined in p:pixclk_in2, new value 3.3 will overwrite the current value.
+
+define_attribute {p:pixclk_in2} {PAP_IO_STANDARD} {LVCMOS33}
+	W: ConstraintEditor-4026: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1049)] PAP_IO_STANDARD is already defined in p:pixclk_in2, new value LVCMOS33 will overwrite the current value.
+
+define_attribute {p:pixclk_in2} {PAP_IO_NONE} {TRUE}
+	W: ConstraintEditor-4026: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1050)] PAP_IO_NONE is already defined in p:pixclk_in2, new value TRUE will overwrite the current value.
+
+define_attribute {p:mem_dq[14]} {PAP_IO_LOC} {P3}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 253)] | Port mem_dq[14] has been placed at location P3, whose type is share pin.
+
+define_attribute {p:mem_dq[11]} {PAP_IO_LOC} {M1}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 274)] | Port mem_dq[11] has been placed at location M1, whose type is share pin.
+
+define_attribute {p:mem_dq[9]} {PAP_IO_LOC} {M2}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 288)] | Port mem_dq[9] has been placed at location M2, whose type is share pin.
+
+define_attribute {p:cmos1_data[7]} {PAP_IO_LOC} {AB13}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 538)] | Port cmos1_data[7] has been placed at location AB13, whose type is share pin.
+
+define_attribute {p:cmos1_sda} {PAP_IO_LOC} {Y13}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 625)] | Port cmos1_sda has been placed at location Y13, whose type is share pin.
+
+define_attribute {p:cmos2_href} {PAP_IO_LOC} {AB5}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 675)] | Port cmos2_href has been placed at location AB5, whose type is share pin.
+
+define_attribute {p:cmos2_vsync} {PAP_IO_LOC} {Y5}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 685)] | Port cmos2_vsync has been placed at location Y5, whose type is share pin.
+
+define_attribute {p:b_out[7]} {PAP_IO_LOC} {C18}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1197)] | Port b_out[7] has been placed at location C18, whose type is share pin.
+
+define_attribute {p:b_out[6]} {PAP_IO_LOC} {A18}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1204)] | Port b_out[6] has been placed at location A18, whose type is share pin.
+
+define_attribute {p:b_out[5]} {PAP_IO_LOC} {B18}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1211)] | Port b_out[5] has been placed at location B18, whose type is share pin.
+
+define_attribute {p:b_out[4]} {PAP_IO_LOC} {B20}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1218)] | Port b_out[4] has been placed at location B20, whose type is share pin.
+
+define_attribute {p:g_out[0]} {PAP_IO_LOC} {D17}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1302)] | Port g_out[0] has been placed at location D17, whose type is share pin.
+
+define_attribute {p:g_in[1]} {PAP_IO_LOC} {V17}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 801)] | Port g_in[1] has been placed at location V17, whose type is share pin.
+
+define_attribute {p:g_in[5]} {PAP_IO_LOC} {AB18}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 821)] | Port g_in[5] has been placed at location AB18, whose type is share pin.
+
+define_attribute {p:g_in[4]} {PAP_IO_LOC} {AA18}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 826)] | Port g_in[4] has been placed at location AA18, whose type is share pin.
+
+define_attribute {p:g_in[3]} {PAP_IO_LOC} {AB19}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 831)] | Port g_in[3] has been placed at location AB19, whose type is share pin.
+
+define_attribute {p:g_in[2]} {PAP_IO_LOC} {W18}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 836)] | Port g_in[2] has been placed at location W18, whose type is share pin.
+
+define_attribute {p:pixclk_in} {PAP_IO_LOC} {AA12}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 895)] | Port pixclk_in has been placed at location AA12, whose type is share pin.
+
+define_attribute {p:b_in2[6]} {PAP_IO_LOC} {T21}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 913)] | Port b_in2[6] has been placed at location T21, whose type is share pin.
+
+define_attribute {p:g_in2[1]} {PAP_IO_LOC} {R22}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 948)] | Port g_in2[1] has been placed at location R22, whose type is share pin.
+
+define_attribute {p:g_in2[0]} {PAP_IO_LOC} {R20}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 953)] | Port g_in2[0] has been placed at location R20, whose type is share pin.
+
+define_attribute {p:g_in2[5]} {PAP_IO_LOC} {M22}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 968)] | Port g_in2[5] has been placed at location M22, whose type is share pin.
+
+define_attribute {p:g_in2[4]} {PAP_IO_LOC} {M21}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 973)] | Port g_in2[4] has been placed at location M21, whose type is share pin.
+
+define_attribute {p:r_in2[5]} {PAP_IO_LOC} {K17}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 998)] | Port r_in2[5] has been placed at location K17, whose type is share pin.
+
+define_attribute {p:r_in2[4]} {PAP_IO_LOC} {L17}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1003)] | Port r_in2[4] has been placed at location L17, whose type is share pin.
+
+define_attribute {p:r_in2[3]} {PAP_IO_LOC} {K20}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1008)] | Port r_in2[3] has been placed at location K20, whose type is share pin.
+
+define_attribute {p:r_in2[2]} {PAP_IO_LOC} {L19}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1013)] | Port r_in2[2] has been placed at location L19, whose type is share pin.
+
+define_attribute {p:b_in3[7]} {PAP_IO_LOC} {K19}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1055)] | Port b_in3[7] has been placed at location K19, whose type is share pin.
+
+define_attribute {p:b_in3[3]} {PAP_IO_LOC} {N22}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1075)] | Port b_in3[3] has been placed at location N22, whose type is share pin.
+
+define_attribute {p:b_in3[2]} {PAP_IO_LOC} {N20}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1080)] | Port b_in3[2] has been placed at location N20, whose type is share pin.
+
+define_attribute {p:b_in3[0]} {PAP_IO_LOC} {F21}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1090)] | Port b_in3[0] has been placed at location F21, whose type is share pin.
+
+define_attribute {p:g_in3[6]} {PAP_IO_LOC} {H20}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1100)] | Port g_in3[6] has been placed at location H20, whose type is share pin.
+
+define_attribute {p:g_in3[5]} {PAP_IO_LOC} {J19}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1105)] | Port g_in3[5] has been placed at location J19, whose type is share pin.
+
+define_attribute {p:g_in3[0]} {PAP_IO_LOC} {K18}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1130)] | Port g_in3[0] has been placed at location K18, whose type is share pin.
+
+define_attribute {p:r_in3[4]} {PAP_IO_LOC} {F18}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1150)] | Port r_in3[4] has been placed at location F18, whose type is share pin.
+
+define_attribute {p:r_in3[3]} {PAP_IO_LOC} {F19}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1155)] | Port r_in3[3] has been placed at location F19, whose type is share pin.
+
+define_attribute {p:r_in3[2]} {PAP_IO_LOC} {F20}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1160)] | Port r_in3[2] has been placed at location F20, whose type is share pin.
+
+define_attribute {p:r_in3[1]} {PAP_IO_LOC} {G19}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1165)] | Port r_in3[1] has been placed at location G19, whose type is share pin.
+
+define_attribute {p:de_in3} {PAP_IO_LOC} {F22}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1175)] | Port de_in3 has been placed at location F22, whose type is share pin.
+
+define_attribute {p:hs_in3} {PAP_IO_LOC} {G20}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1180)] | Port hs_in3 has been placed at location G20, whose type is share pin.
+
+define_attribute {p:vs_in3} {PAP_IO_LOC} {G22}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1190)] | Port vs_in3 has been placed at location G22, whose type is share pin.
+
+define_attribute {p:rstn_out2} {PAP_IO_LOC} {P21}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1402)] | Port rstn_out2 has been placed at location P21, whose type is share pin.
+
+define_attribute {p:iic_rx_sda} {PAP_IO_LOC} {V20}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1419)] | Port iic_rx_sda has been placed at location V20, whose type is share pin.
+
+define_attribute {p:iic_rx_scl} {PAP_IO_LOC} {V19}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1426)] | Port iic_rx_scl has been placed at location V19, whose type is share pin.
+
+define_attribute {p:iic_scl} {PAP_IO_LOC} {C19}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1435)] | Port iic_scl has been placed at location C19, whose type is share pin.
+
+define_attribute {p:iic_sda} {PAP_IO_LOC} {A20}
+	C: ConstraintEditor-2002: [D:/PDSapp/four_pinjie_video/four_pinjie_video/HDMI_DDR3_OV5640/hdmi_ddr_ov5640_top.fdc(line number: 1442)] | Port iic_sda has been placed at location A20, whose type is share pin.
+
+
+Constraints with issues:
+********************************************
+
+
+Issues without commands:
+********************************************
+
+C: ConstraintEditor-2009: p:r_out[4] is lack of PAP_IO_SLEW, OUTPUT or INOUT PORT had better set PAP_IO_SLEW, the optional value is {SLOW, FAST}.
+
+Unconstrained ports:
+********************************************
+
+W: ConstraintEditor-4019: Port Bus 'cmos_init_done' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port 'ddr_init_done' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port 'hdmi_int_led' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port 'heart_beat_led' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port 'i_p_l2rxn' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port 'i_p_l2rxp' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port 'i_p_l3rxn' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port 'i_p_l3rxp' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port 'i_p_refckn_0' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port 'i_p_refckp_0' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port 'o_p_l2txn' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port 'o_p_l2txp' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port 'o_p_l3txn' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port 'o_p_l3txp' unspecified I/O constraint.
+
+Constraints with matching wildcard expressions:
+********************************************
+
+

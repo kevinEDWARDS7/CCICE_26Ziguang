@@ -1,4 +1,4 @@
-                                            #!/bin/sh
+#!/bin/sh
 set -eu
 
 SCRIPT_DIR=$(CDPATH= cd "$(dirname "$0")" && pwd)
@@ -112,8 +112,41 @@ check_programs() {
     fi
 }
 
+find_pcie_bdf() {
+    if command -v lspci >/dev/null 2>&1; then
+        lspci -Dnn | awk '/0755:0755/{print $1; exit}'
+    fi
+}
+
+print_pcie_status() {
+    BDF="$(find_pcie_bdf)"
+
+    echo
+    echo "== PCIe status =="
+    if [ -z "$BDF" ]; then
+        echo "0755:0755 PCIe device not found by lspci"
+        return 0
+    fi
+
+    echo "BDF=$BDF"
+    SYS="/sys/bus/pci/devices/$BDF"
+    if [ -r "$SYS/resource" ]; then
+        echo "-- resources --"
+        awk '{printf "BAR%d start=%s end=%s flags=%s\n", NR-1, $1, $2, $3}' "$SYS/resource"
+    fi
+
+    if command -v lspci >/dev/null 2>&1; then
+        echo "-- link/driver --"
+        lspci -s "$BDF" -vvv 2>/dev/null | grep -E "Control:|LnkSta:|Kernel driver|Region" || true
+    fi
+
+    echo "-- recent pango logs --"
+    dmesg | grep -iE "pango|DMA control|BAR1|BAR0" | tail -40 || true
+}
+
 probe_pcie() {
     "$PROBE" --pcie "$PCIE_DEV"
+    print_pcie_status
 }
 
 run_app() {

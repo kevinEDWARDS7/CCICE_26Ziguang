@@ -1,0 +1,119 @@
+##### Written on 2025/11/07 16:25:51 ###############################
+
+
+##### INFO ##################################################
+
+Current device : 
+	PG2L100H-6FBG484
+
+Top Module : 
+	dl_fpga_prj
+
+Constraint File(s) : 
+	E:/11.7/dl/dl/project/project.fdc
+
+##### SUMMARY ######################################################
+
+Found 0 error(s), 20 critical warning(s), 20 warning(s), out of 742 constraint(s)
+
+
+Inapplicable constraints(except overwritten constraints):
+********************************************
+
+define_attribute {p:sys_rst_n} {PAP_IO_LOC} {M15}        
+	C: ConstraintEditor-2002: [E:/11.7/dl/dl/project/project.fdc(line number: 532)] | Port sys_rst_n has been placed at location M15, whose type is share pin.
+
+define_attribute {p:pcie_perst_n} {PAP_IO_LOC} {M16}
+	C: ConstraintEditor-2002: [E:/11.7/dl/dl/project/project.fdc(line number: 584)] | Port pcie_perst_n has been placed at location M16, whose type is share pin.
+
+define_attribute {p:cam1_data[7]} {PAP_IO_LOC} {AB21}
+	C: ConstraintEditor-2002: [E:/11.7/dl/dl/project/project.fdc(line number: 613)] | Port cam1_data[7] has been placed at location AB21, whose type is share pin.
+
+define_attribute {p:cam1_data[5]} {PAP_IO_LOC} {AB22}
+	C: ConstraintEditor-2002: [E:/11.7/dl/dl/project/project.fdc(line number: 623)] | Port cam1_data[5] has been placed at location AB22, whose type is share pin.
+
+define_attribute {p:cam1_data[4]} {PAP_IO_LOC} {L13}
+	C: ConstraintEditor-2002: [E:/11.7/dl/dl/project/project.fdc(line number: 628)] | Port cam1_data[4] has been placed at location L13, whose type is share pin.
+
+define_attribute {p:cam1_data[2]} {PAP_IO_LOC} {AB20}
+	C: ConstraintEditor-2002: [E:/11.7/dl/dl/project/project.fdc(line number: 638)] | Port cam1_data[2] has been placed at location AB20, whose type is share pin.
+
+define_attribute {p:cam1_data[1]} {PAP_IO_LOC} {AA19}
+	C: ConstraintEditor-2002: [E:/11.7/dl/dl/project/project.fdc(line number: 643)] | Port cam1_data[1] has been placed at location AA19, whose type is share pin.
+
+define_attribute {p:cam2_data[7]} {PAP_IO_LOC} {AB18}
+	C: ConstraintEditor-2002: [E:/11.7/dl/dl/project/project.fdc(line number: 653)] | Port cam2_data[7] has been placed at location AB18, whose type is share pin.
+
+define_attribute {p:cam2_data[6]} {PAP_IO_LOC} {P17}
+	C: ConstraintEditor-2002: [E:/11.7/dl/dl/project/project.fdc(line number: 658)] | Port cam2_data[6] has been placed at location P17, whose type is share pin.
+
+define_attribute {p:cam2_data[3]} {PAP_IO_LOC} {P15}
+	C: ConstraintEditor-2002: [E:/11.7/dl/dl/project/project.fdc(line number: 673)] | Port cam2_data[3] has been placed at location P15, whose type is share pin.
+
+define_attribute {p:cam2_data[2]} {PAP_IO_LOC} {R16}
+	C: ConstraintEditor-2002: [E:/11.7/dl/dl/project/project.fdc(line number: 678)] | Port cam2_data[2] has been placed at location R16, whose type is share pin.
+
+define_attribute {p:cam2_data[0]} {PAP_IO_LOC} {U17}
+	C: ConstraintEditor-2002: [E:/11.7/dl/dl/project/project.fdc(line number: 688)] | Port cam2_data[0] has been placed at location U17, whose type is share pin.
+
+define_attribute {p:cam1_scl} {PAP_IO_LOC} {R14}
+	C: ConstraintEditor-2002: [E:/11.7/dl/dl/project/project.fdc(line number: 693)] | Port cam1_scl has been placed at location R14, whose type is share pin.
+
+define_attribute {p:cam1_sda} {PAP_IO_LOC} {P14}
+	C: ConstraintEditor-2002: [E:/11.7/dl/dl/project/project.fdc(line number: 700)] | Port cam1_sda has been placed at location P14, whose type is share pin.
+
+define_attribute {p:cam2_reset_n} {PAP_IO_LOC} {AA21}
+	C: ConstraintEditor-2002: [E:/11.7/dl/dl/project/project.fdc(line number: 728)] | Port cam2_reset_n has been placed at location AA21, whose type is share pin.
+
+define_attribute {p:cam1_pclk} {PAP_IO_LOC} {T18}
+	C: ConstraintEditor-2002: [E:/11.7/dl/dl/project/project.fdc(line number: 740)] | Port cam1_pclk has been placed at location T18, whose type is share pin.
+
+define_attribute {p:cam1_vsync} {PAP_IO_LOC} {W17}
+	C: ConstraintEditor-2002: [E:/11.7/dl/dl/project/project.fdc(line number: 745)] | Port cam1_vsync has been placed at location W17, whose type is share pin.
+
+define_attribute {p:cam2_href} {PAP_IO_LOC} {U18}
+	C: ConstraintEditor-2002: [E:/11.7/dl/dl/project/project.fdc(line number: 750)] | Port cam2_href has been placed at location U18, whose type is share pin.
+
+define_attribute {p:cam2_pclk} {PAP_IO_LOC} {P16}
+	C: ConstraintEditor-2002: [E:/11.7/dl/dl/project/project.fdc(line number: 755)] | Port cam2_pclk has been placed at location P16, whose type is share pin.
+
+define_attribute {p:cam2_vsync} {PAP_IO_LOC} {R17}
+	C: ConstraintEditor-2002: [E:/11.7/dl/dl/project/project.fdc(line number: 760)] | Port cam2_vsync has been placed at location R17, whose type is share pin.
+
+
+Constraints with issues:
+********************************************
+
+
+Issues without commands:
+********************************************
+
+
+Unconstrained ports:
+********************************************
+
+W: ConstraintEditor-4019: Port Bus 'o_pl_err' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port Bus 'o_rdecer_2' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port Bus 'o_rdisper_2' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port Bus 'o_rxstatus_2' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port Bus 'o_wtchdg_st_0' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port Bus 'pcie_rxn' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port Bus 'pcie_rxp' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port Bus 'pcie_txn' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port Bus 'pcie_txp' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port 'i_p_l2rxn' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port 'i_p_l2rxp' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port 'o_p_l2txn' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port 'o_p_l2txp' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port 'o_p_lx_cdr_align_2' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port 'o_p_pll_lock_0' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port 'o_p_rx_sigdet_sta_2' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port 'o_pll_done_0' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port 'o_rxlane_done_2' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port 'o_txlane_done_2' unspecified I/O constraint.
+W: ConstraintEditor-4019: Port 'tx_disable' unspecified I/O constraint.
+
+Constraints with matching wildcard expressions:
+********************************************
+
+
