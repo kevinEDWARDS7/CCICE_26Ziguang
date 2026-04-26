@@ -196,6 +196,14 @@ ls -l /tmp/hdmi_pcie_8lines.rgb565
 hexdump -C /tmp/hdmi_pcie_8lines.rgb565 | head -40
 ```
 
+如果 dump 仍然全 0，可用 DMA 哨兵区分“FPGA 写入了 0”和“FPGA 没有写到 RK 缓冲区”：
+
+```sh
+sudo ./pango_pcie_drm_c --no-display --frames 1 --dump-lines 8 --dump-frame /tmp/hdmi_pcie_sentinel.rgb565 --dma-sentinel 0xa5
+```
+
+输出中的 `sentinel_bytes` 若接近 dump 大小，表示 MWr 没有覆盖缓冲区；若仍为 0 且 `nonzero_bytes=0`，表示 FPGA 发起了 MWr 但数据本身是 0。
+
 连续显示：
 
 ```sh

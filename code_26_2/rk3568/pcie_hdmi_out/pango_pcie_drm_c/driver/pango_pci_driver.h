@@ -30,6 +30,9 @@
 #define DMA_MAX_PACKET_SIZE           4096
 #define DMA_MIN_PACKET_SIZE           4
 
+#define DMA_CMD_SENTINEL_ENABLE       0x80000000U
+#define DMA_CMD_SENTINEL_MASK         0x000000ffU
+
 #define CMD_REG_OFFSET                0x100
 #define RW_ADDR_LO_OFFSET             0x110
 #define RW_ADDR_HI_OFFSET             0x120

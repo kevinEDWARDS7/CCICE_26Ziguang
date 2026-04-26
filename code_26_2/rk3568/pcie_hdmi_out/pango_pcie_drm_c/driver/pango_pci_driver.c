@@ -23,6 +23,7 @@ static DMA_INFO dma_info;
 static DMA_PERFORMANCE_CONFIG performance_config;
 static PERFORMANCE_OPERATION performance_operation;
 static struct pci_dev *op_dev;
+static unsigned int dma_map_log_count;
 
 static int init_pango_cdev(struct cdev *pango_cdev);
 static int init_pango_pci_driver(struct pci_driver *pango_pci_driver);
@@ -339,9 +340,14 @@ long pango_cdev_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		dma_info.cmd.value = 0;
 		dma_info.cmd.data.length = dma_operation.current_len - 1;
 		dma_info.cmd.data.addr_type = dma_info.addr_r.addr_size;
-		LOG("DMA map len=%u bytes r=%pad w=%pad offset=0x%x\n",
-		    len_bytes, &dma_info.addr_r.base_addr, &dma_info.addr_w.base_addr,
-		    dma_operation.offset_addr);
+		if (dma_map_log_count < 8U) {
+			LOG("DMA map len=%u bytes r=%pad w=%pad offset=0x%x\n",
+			    len_bytes, &dma_info.addr_r.base_addr, &dma_info.addr_w.base_addr,
+			    dma_operation.offset_addr);
+		} else if (dma_map_log_count == 8U) {
+			LOG("DMA map logging suppressed\n");
+		}
+		++dma_map_log_count;
 		break;
 
 	case PCI_WRITE_TO_KERNEL_CMD:
@@ -385,7 +391,10 @@ long pango_cdev_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 			ret = -EINVAL;
 			break;
 		}
-		memset(dma_info.addr_w.data_buf, 0, dma_operation.current_len * 4U);
+		memset(dma_info.addr_w.data_buf,
+		       (dma_operation.cmd & DMA_CMD_SENTINEL_ENABLE) ?
+		       (dma_operation.cmd & DMA_CMD_SENTINEL_MASK) : 0,
+		       dma_operation.current_len * 4U);
 		dma_info.cmd.data.op_type = 1;
 		dma_info.cmd.data.addr_type = dma_info.addr_w.addr_size;
 		set_dma_addr(&dma_info.addr_w, pci_pango);
