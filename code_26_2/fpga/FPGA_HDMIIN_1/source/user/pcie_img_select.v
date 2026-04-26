@@ -31,17 +31,10 @@ localparam  [11:0]  ROW_NUM = 12'd1080;
 
 
 
-reg                   dma_sim_vs_temp     ;
-reg  [15:0]           dma_sim_vs_cnt      ;
 reg                   dma_sim_vs_raw_dly  ;
 wire                  dma_sim_vs_start    ;
 reg                   stream_ready        ;
-// vs pos
-reg                   dma_sim_vs_dly1     ;
-reg                   dma_sim_vs_dly2     ;
-reg                   dma_sim_vs_pos      ;
-reg                   dma_sim_vs_neg      ;
-reg                   dma_sim_vs_neg_flag ; 
+reg                   frame_start_pending ;
 reg                   dma_data_req_ahead  ;    
 reg                   dma_data_req_ahead_dly;
 
@@ -94,7 +87,7 @@ always @(posedge clk)begin
     else if (dma_wr_data_req == 1'b1 && stream_ready == 1'b1 && col_cnt == COL_NUM)begin
         col_cnt <= 12'd1;
     end
-    else if (dma_sim_vs_start == 1'b1 || dma_sim_vs_pos == 1'b1)begin
+    else if (dma_sim_vs_start == 1'b1)begin
         col_cnt <= 12'd1;
     end
     else if (dma_wr_data_req == 1'b1 && stream_ready == 1'b1)begin
@@ -112,7 +105,7 @@ always @(posedge clk)begin
     else if (dma_wr_data_req == 1'b1 && stream_ready == 1'b1 && col_cnt == COL_NUM && row_cnt == ROW_NUM)begin
         row_cnt <= 12'd1;
     end
-    else if (dma_sim_vs_start == 1'b1 || dma_sim_vs_pos == 1'b1)begin
+    else if (dma_sim_vs_start == 1'b1)begin
         row_cnt <= 12'd1;
     end
     else if (dma_wr_data_req == 1'b1 && stream_ready == 1'b1 && col_cnt == COL_NUM)begin
@@ -125,68 +118,24 @@ end
 
 always @(posedge clk)begin
     if (!rst_n)begin
-        dma_sim_vs_cnt <= 16'd0;
+        frame_start_pending <= 1'b0;
     end
     else if (dma_sim_vs_start == 1'b1)begin
-        dma_sim_vs_cnt <= 16'd1;
-    end
-    else if (dma_sim_vs_cnt != 16'd0 && dma_sim_vs_cnt < 16'd255)begin
-        dma_sim_vs_cnt <= dma_sim_vs_cnt + 16'd1;
-    end
-    else begin
-        dma_sim_vs_cnt <= 16'd0;
-    end
-end
-
-always @(posedge clk)begin
-    if (!rst_n)begin
-        dma_sim_vs_temp <= 1'b0;
-    end
-    else if (dma_sim_vs_cnt >= 16'd200)begin
-        dma_sim_vs_temp <= 1'b1;
-    end
-    else begin
-        dma_sim_vs_temp <= 1'b0;
-    end
-end
-
-always @(posedge clk)begin
-    if (!rst_n)begin
-        dma_sim_vs_dly1 <= 1'b0;
-        dma_sim_vs_dly2 <= 1'b0;
-        dma_sim_vs_pos  <= 1'b0;
-        dma_sim_vs_neg  <= 1'b0;
-    end
-    else begin
-        dma_sim_vs_dly1 <= dma_sim_vs_temp;
-        dma_sim_vs_dly2 <= dma_sim_vs_dly1;
-        dma_sim_vs_pos  <= dma_sim_vs_dly1 & (~dma_sim_vs_dly2);
-        dma_sim_vs_neg  <= (~dma_sim_vs_dly1) & dma_sim_vs_dly2; 
-    end
-end
-
-always @(posedge clk)begin
-    if (!rst_n)begin
-        dma_sim_vs_neg_flag <= 1'b0;
-    end
-    else if (dma_sim_vs_neg == 1'b1)begin
-        dma_sim_vs_neg_flag <= 1'b1;
+        frame_start_pending <= 1'b1;
     end
     else if (line_full_flag == 1'b1)begin
-        dma_sim_vs_neg_flag <= 1'b0;
+        frame_start_pending <= 1'b0;
     end
     else begin
-        dma_sim_vs_neg_flag <= dma_sim_vs_neg_flag;
+        frame_start_pending <= frame_start_pending;
     end
 end
-
-
 
 always @(posedge clk)begin
     if (!rst_n)begin
         dma_data_req_ahead <= 1'b0;
     end
-    else if (dma_sim_vs_neg_flag == 1'b1 && line_full_flag == 1'b1)begin
+    else if (frame_start_pending == 1'b1 && line_full_flag == 1'b1)begin
         dma_data_req_ahead <= 1'b1;
     end
     else begin

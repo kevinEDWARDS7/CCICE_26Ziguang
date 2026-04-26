@@ -213,10 +213,10 @@
             <data>RAM(GB)</data>
         </column_headers>
         <row>
-            <data>0h:0m:16s</data>
-            <data>0h:0m:16s</data>
-            <data>0h:1m:10s</data>
-            <data>288</data>
+            <data>0h:0m:19s</data>
+            <data>0h:0m:19s</data>
+            <data>0h:1m:36s</data>
+            <data>289</data>
             <data>WINDOWS 10 x86_64</data>
             <data>AMD Ryzen 7 8845H w/ Radeon 780M Graphics</data>
             <data>31</data>
@@ -624,7 +624,7 @@
             <data message="4">Verilog-0002: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 5)] Analyzing module dl_fpga_prj (library work)</data>
         </row>
         <row>
-            <data message="5">Verilog-2006: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 158)] Ansi_parameter force parameter in body to localparam</data>
+            <data message="5">Verilog-2006: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 177)] Ansi_parameter force parameter in body to localparam</data>
         </row>
         <row>
             <data message="4">Verilog-0001: Analyzing file F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/pcie/pcie_dma_core.v</data>
@@ -2460,7 +2460,7 @@
     CTRL_ADDR_WIDTH = 32'b00000000000000000000000000011100</data>
         </row>
         <row>
-            <data message="4">Verilog-0004: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 116)] Elaborating instance u_hdmi_rx_ms7200_ctl</data>
+            <data message="4">Verilog-0004: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 135)] Elaborating instance u_hdmi_rx_ms7200_ctl</data>
         </row>
         <row>
             <data message="4">Verilog-0003: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/hdmi/ms7200_ctl.v(line number: 22)] Elaborating module ms7200_ctl</data>
@@ -2476,7 +2476,7 @@
     RD_BAK = 7'b1000000</data>
         </row>
         <row>
-            <data message="4">Verilog-0004: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 137)] Elaborating instance u_hdmi_rx_iic_dri</data>
+            <data message="4">Verilog-0004: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 156)] Elaborating instance u_hdmi_rx_iic_dri</data>
         </row>
         <row>
             <data message="4">Verilog-0003: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/hdmi/iic_dri.v(line number: 23)] Elaborating module iic_dri</data>
@@ -2491,7 +2491,7 @@
     DATA_BYTE = 2'b01</data>
         </row>
         <row>
-            <data message="4">Verilog-0004: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 175)] Elaborating instance dl_pll_inst</data>
+            <data message="4">Verilog-0004: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 194)] Elaborating instance dl_pll_inst</data>
         </row>
         <row>
             <data message="4">Verilog-0003: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/project/ipcore/pll/pll.v(line number: 18)] Elaborating module pll</data>
@@ -2500,13 +2500,13 @@
             <data message="4">Verilog-0004: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/project/ipcore/pll/pll.v(line number: 304)] Elaborating instance u_gpll</data>
         </row>
         <row>
-            <data message="4">Verilog-0004: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 264)] Elaborating instance dl_pcie_img_select_inst</data>
+            <data message="4">Verilog-0004: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 283)] Elaborating instance dl_pcie_img_select_inst</data>
         </row>
         <row>
             <data message="4">Verilog-0003: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/user/pcie_img_select.v(line number: 1)] Elaborating module pcie_image_channel_selector</data>
         </row>
         <row>
-            <data message="4">Verilog-0004: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 288)] Elaborating instance dl_axi_ctrl_inst</data>
+            <data message="4">Verilog-0004: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 307)] Elaborating instance dl_axi_ctrl_inst</data>
         </row>
         <row>
             <data message="4">Verilog-0003: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/frame_ddr3/axi_ctrl_256_burst.v(line number: 2)] Elaborating module mem_axi_burst_ctrl_core</data>
@@ -3531,13 +3531,13 @@
             <data message="5">Verilog-2020: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/frame_ddr3/aq_axi_master_256_burst.v(line number: 102)] Net reg_wr_len[31] in ddr_axi256_burst_engine(original module ddr_axi256_burst_engine) does not have a driver, tie it to 0</data>
         </row>
         <row>
-            <data message="5">Verilog-2019: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 288)] Width mismatch between port M_AXI_AWADDR and signal bound to it for instantiated module mem_axi_burst_ctrl_core</data>
+            <data message="5">Verilog-2019: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 307)] Width mismatch between port M_AXI_AWADDR and signal bound to it for instantiated module mem_axi_burst_ctrl_core</data>
         </row>
         <row>
-            <data message="5">Verilog-2019: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 288)] Width mismatch between port M_AXI_ARADDR and signal bound to it for instantiated module mem_axi_burst_ctrl_core</data>
+            <data message="5">Verilog-2019: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 307)] Width mismatch between port M_AXI_ARADDR and signal bound to it for instantiated module mem_axi_burst_ctrl_core</data>
         </row>
         <row>
-            <data message="4">Verilog-0004: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 380)] Elaborating instance dl_I_ips_ddr_top</data>
+            <data message="4">Verilog-0004: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 399)] Elaborating instance dl_I_ips_ddr_top</data>
         </row>
         <row>
             <data message="4">Verilog-0003: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/project/ipcore/ddr3/ddr3.v(line number: 2)] Elaborating module ddr3</data>
@@ -5773,7 +5773,7 @@
             <data message="5">Verilog-2023: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/project/ipcore/ddr3/ddr3.v(line number: 313)] Give initial value 0 for the no drive pin ddr_zqcs_req in module instance dl_fpga_prj/dl_I_ips_ddr_top.u_ips_ddrc_top</data>
         </row>
         <row>
-            <data message="4">Verilog-0004: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 460)] Elaborating instance dl_u_refclk_perstn_debounce</data>
+            <data message="4">Verilog-0004: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 479)] Elaborating instance dl_u_refclk_perstn_debounce</data>
         </row>
         <row>
             <data message="4">Verilog-0003: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/project/ipcore/pcie_test/rtl/hsst_pipe/hsst_rst_cross_sync_v1_0.v(line number: 6)] Elaborating module hsst_rst_cross_sync_v1_0</data>
@@ -5784,19 +5784,19 @@
     RST_CNTR_VALUE = 16'b1100000000000000</data>
         </row>
         <row>
-            <data message="4">Verilog-0004: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 466)] Elaborating instance dl_u_ref_core_rstn_sync</data>
+            <data message="4">Verilog-0004: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 485)] Elaborating instance dl_u_ref_core_rstn_sync</data>
         </row>
         <row>
             <data message="4">Verilog-0003: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/project/ipcore/pcie_test/rtl/hsst_pipe/hsst_rst_sync_v1_0.v(line number: 6)] Elaborating module hsst_rst_sync_v1_0</data>
         </row>
         <row>
-            <data message="4">Verilog-0004: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 473)] Elaborating instance dl_u_pclk_core_rstn_sync</data>
+            <data message="4">Verilog-0004: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 492)] Elaborating instance dl_u_pclk_core_rstn_sync</data>
         </row>
         <row>
             <data message="4">Verilog-0003: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/project/ipcore/pcie_test/rtl/hsst_pipe/hsst_rst_sync_v1_0.v(line number: 6)] Elaborating module hsst_rst_sync_v1_0</data>
         </row>
         <row>
-            <data message="4">Verilog-0004: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 488)] Elaborating instance dl_u_ips2l_pcie_dma</data>
+            <data message="4">Verilog-0004: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 507)] Elaborating instance dl_u_ips2l_pcie_dma</data>
         </row>
         <row>
             <data message="4">Verilog-0003: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/pcie/pcie_dma_core.v(line number: 2)] Elaborating module pcie_dma_core</data>
@@ -6441,7 +6441,7 @@
     DEVICE_TYPE = 3'b000</data>
         </row>
         <row>
-            <data message="4">Verilog-0004: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 544)] Elaborating instance dl_u_ips2l_pcie_wrap</data>
+            <data message="4">Verilog-0004: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/dl_fpga_prj.v(line number: 563)] Elaborating instance dl_u_ips2l_pcie_wrap</data>
         </row>
         <row>
             <data message="4">Verilog-0003: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/project/ipcore/pcie_test/pcie_test.v(line number: 16)] Elaborating module pcie_test</data>
@@ -8778,30 +8778,6 @@
             <data message="5">Verilog-2020: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/project/ipcore/pcie_test/rtl/ips2l_pcie_soft_phy_v1_2c.v(line number: 299)] Net TCLK2FABRIC[3] in ips2l_pcie_soft_phy_v1_2c(original module ips2l_pcie_soft_phy_v1_2c) does not have a driver, tie it to 0</data>
         </row>
         <row>
-            <data message="5">Sdm-2000: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/user/pcie_img_select.v(line number: 60)] Removed register node dl_pcie_img_select_inst/dma_sim_vs_cnt[15] that is stuck at constant 0.</data>
-        </row>
-        <row>
-            <data message="5">Sdm-2000: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/user/pcie_img_select.v(line number: 60)] Removed register node dl_pcie_img_select_inst/dma_sim_vs_cnt[14] that is stuck at constant 0.</data>
-        </row>
-        <row>
-            <data message="5">Sdm-2000: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/user/pcie_img_select.v(line number: 60)] Removed register node dl_pcie_img_select_inst/dma_sim_vs_cnt[13] that is stuck at constant 0.</data>
-        </row>
-        <row>
-            <data message="5">Sdm-2000: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/user/pcie_img_select.v(line number: 60)] Removed register node dl_pcie_img_select_inst/dma_sim_vs_cnt[12] that is stuck at constant 0.</data>
-        </row>
-        <row>
-            <data message="5">Sdm-2000: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/user/pcie_img_select.v(line number: 60)] Removed register node dl_pcie_img_select_inst/dma_sim_vs_cnt[11] that is stuck at constant 0.</data>
-        </row>
-        <row>
-            <data message="5">Sdm-2000: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/user/pcie_img_select.v(line number: 60)] Removed register node dl_pcie_img_select_inst/dma_sim_vs_cnt[10] that is stuck at constant 0.</data>
-        </row>
-        <row>
-            <data message="5">Sdm-2000: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/user/pcie_img_select.v(line number: 60)] Removed register node dl_pcie_img_select_inst/dma_sim_vs_cnt[9] that is stuck at constant 0.</data>
-        </row>
-        <row>
-            <data message="5">Sdm-2000: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/user/pcie_img_select.v(line number: 60)] Removed register node dl_pcie_img_select_inst/dma_sim_vs_cnt[8] that is stuck at constant 0.</data>
-        </row>
-        <row>
             <data message="4">Removed inst ch2_data_req that is redundant to ch1_data_req.</data>
         </row>
         <row>
@@ -8937,7 +8913,7 @@
             <data message="4">Removed inst dqs_gate_comp_en_r that is redundant to dqs_gate_comp_done.</data>
         </row>
         <row>
-            <data message="5">Sdm-2000: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/user/pcie_img_select.v(line number: 207)] Removed register node dl_pcie_img_select_inst/ch1_data_req that is stuck at constant 0.</data>
+            <data message="5">Sdm-2000: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/user/pcie_img_select.v(line number: 156)] Removed register node dl_pcie_img_select_inst/ch1_data_req that is stuck at constant 0.</data>
         </row>
         <row>
             <data message="5">Sdm-2000: [F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/pcie/pcie_dma_ctrl/ips2l_pcie_dma_controller.v(line number: 428)] Removed register node dl_u_ips2l_pcie_dma/dl_u_ips2l_pcie_dma_controller/o_user_define_data_flag that is stuck at constant 0.</data>
@@ -9237,15 +9213,6 @@
             <data message="5">Loop was found during constant probe.</data>
         </row>
         <row>
-            <data message="4">Constant propagation done on N215 (bmsREDAND).</data>
-        </row>
-        <row>
-            <data message="4">Constant propagation done on N227 (bmsWIDEMUX).</data>
-        </row>
-        <row>
-            <data message="4">Constant propagation done on N226 (bmsWIDEMUX).</data>
-        </row>
-        <row>
             <data message="5">Loop was found during constant probe.</data>
         </row>
         <row>
@@ -9273,7 +9240,10 @@
             <data message="5">Loop was found during constant probe.</data>
         </row>
         <row>
-            <data message="5">Loop was found during constant probe.</data>
+            <data message="4">Constant propagation done on N163 (bmsWIDEMUX).</data>
+        </row>
+        <row>
+            <data message="4">Constant propagation done on N193_1 (bmsPMUX).</data>
         </row>
         <row>
             <data message="5">Loop was found during constant probe.</data>
@@ -9297,7 +9267,7 @@
             <data message="5">Loop was found during constant probe.</data>
         </row>
         <row>
-            <data message="5">Loop was found during constant probe.</data>
+            <data message="4">Constant propagation done on N137 (bmsWIDEMUX).</data>
         </row>
         <row>
             <data message="5">Loop was found during constant probe.</data>

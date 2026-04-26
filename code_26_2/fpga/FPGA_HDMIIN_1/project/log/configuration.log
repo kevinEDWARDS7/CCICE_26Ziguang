@@ -12441,3 +12441,104 @@ Cable index 0:USB Cable II/fffffffffffffffe
 [Debug] [2026-4-26 17:50:50] Log::Print : The done bit is 1
 [Debug] [2026-4-26 17:50:50] Log::Print : COMMAND[Program] execute successfully, takes 5.5 secs.
 >>>>>>> 2a5b69e8ab9968dd106cc65817409f251b8e3864
+[Info] [2026-4-26 23:55:54] /***************************Start Configuration***************************/
+[Info] [2026-4-26 23:55:54] Path: F:/Ziguang/PDS_2022.2-SP6.4/bin
+[Info] [2026-4-26 23:55:54] Version: 146967
+[Info] [2026-4-26 23:55:55] Current Path: F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/project
+[Info] [2026-4-26 23:55:55] PDS Dir Path: F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/project
+[Info] [2026-4-26 23:56:05] Configuration is not connect with server. connect first then scan chain.
+[Debug] [2026-4-26 23:56:05] Client Local host name:KevinEdwards
+[Debug] [2026-4-26 23:56:05] Client Local Address:192.168.1.10
+[Debug] [2026-4-26 23:56:05] Client Local Address:10.140.239.214
+[Debug] [2026-4-26 23:56:05] Client Local Address:192.168.231.1
+[Debug] [2026-4-26 23:56:05] Server Address:127.0.0.1, Port:65420
+[Debug] [2026-4-26 23:56:05] Log::Print : Connecting to server[127.0.0.1 : 65420].
+[Info] [2026-4-26 23:56:05] Connect OK, Server: 127.0.0.1  Port: 65420
+[Debug] [2026-4-26 23:56:05] Finish.
+[Info] [2026-4-26 23:56:05] Connect server succeeded
+[Debug] [2026-4-26 23:56:05] Send RPC:1
+[Debug] [2026-4-26 23:56:05] Send cmd [check version information:40004] OK
+[Debug] [2026-4-26 23:56:05] Log::Print : Connect to server[127.0.0.1 : 65420] successfully.
+[Debug] [2026-4-26 23:56:08] Send RPC:2
+[Debug] [2026-4-26 23:56:08] Send cmd [get_cable_paras:40010] OK
+[Debug] [2026-4-26 23:56:08] Begin to send initialize chain cmd...
+[Debug] [2026-4-26 23:56:08] Send RPC:3
+[Debug] [2026-4-26 23:56:08] Send cmd [Open config cable:20001] OK
+[Debug] [2026-4-26 23:56:08] End to send initialize chain cmd.
+[Debug] [2026-4-26 23:56:08] COMMAND[check version information] execute successfully, takes 2.8 secs.
+[Debug] [2026-4-26 23:56:08] Log::Print : COMMAND[check version information] execute successfully, takes 2.8 secs.
+[Debug] [2026-4-26 23:56:11] COMMAND[get_cable_paras] execute successfully, takes 2.9 secs.
+[Debug] [2026-4-26 23:56:11] Log::Print : The cable List : 
+Cable index 0:USB Cable II/fffffffffffffffe 
+
+[Debug] [2026-4-26 23:56:11] Log::Print : COMMAND[get_cable_paras] execute successfully, takes 2.9 secs.
+[Debug] [2026-4-26 23:56:12] begin the exec of open cable cmd...
+[Debug] [2026-4-26 23:56:12] Begin to deal with chain from server...
+[Debug] [2026-4-26 23:56:12] Begin to set user chain...
+[Debug] [2026-4-26 23:56:12] End to set user chain.
+[Debug] [2026-4-26 23:56:12] Begin to update graphic item and tree item ...
+[Debug] [2026-4-26 23:56:12] End to update graphic item and tree item ...
+[Debug] [2026-4-26 23:56:12] Log::Print : PANGO USB CABLE II cable driver: D2XX DLL
+[Debug] [2026-4-26 23:56:12] Log::Print : PG2L100H
+[Debug] [2026-4-26 23:56:12] Log::Print : This device configure situation (done bit): 1
+[Info] [2026-4-26 23:56:13] set OpenLastPath: F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/project/generate_bitstream/dl_fpga_prj.sbit
+[Debug] [2026-4-26 23:56:13] begin to get device info from CFG file...
+[Debug] [2026-4-26 23:56:13] end to get device info from CFG file...
+[Debug] [2026-4-26 23:56:13] Begin to update graphic item and tree item ...
+[Debug] [2026-4-26 23:56:13] End to update graphic item and tree item ...
+[Debug] [2026-4-26 23:56:13] Begin to update graphic item and tree item ...
+[Debug] [2026-4-26 23:56:13] End to update graphic item and tree item ...
+[Debug] [2026-4-26 23:56:13] End to deal wiht chain from server.
+[Debug] [2026-4-26 23:56:13] end the exec of open cable cmd.
+[Debug] [2026-4-26 23:56:13] COMMAND[Open config cable] execute successfully, takes 5.2 secs.
+[Debug] [2026-4-26 23:56:13] Log::Print : COMMAND[Open config cable] execute successfully, takes 5.2 secs.
+[Debug] [2026-4-26 23:56:14] Begin to send programming cmd...
+[Debug] [2026-4-26 23:56:14] Send RPC:4
+[Debug] [2026-4-26 23:56:14] Begin to send program data.
+[Debug] [2026-4-26 23:56:14] End to send program data.
+[Debug] [2026-4-26 23:56:14] Send cmd [Program:20002] OK
+[Debug] [2026-4-26 23:56:15] The value of Progress is 6
+[Debug] [2026-4-26 23:56:15] The value of Progress is 10
+[Debug] [2026-4-26 23:56:15] The value of Progress is 15
+[Debug] [2026-4-26 23:56:15] The value of Progress is 20
+[Debug] [2026-4-26 23:56:15] The value of Progress is 25
+[Debug] [2026-4-26 23:56:15] The value of Progress is 30
+[Debug] [2026-4-26 23:56:15] The value of Progress is 35
+[Debug] [2026-4-26 23:56:16] The value of Progress is 40
+[Debug] [2026-4-26 23:56:16] The value of Progress is 45
+[Debug] [2026-4-26 23:56:16] The value of Progress is 50
+[Debug] [2026-4-26 23:56:16] The value of Progress is 55
+[Debug] [2026-4-26 23:56:16] The value of Progress is 60
+[Debug] [2026-4-26 23:56:16] The value of Progress is 65
+[Debug] [2026-4-26 23:56:16] The value of Progress is 70
+[Debug] [2026-4-26 23:56:16] The value of Progress is 75
+[Debug] [2026-4-26 23:56:16] The value of Progress is 80
+[Debug] [2026-4-26 23:56:16] The value of Progress is 85
+[Debug] [2026-4-26 23:56:17] The value of Progress is 90
+[Debug] [2026-4-26 23:56:17] The value of Progress is 95
+[Debug] [2026-4-26 23:56:17] The value of Progress is 100
+[Debug] [2026-4-26 23:56:17] COMMAND[Program] execute successfully, takes 2.7 secs.
+[Debug] [2026-4-26 23:56:17] End to send programming cmd.
+[Debug] [2026-4-26 23:56:17] Log::Print : The done bit is 1
+[Debug] [2026-4-26 23:56:17] Log::Print : COMMAND[Program] execute successfully, takes 2.7 secs.
+[Debug] [2026-4-27 00:11:57] Begin to send initialize chain cmd...
+[Debug] [2026-4-27 00:11:57] Send RPC:5
+[Debug] [2026-4-27 00:11:57] Send cmd [Open config cable:20001] OK
+[Debug] [2026-4-27 00:11:57] End to send initialize chain cmd.
+[Debug] [2026-4-27 00:11:58] begin the exec of open cable cmd...
+[Debug] [2026-4-27 00:11:58] Begin to deal with chain from server...
+[Debug] [2026-4-27 00:11:58] Begin to set user chain...
+[Debug] [2026-4-27 00:11:58] End to set user chain.
+[Debug] [2026-4-27 00:11:58] Begin to update graphic item and tree item ...
+[Debug] [2026-4-27 00:11:58] End to update graphic item and tree item ...
+[Debug] [2026-4-27 00:11:58] Log::Print : PANGO USB CABLE II cable driver: D2XX DLL
+[Debug] [2026-4-27 00:11:58] Log::Print : PG2L100H
+[Debug] [2026-4-27 00:11:58] Log::Print : This device configure situation (done bit): 1
+[Debug] [2026-4-27 00:12:00] selected file name is empty and ignore.
+[Debug] [2026-4-27 00:12:00] Begin to update graphic item and tree item ...
+[Debug] [2026-4-27 00:12:00] End to update graphic item and tree item ...
+[Debug] [2026-4-27 00:12:00] End to deal wiht chain from server.
+[Debug] [2026-4-27 00:12:00] end the exec of open cable cmd.
+[Debug] [2026-4-27 00:12:00] COMMAND[Open config cable] execute successfully, takes 2.6 secs.
+[Debug] [2026-4-27 00:12:00] Log::Print : COMMAND[Open config cable] execute successfully, takes 2.6 secs.
+[Info] [2026-4-27 00:12:00] /***************************End Configration***************************/

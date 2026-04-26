@@ -81,20 +81,39 @@ assign hdmi_rgb565      = {hdmi_r[7:3], hdmi_g[7:2], hdmi_b[7:3]};
 assign hdmi_rx_sda      = hdmi_sda_oe ? hdmi_sda_out : 1'bz;
 assign hdmi_sda_in      = hdmi_rx_sda;
 
+localparam [19:0] HDMI_POWER_STABLE_CYCLES = 20'd200_000;
 localparam [19:0] HDMI_IIC_STARTUP_CYCLES = 20'd1_000_000;
-reg [19:0] hdmi_iic_startup_cnt;
+reg [19:0] hdmi_startup_cnt;
+reg        hdmi_power_stable;
 reg        hdmi_iic_rstn;
 
 always @(posedge clk_10m or negedge lock) begin
     if (!lock) begin
-        hdmi_iic_startup_cnt <= 20'd0;
-        hdmi_iic_rstn        <= 1'b0;
-    end else if (hdmi_iic_startup_cnt == HDMI_IIC_STARTUP_CYCLES) begin
-        hdmi_iic_startup_cnt <= hdmi_iic_startup_cnt;
-        hdmi_iic_rstn        <= 1'b1;
+        hdmi_startup_cnt  <= 20'd0;
+        hdmi_power_stable <= 1'b0;
+        hdmi_iic_rstn     <= 1'b0;
+    end else if (!hdmi_power_stable) begin
+        if (hdmi_startup_cnt == HDMI_POWER_STABLE_CYCLES) begin
+            hdmi_startup_cnt  <= 20'd0;
+            hdmi_power_stable <= 1'b1;
+            hdmi_iic_rstn     <= 1'b0;
+        end else begin
+            hdmi_startup_cnt  <= hdmi_startup_cnt + 20'd1;
+            hdmi_power_stable <= 1'b0;
+            hdmi_iic_rstn     <= 1'b0;
+        end
+    end else if (!hdmi_iic_rstn) begin
+        if (hdmi_startup_cnt == HDMI_IIC_STARTUP_CYCLES) begin
+            hdmi_startup_cnt <= hdmi_startup_cnt;
+            hdmi_iic_rstn    <= 1'b1;
+        end else begin
+            hdmi_startup_cnt <= hdmi_startup_cnt + 20'd1;
+            hdmi_iic_rstn    <= 1'b0;
+        end
     end else begin
-        hdmi_iic_startup_cnt <= hdmi_iic_startup_cnt + 20'd1;
-        hdmi_iic_rstn        <= 1'b0;
+        hdmi_startup_cnt  <= hdmi_startup_cnt;
+        hdmi_power_stable <= hdmi_power_stable;
+        hdmi_iic_rstn     <= hdmi_iic_rstn;
     end
 end
 
