@@ -1,0 +1,42 @@
+# Shell scripts must always use LF
+*.sh        text eol=lf
+*.bash      text eol=lf
+
+# Windows batch files use CRLF
+*.bat       text eol=crlf
+*.cmd       text eol=crlf
+
+# Source code: normalize to LF
+*.c         text eol=lf
+*.cc        text eol=lf
+*.cpp       text eol=lf
+*.h         text eol=lf
+*.go        text eol=lf
+*.py        text eol=lf
+*.tcl       text eol=lf
+*.cmake     text eol=lf
+CMakeLists.txt text eol=lf
+
+# Web
+*.html      text eol=lf
+*.css       text eol=lf
+*.js        text eol=lf
+*.ts        text eol=lf
+*.tsx       text eol=lf
+*.json      text eol=lf
+*.yaml      text eol=lf
+*.yml       text eol=lf
+
+# Binary files: no line-ending conversion
+*.rknn      binary
+*.onnx      binary
+*.pth       binary
+*.pds       binary
+*.a         binary
+*.so        binary
+*.bin       binary
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.gif       binary
+*.ico       binary
