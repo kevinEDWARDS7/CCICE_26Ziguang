@@ -18,7 +18,7 @@
 
 
 
-F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/pcie/pcie_dma_ctrl/ips2l_pcie_dma_ram/rtl/ipm2l_sdpram_v1_1_ips2l_pcie_dma_ram.v|F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/pcie/pcie_dma_ctrl/ips2l_pcie_dma_ram/rtl/ips2l_pcie_dma_ram_init_param.v|
+E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/pcie/pcie_dma_ctrl/ips2l_pcie_dma_ram/rtl/ipm2l_sdpram_v1_1_ips2l_pcie_dma_ram.v|E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/pcie/pcie_dma_ctrl/ips2l_pcie_dma_ram/rtl/ips2l_pcie_dma_ram_init_param.v|
 
 
 
@@ -133,13 +133,14 @@ F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/source/pcie/pcie_dma_ctrl/
 
 
 
-F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/project/ipcore/pcie_test/rtl/external_ram/rcv_data_ram/rtl/ipm2l_sdpram_v1_0_rcv_data_ram.v|F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/project/ipcore/pcie_test/rtl/external_ram/rcv_data_ram/rtl/rcv_data_ram_init_param.v|
 
+E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/project/ipcore/pcie_test/rtl/external_ram/rcv_data_ram/rtl/ipm2l_sdpram_v1_0_rcv_data_ram.v|E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/project/ipcore/pcie_test/rtl/external_ram/rcv_data_ram/rtl/rcv_data_ram_init_param.v|
 
-F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/project/ipcore/pcie_test/rtl/external_ram/rcv_header_ram/rtl/ipm2l_sdpram_v1_0_rcv_header_ram.v|F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/project/ipcore/pcie_test/rtl/external_ram/rcv_header_ram/rtl/rcv_header_ram_init_param.v|
 
+E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/project/ipcore/pcie_test/rtl/external_ram/rcv_header_ram/rtl/ipm2l_sdpram_v1_0_rcv_header_ram.v|E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/project/ipcore/pcie_test/rtl/external_ram/rcv_header_ram/rtl/rcv_header_ram_init_param.v|
 
-F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/project/ipcore/pcie_test/rtl/external_ram/retry_data_ram/rtl/ipm2l_spram_v1_0_retry_data_ram.v|F:/Codex/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/project/ipcore/pcie_test/rtl/external_ram/retry_data_ram/rtl/retry_data_ram_init_param.v|
+
+E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/project/ipcore/pcie_test/rtl/external_ram/retry_data_ram/rtl/ipm2l_spram_v1_0_retry_data_ram.v|E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/project/ipcore/pcie_test/rtl/external_ram/retry_data_ram/rtl/retry_data_ram_init_param.v|
 
 
 
