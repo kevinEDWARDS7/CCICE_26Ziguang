@@ -121,7 +121,7 @@ Key files:
 Purpose:
 
 - `dl_fpga_prj.v` integrates HDMI input, DDR3 buffering, and PCIe DMA.
-- `img_data_stream_reducer.v` downsamples 1280x720 RGB565 video to 640x360.
+- `img_data_stream_reducer.v` passes 1920x1080 RGB565 video into the DDR write path.
 - `pcie_image_channel_selector.v` pulls 128-bit image data from DDR3 and feeds the DMA write-data path.
 
 ### RK3568 local app and driver

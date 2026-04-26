@@ -5,20 +5,20 @@ Setup Summary(Slow Corner):
                                                                           TNS Failing      TNS Total
  Launch Clock           Capture Clock              WNS(ns)     TNS(ns)      Endpoints      Endpoints
 ----------------------------------------------------------------------------------------------------
- rst_clk                rst_clk                     36.969       0.000              0            437
- ddrphy_sysclk          ddrphy_sysclk                0.160       0.000              0          11339
- phy_dq_sysclk_1        ddrphy_sysclk                2.391       0.000              0            130
- phy_dq_sysclk_0        ddrphy_sysclk                3.523       0.000              0              1
- hdmi_pix_clk           ddrphy_sysclk               -7.482    -107.861             15             15
- ddrphy_sysclk          phy_dq_sysclk_0              1.438       0.000              0            196
- ddrphy_sysclk          phy_dq_sysclk_1              1.503       0.000              0            210
- pclk                   pclk                        -0.779     -15.415             61            981
- pclk_div2              pclk_div2                    1.108       0.000              0          11197
- ref_clk1               ref_clk1                     6.344       0.000              0           1018
- clk_10m                clk_10m                     96.124       0.000              0            476
- hdmi_pix_clk           hdmi_pix_clk                 0.656       0.000              0            234
- ddrphy_sysclk          hdmi_pix_clk                -5.407    -211.824             55             55
- clk_10m                hdmi_pix_clk                -7.365    -254.424             43             43
+ rst_clk                rst_clk                     37.372       0.000              0            437
+ ddrphy_sysclk          ddrphy_sysclk                2.190       0.000              0          11607
+ phy_dq_sysclk_1        ddrphy_sysclk                2.698       0.000              0            130
+ phy_dq_sysclk_0        ddrphy_sysclk                3.527       0.000              0              1
+ hdmi_pix_clk           ddrphy_sysclk               -7.465    -102.316             15             15
+ ddrphy_sysclk          phy_dq_sysclk_0              1.098       0.000              0            196
+ ddrphy_sysclk          phy_dq_sysclk_1              1.594       0.000              0            210
+ pclk                   pclk                        -0.009      -0.009              1            981
+ pclk_div2              pclk_div2                    0.832       0.000              0          16523
+ ref_clk1               ref_clk1                     6.147       0.000              0           1009
+ clk_10m                clk_10m                     95.981       0.000              0            571
+ ddrphy_sysclk          hdmi_pix_clk                -3.639     -43.130             13             13
+ hdmi_pix_clk           hdmi_pix_clk                 1.605       0.000              0            203
+ clk_10m                hdmi_pix_clk                -4.417      -4.417              1              1
 ====================================================================================================
 
 Hold Summary(Slow Corner):
@@ -26,20 +26,20 @@ Hold Summary(Slow Corner):
                                                                           THS Failing      THS Total
  Launch Clock           Capture Clock              WHS(ns)     THS(ns)      Endpoints      Endpoints
 ----------------------------------------------------------------------------------------------------
- rst_clk                rst_clk                      0.202       0.000              0            437
- ddrphy_sysclk          ddrphy_sysclk                0.138       0.000              0          11339
- phy_dq_sysclk_1        ddrphy_sysclk                0.792       0.000              0            130
- phy_dq_sysclk_0        ddrphy_sysclk                0.843       0.000              0              1
- hdmi_pix_clk           ddrphy_sysclk                2.337       0.000              0             15
- ddrphy_sysclk          phy_dq_sysclk_0              0.441       0.000              0            196
- ddrphy_sysclk          phy_dq_sysclk_1              0.509       0.000              0            210
- pclk                   pclk                         0.199       0.000              0            981
- pclk_div2              pclk_div2                    0.137       0.000              0          11197
- ref_clk1               ref_clk1                     0.170       0.000              0           1018
- clk_10m                clk_10m                      0.259       0.000              0            476
- hdmi_pix_clk           hdmi_pix_clk                 0.359       0.000              0            234
- ddrphy_sysclk          hdmi_pix_clk                 0.253       0.000              0             55
- clk_10m                hdmi_pix_clk                 2.419       0.000              0             43
+ rst_clk                rst_clk                      0.253       0.000              0            437
+ ddrphy_sysclk          ddrphy_sysclk                0.138       0.000              0          11607
+ phy_dq_sysclk_1        ddrphy_sysclk                0.697       0.000              0            130
+ phy_dq_sysclk_0        ddrphy_sysclk                1.028       0.000              0              1
+ hdmi_pix_clk           ddrphy_sysclk                2.149       0.000              0             15
+ ddrphy_sysclk          phy_dq_sysclk_0              0.444       0.000              0            196
+ ddrphy_sysclk          phy_dq_sysclk_1              0.476       0.000              0            210
+ pclk                   pclk                         0.256       0.000              0            981
+ pclk_div2              pclk_div2                    0.135       0.000              0          16523
+ ref_clk1               ref_clk1                     0.180       0.000              0           1009
+ clk_10m                clk_10m                      0.210       0.000              0            571
+ ddrphy_sysclk          hdmi_pix_clk                 0.338       0.000              0             13
+ hdmi_pix_clk           hdmi_pix_clk                 0.361       0.000              0            203
+ clk_10m                hdmi_pix_clk                 2.194       0.000              0              1
 ====================================================================================================
 
 Recovery Summary(Slow Corner):
@@ -47,13 +47,14 @@ Recovery Summary(Slow Corner):
                                                                           TNS Failing      TNS Total
  Launch Clock           Capture Clock              WNS(ns)     TNS(ns)      Endpoints      Endpoints
 ----------------------------------------------------------------------------------------------------
- rst_clk                rst_clk                     37.699       0.000              0            102
- ddrphy_sysclk          ddrphy_sysclk                4.529       0.000              0           2486
- pclk                   pclk                         1.221       0.000              0            101
- pclk_div2              pclk_div2                    2.102       0.000              0           1599
- ref_clk1               ref_clk1                     7.702       0.000              0            182
- ddrphy_sysclk          hdmi_pix_clk                -4.923    -107.172             32             32
- clk_10m                hdmi_pix_clk                -5.538     -27.228              5              5
+ rst_clk                rst_clk                     37.379       0.000              0            101
+ ddrphy_sysclk          ddrphy_sysclk                4.338       0.000              0           2504
+ pclk                   pclk                         1.510       0.000              0            101
+ pclk_div2              pclk_div2                    2.237       0.000              0           2166
+ ref_clk1               ref_clk1                     7.596       0.000              0            180
+ clk_10m                hdmi_pix_clk                -5.432     -21.283              4              4
+ hdmi_pix_clk           hdmi_pix_clk                 3.224       0.000              0              5
+ ddrphy_sysclk          hdmi_pix_clk                -4.908     -99.620             27             27
 ====================================================================================================
 
 Removal Summary(Slow Corner):
@@ -61,13 +62,14 @@ Removal Summary(Slow Corner):
                                                                           THS Failing      THS Total
  Launch Clock           Capture Clock              WHS(ns)     THS(ns)      Endpoints      Endpoints
 ----------------------------------------------------------------------------------------------------
- rst_clk                rst_clk                      0.437       0.000              0            102
- ddrphy_sysclk          ddrphy_sysclk                0.264       0.000              0           2486
- pclk                   pclk                         0.409       0.000              0            101
- pclk_div2              pclk_div2                    0.841       0.000              0           1599
- ref_clk1               ref_clk1                     0.350       0.000              0            182
- ddrphy_sysclk          hdmi_pix_clk                 0.315       0.000              0             32
- clk_10m                hdmi_pix_clk                 2.782       0.000              0              5
+ rst_clk                rst_clk                      0.431       0.000              0            101
+ ddrphy_sysclk          ddrphy_sysclk                0.350       0.000              0           2504
+ pclk                   pclk                         0.354       0.000              0            101
+ pclk_div2              pclk_div2                    0.750       0.000              0           2166
+ ref_clk1               ref_clk1                     0.353       0.000              0            180
+ clk_10m                hdmi_pix_clk                 2.640       0.000              0              4
+ hdmi_pix_clk           hdmi_pix_clk                 0.699       0.000              0              5
+ ddrphy_sysclk          hdmi_pix_clk                 0.271       0.000              0             27
 ====================================================================================================
 
 Minimum Pulse Width Summary(Slow Corner):
@@ -82,20 +84,20 @@ Setup Summary(Fast Corner):
                                                                           TNS Failing      TNS Total
  Launch Clock           Capture Clock              WNS(ns)     TNS(ns)      Endpoints      Endpoints
 ----------------------------------------------------------------------------------------------------
- rst_clk                rst_clk                     38.175       0.000              0            437
- ddrphy_sysclk          ddrphy_sysclk                2.857       0.000              0          11339
- phy_dq_sysclk_1        ddrphy_sysclk                3.931       0.000              0            130
- phy_dq_sysclk_0        ddrphy_sysclk                4.825       0.000              0              1
- hdmi_pix_clk           ddrphy_sysclk               -4.149     -58.828             15             15
- ddrphy_sysclk          phy_dq_sysclk_0              3.480       0.000              0            196
- ddrphy_sysclk          phy_dq_sysclk_1              3.470       0.000              0            210
- pclk                   pclk                         0.999       0.000              0            981
- pclk_div2              pclk_div2                    3.766       0.000              0          11197
- ref_clk1               ref_clk1                     7.803       0.000              0           1018
- clk_10m                clk_10m                     97.656       0.000              0            476
- hdmi_pix_clk           hdmi_pix_clk                 2.866       0.000              0            234
- ddrphy_sysclk          hdmi_pix_clk                -4.159    -173.261             55             55
- clk_10m                hdmi_pix_clk                -4.878    -170.185             43             43
+ rst_clk                rst_clk                     38.434       0.000              0            437
+ ddrphy_sysclk          ddrphy_sysclk                4.255       0.000              0          11607
+ phy_dq_sysclk_1        ddrphy_sysclk                4.211       0.000              0            130
+ phy_dq_sysclk_0        ddrphy_sysclk                4.676       0.000              0              1
+ hdmi_pix_clk           ddrphy_sysclk               -4.074     -54.728             15             15
+ ddrphy_sysclk          phy_dq_sysclk_0              3.284       0.000              0            196
+ ddrphy_sysclk          phy_dq_sysclk_1              3.590       0.000              0            210
+ pclk                   pclk                         1.482       0.000              0            981
+ pclk_div2              pclk_div2                    3.594       0.000              0          16523
+ ref_clk1               ref_clk1                     7.715       0.000              0           1009
+ clk_10m                clk_10m                     97.570       0.000              0            571
+ ddrphy_sysclk          hdmi_pix_clk                -3.076     -37.015             13             13
+ hdmi_pix_clk           hdmi_pix_clk                 3.455       0.000              0            203
+ clk_10m                hdmi_pix_clk                -3.075      -3.075              1              1
 ====================================================================================================
 
 Hold Summary(Fast Corner):
@@ -103,20 +105,20 @@ Hold Summary(Fast Corner):
                                                                           THS Failing      THS Total
  Launch Clock           Capture Clock              WHS(ns)     THS(ns)      Endpoints      Endpoints
 ----------------------------------------------------------------------------------------------------
- rst_clk                rst_clk                      0.150       0.000              0            437
- ddrphy_sysclk          ddrphy_sysclk                0.100       0.000              0          11339
- phy_dq_sysclk_1        ddrphy_sysclk                0.239       0.000              0            130
- phy_dq_sysclk_0        ddrphy_sysclk                0.356       0.000              0              1
- hdmi_pix_clk           ddrphy_sysclk                0.822       0.000              0             15
- ddrphy_sysclk          phy_dq_sysclk_0              0.101       0.000              0            196
- ddrphy_sysclk          phy_dq_sysclk_1              0.125       0.000              0            210
- pclk                   pclk                         0.131       0.000              0            981
- pclk_div2              pclk_div2                    0.101       0.000              0          11197
- ref_clk1               ref_clk1                     0.103       0.000              0           1018
- clk_10m                clk_10m                      0.174       0.000              0            476
- hdmi_pix_clk           hdmi_pix_clk                 0.250       0.000              0            234
- ddrphy_sysclk          hdmi_pix_clk                 0.809       0.000              0             55
- clk_10m                hdmi_pix_clk                 1.742       0.000              0             43
+ rst_clk                rst_clk                      0.164       0.000              0            437
+ ddrphy_sysclk          ddrphy_sysclk                0.100       0.000              0          11607
+ phy_dq_sysclk_1        ddrphy_sysclk                0.178       0.000              0            130
+ phy_dq_sysclk_0        ddrphy_sysclk                0.357       0.000              0              1
+ hdmi_pix_clk           ddrphy_sysclk                0.603       0.000              0             15
+ ddrphy_sysclk          phy_dq_sysclk_0              0.102       0.000              0            196
+ ddrphy_sysclk          phy_dq_sysclk_1              0.150       0.000              0            210
+ pclk                   pclk                         0.181       0.000              0            981
+ pclk_div2              pclk_div2                    0.100       0.000              0          16523
+ ref_clk1               ref_clk1                     0.101       0.000              0           1009
+ clk_10m                clk_10m                      0.147       0.000              0            571
+ ddrphy_sysclk          hdmi_pix_clk                 0.870       0.000              0             13
+ hdmi_pix_clk           hdmi_pix_clk                 0.251       0.000              0            203
+ clk_10m                hdmi_pix_clk                 1.577       0.000              0              1
 ====================================================================================================
 
 Recovery Summary(Fast Corner):
@@ -124,13 +126,14 @@ Recovery Summary(Fast Corner):
                                                                           TNS Failing      TNS Total
  Launch Clock           Capture Clock              WNS(ns)     TNS(ns)      Endpoints      Endpoints
 ----------------------------------------------------------------------------------------------------
- rst_clk                rst_clk                     38.510       0.000              0            102
- ddrphy_sysclk          ddrphy_sysclk                5.547       0.000              0           2486
- pclk                   pclk                         2.258       0.000              0            101
- pclk_div2              pclk_div2                    4.204       0.000              0           1599
- ref_clk1               ref_clk1                     8.557       0.000              0            182
- ddrphy_sysclk          hdmi_pix_clk                -3.886     -90.727             32             32
- clk_10m                hdmi_pix_clk                -3.712     -18.308              5              5
+ rst_clk                rst_clk                     38.333       0.000              0            101
+ ddrphy_sysclk          ddrphy_sysclk                5.450       0.000              0           2504
+ pclk                   pclk                         2.499       0.000              0            101
+ pclk_div2              pclk_div2                    4.273       0.000              0           2166
+ ref_clk1               ref_clk1                     8.435       0.000              0            180
+ clk_10m                hdmi_pix_clk                -3.647     -14.359              4              4
+ hdmi_pix_clk           hdmi_pix_clk                 4.479       0.000              0              5
+ ddrphy_sysclk          hdmi_pix_clk                -3.868     -82.571             27             27
 ====================================================================================================
 
 Removal Summary(Fast Corner):
@@ -138,13 +141,14 @@ Removal Summary(Fast Corner):
                                                                           THS Failing      THS Total
  Launch Clock           Capture Clock              WHS(ns)     THS(ns)      Endpoints      Endpoints
 ----------------------------------------------------------------------------------------------------
- rst_clk                rst_clk                      0.302       0.000              0            102
- ddrphy_sysclk          ddrphy_sysclk                0.182       0.000              0           2486
- pclk                   pclk                         0.285       0.000              0            101
- pclk_div2              pclk_div2                    0.535       0.000              0           1599
- ref_clk1               ref_clk1                     0.247       0.000              0            182
- ddrphy_sysclk          hdmi_pix_clk                 0.851       0.000              0             32
- clk_10m                hdmi_pix_clk                 2.003       0.000              0              5
+ rst_clk                rst_clk                      0.305       0.000              0            101
+ ddrphy_sysclk          ddrphy_sysclk                0.247       0.000              0           2504
+ pclk                   pclk                         0.250       0.000              0            101
+ pclk_div2              pclk_div2                    0.471       0.000              0           2166
+ ref_clk1               ref_clk1                     0.248       0.000              0            180
+ clk_10m                hdmi_pix_clk                 1.902       0.000              0              4
+ hdmi_pix_clk           hdmi_pix_clk                 0.594       0.000              0              5
+ ddrphy_sysclk          hdmi_pix_clk                 0.821       0.000              0             27
 ====================================================================================================
 
 Minimum Pulse Width Summary(Fast Corner):

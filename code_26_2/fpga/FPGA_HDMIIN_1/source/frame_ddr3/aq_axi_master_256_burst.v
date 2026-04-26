@@ -5,16 +5,16 @@ DLDLDLAXI_256
 
 **************************************************************************************/
 module ddr_axi256_burst_engine #(
-parameter DATA_WIDTH=256
+parameter DATA_WIDTH=128
 )(
   // Reset, Clock
   input           ARESETN,
   input           ACLK,
 
   // Master Write Address
-  output [0:0]  M_AXI_AWID,
+  output [3:0]  M_AXI_AWID,
   output [31:0] M_AXI_AWADDR,
-  output [7:0]  M_AXI_AWLEN,    // Burst Length: 0-255
+  output [3:0]  M_AXI_AWLEN,    // DDR3 IP Burst Length: 0-15
   output [2:0]  M_AXI_AWSIZE,   // Burst Size: 100
   output [1:0]  M_AXI_AWBURST,  // Burst Type: Fixed 2'b01(Incremental Burst)
   output        M_AXI_AWLOCK,   // Lock: Fixed 2'b00
@@ -34,16 +34,16 @@ parameter DATA_WIDTH=256
  input         M_AXI_WREADY,
 
   // Master Write Response
-  input [0:0]   M_AXI_BID,
+  input [3:0]   M_AXI_BID,
   input [1:0]   M_AXI_BRESP,
   input [0:0]   M_AXI_BUSER,
   input         M_AXI_BVALID,
   output        M_AXI_BREADY,
     
   // Master Read Address
-  output [0:0]  M_AXI_ARID,
+  output [3:0]  M_AXI_ARID,
    output [31:0] M_AXI_ARADDR,
-   output [7:0]  M_AXI_ARLEN,
+  output [3:0]  M_AXI_ARLEN,
    output [2:0]  M_AXI_ARSIZE,
   output [1:0]  M_AXI_ARBURST,
   output [1:0]  M_AXI_ARLOCK,//
@@ -55,7 +55,7 @@ parameter DATA_WIDTH=256
   input         M_AXI_ARREADY,
     
   // Master Read Data 
-  input [0:0]   M_AXI_RID,
+  input [3:0]   M_AXI_RID,
   input [DATA_WIDTH-1:0]  M_AXI_RDATA,//
   input [1:0]   M_AXI_RRESP,
   input         M_AXI_RLAST,
@@ -116,7 +116,7 @@ reg rd_fifo_enable;
 
 
 reg  [2:0]    wr_state_new; // 用于256突发的状态机
-reg  [31:0]   reg_axi_awaddr;   //每次要16突发请求时递增256/8*16=512（‘h200），在256突发开始时暂存地址WR_ADRS
+reg  [31:0]   reg_axi_awaddr;   //每次16拍突发，128-bit总线一次突发256字节，在突发开始时暂存地址WR_ADRS
 reg  [7:0]    reg_axi_awlen;    //固定长度为8’hf，相当于单次突发16，分多次16突发
 reg           reg_axi_awvalid;
 reg           reg_axi_wvalid;
@@ -155,7 +155,7 @@ begin
 		rd_fifo_enable <= 1'b0;
 	else if(wr_state_new == SA_WR_IDLE && WR_START)
 		rd_fifo_enable <= 1'b1;
-	else if(WR_FIFO_RE && (rd_fifo_cnt == WR_LEN[31:5] - 32'd1) )//5
+  else if(WR_FIFO_RE && (rd_fifo_cnt == WR_LEN[31:4] - 32'd1) )
 		rd_fifo_enable <= 1'b0;		
 end
 
@@ -232,14 +232,14 @@ always @(posedge ACLK or negedge ARESETN) begin
       end
       SA_WR_WAIT1: begin
         if (wr_cnt_temp == 4'd3)begin
-          if (reg_wr_len_burst_cnt + 32'd512 < reg_wr_len_burst) begin      //这里512是由于单次突发长度16，突发位宽256位，一次突发了512字节
+          if (reg_wr_len_burst_cnt + 32'd256 < reg_wr_len_burst) begin
             wr_state_new <= SA_WA_START1;
-            reg_axi_awaddr <= reg_axi_awaddr + 32'd512; // 每次递增512
+            reg_axi_awaddr <= reg_axi_awaddr + 32'd256;
             reg_axi_awlen <= 8'hf;
             reg_axi_awvalid <= 1'b0;
             reg_axi_wvalid <= 1'b0;
             reg_wr_len_burst <= reg_wr_len_burst;
-            reg_wr_len_burst_cnt <= reg_wr_len_burst_cnt + 32'd512; // 累加突发长度
+            reg_wr_len_burst_cnt <= reg_wr_len_burst_cnt + 32'd256;
             wr_cnt_temp <= 4'd0;
             rd_first_data <= 1'b0;
           end else begin
@@ -277,7 +277,7 @@ always @(posedge ACLK or negedge ARESETN) begin
         rd_first_data <= 1'b0;
       end
       SA_WR_PROC: begin
-        if (rd_fifo_cnt == {5'd0,reg_wr_len_burst[31:5]}) begin // 这里5是因为256位宽，16突发
+        if (rd_fifo_cnt == {4'd0,reg_wr_len_burst[31:4]}) begin
           wr_state_new <= SA_WR_DONE;
           reg_axi_awaddr <= reg_axi_awaddr;
           reg_axi_awlen <= 8'hf;
@@ -316,22 +316,22 @@ end
 
 
    
-  assign M_AXI_AWID         = 1'b0;
+  assign M_AXI_AWID         = 4'd0;
   assign M_AXI_AWADDR[31:0] = reg_axi_awaddr[31:0];
-  assign M_AXI_AWLEN[7:0]   = reg_axi_awlen[7:0];
-  assign M_AXI_AWSIZE[2:0]  = 3'b101;
+  assign M_AXI_AWLEN[3:0]   = reg_axi_awlen[3:0];
+  assign M_AXI_AWSIZE[2:0]  = 3'b100;
   assign M_AXI_AWBURST[1:0] = 2'b01;
   assign M_AXI_AWLOCK       = 1'b0;
   assign M_AXI_AWCACHE[3:0] = 4'b0011;
   assign M_AXI_AWPROT[2:0]  = 3'b000;
   assign M_AXI_AWQOS[3:0]   = 4'b0000;
-  assign M_AXI_AWUSER[0]    = 1'b1;
+  assign M_AXI_AWUSER[0]    = 1'b0;
   assign M_AXI_AWVALID      = reg_axi_awvalid;
 
   assign M_AXI_WDATA  = WR_FIFO_DATA;
   //assign M_AXI_WSTRB   = (reg_axi_wvalid & ~WR_FIFO_EMPTY)?32'hffffffff:32'h00000000;
-  assign M_AXI_WSTRB   = 32'hffffffff;
-  assign M_AXI_WLAST        = (rd_fifo_cnt == (reg_wr_len_burst - 32'd1))?1'b1:1'b0;
+  assign M_AXI_WSTRB   = {(DATA_WIDTH/8){1'b1}};
+  assign M_AXI_WLAST        = M_AXI_WVALID & (rd_fifo_cnt[3:0] == 4'hf);
   assign M_AXI_WUSER        = 1;
   assign M_AXI_WVALID       = reg_axi_wvalid & ~WR_FIFO_EMPTY;
 //  assign M_AXI_WVALID       = (wr_state == S_WD_PROC)?1'b1:1'b0;
@@ -382,13 +382,13 @@ end
         S_RA_START: begin
           rd_state          <= S_RD_WAIT;
           reg_arvalid       <= 1'b1;
-          reg_rd_len[31:11] <= reg_rd_len[31:11] -21'd1;
-          if(reg_rd_len[31:11] != 21'd0) begin
+            reg_rd_len[31:10] <= reg_rd_len[31:10] -22'd1;
+          if(reg_rd_len[31:10] != 22'd0) begin
             reg_r_last      <= 1'b0;
             reg_r_len[7:0]  <= 8'd255;
           end else begin
             reg_r_last      <= 1'b1;
-            reg_r_len[7:0]  <= reg_rd_len[10:5];
+            reg_r_len[7:0]  <= reg_rd_len[9:4];
           end
         end
         S_RD_WAIT: begin
@@ -404,7 +404,7 @@ end
                 rd_state          <= S_RD_DONE;
               end else begin
                 rd_state          <= S_RA_WAIT;
-                reg_rd_adrs[31:0] <= reg_rd_adrs[31:0] + 32'd512  ;
+                reg_rd_adrs[31:0] <= reg_rd_adrs[31:0] + 32'd256;
               end
             end else begin
               reg_r_len[7:0] <= reg_r_len[7:0] -8'd1;
@@ -422,7 +422,7 @@ end
 
 
 
-reg [31:0]  reg_axi_araddr;   //每次要16突发请求时递增256/8*16=512（‘h200），在256突发开始时暂存地址RD_ADRS
+reg [31:0]  reg_axi_araddr;   //每次16拍突发，128-bit总线一次突发256字节，在突发开始时暂存地址RD_ADRS
 reg [7:0]   reg_axi_arlen;    //固定长度为8’hf
 reg         reg_axi_arvalid;
 reg [31:0]  reg_rd_len_burst; //突发请求的总长度，会被分成多次16长度突发
@@ -512,13 +512,13 @@ always @(posedge ACLK or negedge ARESETN)begin
       end
       SA_RD_WAIT1:begin
         if (cnt == 4'd3) begin
-          if (reg_rd_len_burst_cnt + 32'd512 < reg_rd_len_burst)begin
+          if (reg_rd_len_burst_cnt + 32'd256 < reg_rd_len_burst)begin
             rd_state_new <= SA_RA_START1;
-            reg_axi_araddr <= reg_axi_araddr + 32'd512; // 每次递增512
+            reg_axi_araddr <= reg_axi_araddr + 32'd256;
             reg_axi_arlen <= 8'hf;
             reg_axi_arvalid <= 1'b0;
             reg_rd_len_burst <= reg_rd_len_burst;
-            reg_rd_len_burst_cnt <= reg_rd_len_burst_cnt + 32'd512; // 累加突发长度
+            reg_rd_len_burst_cnt <= reg_rd_len_burst_cnt + 32'd256;
             cnt <= 4'd0;
           end else begin
             rd_state_new <= SA_RD_PROC;
@@ -562,7 +562,7 @@ always @(posedge ACLK or negedge ARESETN)begin
         end
       end
       SA_RD_PROC:begin
-      if (reg_rd_data_cnt == reg_rd_len_burst[31:5]) begin
+      if (reg_rd_data_cnt == reg_rd_len_burst[31:4]) begin
         rd_state_new <= SA_RD_DONE;
         reg_axi_araddr <= reg_axi_araddr;
         reg_axi_arlen <= 8'hf;
@@ -605,27 +605,27 @@ end
 
 
   // Master Read Address
-  assign M_AXI_ARID         = 1'b0;
+  assign M_AXI_ARID         = 4'd0;
   // assign M_AXI_ARADDR[31:0] = reg_rd_adrs[31:0];
-  // assign M_AXI_ARLEN[7:0]   = reg_r_len[7:0];
+  // assign M_AXI_ARLEN[3:0]   = reg_r_len[3:0];
 
   assign M_AXI_ARADDR[31:0] = reg_axi_araddr[31:0];
-  assign M_AXI_ARLEN[7:0]   = reg_axi_arlen[7:0];
+  assign M_AXI_ARLEN[3:0]   = reg_axi_arlen[3:0];
 
-  assign M_AXI_ARSIZE[2:0]  = 3'b101 ;
+  assign M_AXI_ARSIZE[2:0]  = 3'b100 ;
   assign M_AXI_ARBURST[1:0] = 2'b01;
   assign M_AXI_ARLOCK       = 1'b0;
   assign M_AXI_ARCACHE[3:0] = 4'b0011;
   assign M_AXI_ARPROT[2:0]  = 3'b000;
   assign M_AXI_ARQOS[3:0]   = 4'b0000;
-  assign M_AXI_ARUSER[0]    = 1'b1;
+  assign M_AXI_ARUSER[0]    = 1'b0;
   // assign M_AXI_ARVALID      = reg_arvalid;
   assign M_AXI_ARVALID      = reg_axi_arvalid;
 
-  assign M_AXI_RREADY       = M_AXI_RVALID & ~RD_FIFO_FULL;
+  assign M_AXI_RREADY       = ~RD_FIFO_FULL;
 
-  assign RD_READY           = (rd_state == SA_RD_IDLE)?1'b1:1'b0;
-  assign RD_FIFO_WE         = M_AXI_RVALID;
+  assign RD_READY           = (rd_state_new == SA_RD_IDLE)?1'b1:1'b0;
+  assign RD_FIFO_WE         = M_AXI_RVALID & M_AXI_RREADY;
   assign RD_FIFO_DATA = M_AXI_RDATA;
 
   assign DEBUG[31:0] = {reg_wr_len[31:8],

@@ -13,10 +13,8 @@ module img_data_stream_reducer(
 );
 
 
-localparam  [11:0]  COL_NUM = 12'd1280;        
-localparam  [11:0]  HALF_COL_NUM = 12'd640;   
-localparam  [11:0]  ROW_NUM = 12'd720;        
-localparam  [11:0]  HALF_ROW_NUM = 12'd360;
+localparam  [11:0]  COL_NUM = 12'd1920;
+localparam  [11:0]  ROW_NUM = 12'd1080;
 
 reg                 img_vs_dly1        ;
 reg                 img_vs_dly2        ;
@@ -78,9 +76,9 @@ end
 always @(posedge clk)begin
     if (!rst_n)begin
         img_data_valid_out <= 1'b0;
-        img_data_out <= 24'd0;
+        img_data_out <= 16'd0;
     end
-    else if (img_data_valid == 1'b1 &&  col_cnt[0] == 1'b1 && row_cnt[0] == 1'b1)begin
+    else if (img_data_valid == 1'b1)begin
         img_data_valid_out <= img_data_valid;
         img_data_out <= img_data;
     end

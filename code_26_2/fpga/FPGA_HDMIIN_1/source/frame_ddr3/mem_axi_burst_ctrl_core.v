@@ -7,16 +7,16 @@ module mem_axi_burst_ctrl_core#(
 	parameter ADDR_BITS          = 28   ,      
 	parameter BUSRT_BITS         = 10   ,   
 	parameter BURST_SIZE         = 256   ,
-    parameter FRAME_LEN          = 28'd28800 //frame size 1920*1080*16/128=259200 
+    parameter FRAME_LEN          = 28'd259200 //frame size 1920*1080*16/128=259200
 )(
     // Reset, Clock
     input                           ARESETN,
     input                           ACLK,
 
     // Master Write Address
-    output      [0:0]               M_AXI_AWID,
+    output      [3:0]               M_AXI_AWID,
     output      [31:0]              M_AXI_AWADDR,
-    output      [7:0]               M_AXI_AWLEN,    // Burst Length: 0-255
+    output      [3:0]               M_AXI_AWLEN,    // DDR3 IP Burst Length: 0-15
     output      [2:0]               M_AXI_AWSIZE,   // Burst Size: 100
     output      [1:0]               M_AXI_AWBURST,  // Burst Type: Fixed 2'b01(Incremental Burst)
     output                          M_AXI_AWLOCK,   // Lock: Fixed 2'b00
@@ -36,16 +36,16 @@ module mem_axi_burst_ctrl_core#(
     input                           M_AXI_WREADY,
 
     // Master Write Response
-    input       [0:0]               M_AXI_BID,
+    input       [3:0]               M_AXI_BID,
     input       [1:0]               M_AXI_BRESP,
     input       [0:0]               M_AXI_BUSER,
     input                           M_AXI_BVALID,
     output                          M_AXI_BREADY,
         
     // Master Read Address
-    output      [0:0]               M_AXI_ARID,
+    output      [3:0]               M_AXI_ARID,
     output      [31:0]              M_AXI_ARADDR,
-    output      [7:0]               M_AXI_ARLEN,
+    output      [3:0]               M_AXI_ARLEN,
     output      [2:0]               M_AXI_ARSIZE,
     output      [1:0]               M_AXI_ARBURST,
     output      [1:0]               M_AXI_ARLOCK,//
@@ -57,7 +57,7 @@ module mem_axi_burst_ctrl_core#(
     input                           M_AXI_ARREADY,
         
     // Master Read Data 
-    input       [0:0]               M_AXI_RID,
+    input       [3:0]               M_AXI_RID,
     input       [DATA_WIDTH-1:0]    M_AXI_RDATA,//
     input       [1:0]               M_AXI_RRESP,
     input                           M_AXI_RLAST,
@@ -649,7 +649,9 @@ mem_write_arbi_m0(
 
 
 
-ddr_axi256_burst_engine	u_aq_axi_master
+ddr_axi256_burst_engine #(
+    .DATA_WIDTH                  (DATA_WIDTH)
+) u_aq_axi_master
 (
 	  .ARESETN                     (ARESETN                                   ),
 	  .ACLK                        (ACLK                                      ),
@@ -699,8 +701,8 @@ ddr_axi256_burst_engine	u_aq_axi_master
 	  .MASTER_RST                  (1'b0                                      ),
 	  .WR_START                    (wr_burst_req                              ),
     //   .WR_START                    (wr_burst_req_buf                          ),
-	  .WR_ADRS                     ({wr_burst_addr[26:0],5'd0}                ),
-	  .WR_LEN                      ({17'd0,wr_burst_len, 5'd0}                 ),
+      .WR_ADRS                     ({wr_burst_addr[27:0],4'd0}                ),
+      .WR_LEN                      ({18'd0,wr_burst_len, 4'd0}                 ),
 	  .WR_READY                    (                                          ),
 	  .WR_FIFO_RE                  (wr_burst_data_req                         ),
 	  .WR_FIFO_EMPTY               (1'b0                                      ),
@@ -710,8 +712,8 @@ ddr_axi256_burst_engine	u_aq_axi_master
 
 	  .RD_START                    (rd_burst_req                              ),
     //   .RD_START                    (rd_burst_req_buf                          ),
-	  .RD_ADRS                     ({rd_burst_addr[26:0],5'd0}                ),
-	  .RD_LEN                      ({17'd0,rd_burst_len, 5'd0}                ),
+      .RD_ADRS                     ({rd_burst_addr[27:0],4'd0}                ),
+      .RD_LEN                      ({18'd0,rd_burst_len, 4'd0}                ),
 	  .RD_READY                    (                                          ),
 	  .RD_FIFO_WE                  (rd_burst_data_valid                       ),
 	  .RD_FIFO_FULL                (1'b0                                      ),

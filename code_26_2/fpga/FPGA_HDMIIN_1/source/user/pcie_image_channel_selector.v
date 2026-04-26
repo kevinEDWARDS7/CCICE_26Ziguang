@@ -25,10 +25,8 @@ module pcie_image_channel_selector (
 );
 
 
-localparam  [11:0]  COL_NUM = 12'd80;          //640*16/128=80
-localparam  [11:0]  HALF_COL_NUM = 12'd40;
-localparam  [11:0]  ROW_NUM = 12'd360;
-localparam  [11:0]  HALF_ROW_NUM = 12'd180;
+localparam  [11:0]  COL_NUM = 12'd240;         //1920*16/128=240
+localparam  [11:0]  ROW_NUM = 12'd1080;
 
 
 

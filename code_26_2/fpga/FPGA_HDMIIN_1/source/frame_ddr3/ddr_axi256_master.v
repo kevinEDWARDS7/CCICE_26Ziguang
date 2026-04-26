@@ -6,7 +6,7 @@ parameter DATA_WIDTH=256
   input           ACLK,
 
   // Master Write Address
-  output [0:0]  M_AXI_AWID,
+  output [3:0]  M_AXI_AWID,
   output [31:0] M_AXI_AWADDR,
   output [7:0]  M_AXI_AWLEN,    // Burst Length: 0-255
   output [2:0]  M_AXI_AWSIZE,   // Burst Size: 100
@@ -28,14 +28,14 @@ parameter DATA_WIDTH=256
  input         M_AXI_WREADY,
 
   // Master Write Response
-  input [0:0]   M_AXI_BID,
+  input [3:0]   M_AXI_BID,
   input [1:0]   M_AXI_BRESP,
   input [0:0]   M_AXI_BUSER,
   input         M_AXI_BVALID,
   output        M_AXI_BREADY,
     
   // Master Read Address
-  output [0:0]  M_AXI_ARID,
+  output [3:0]  M_AXI_ARID,
    output [31:0] M_AXI_ARADDR,
    output [7:0]  M_AXI_ARLEN,
    output [2:0]  M_AXI_ARSIZE,
@@ -49,7 +49,7 @@ parameter DATA_WIDTH=256
   input         M_AXI_ARREADY,
     
   // Master Read Data 
-  input [0:0]   M_AXI_RID,
+  input [3:0]   M_AXI_RID,
   input [DATA_WIDTH-1:0]  M_AXI_RDATA,//
   input [1:0]   M_AXI_RRESP,
   input         M_AXI_RLAST,
@@ -230,7 +230,7 @@ end
     end
   end
    
-  assign M_AXI_AWID         = 1'b0;
+  assign M_AXI_AWID         = 4'd0;
   assign M_AXI_AWADDR[31:0] = reg_wr_adrs[31:0];
   assign M_AXI_AWLEN[7:0]   = reg_w_len[7:0];
   assign M_AXI_AWSIZE[2:0]  = 3'b101;
@@ -239,7 +239,7 @@ end
   assign M_AXI_AWCACHE[3:0] = 4'b0011;
   assign M_AXI_AWPROT[2:0]  = 3'b000;
   assign M_AXI_AWQOS[3:0]   = 4'b0000;
-  assign M_AXI_AWUSER[0]    = 1'b1;
+  assign M_AXI_AWUSER[0]    = 1'b0;
   assign M_AXI_AWVALID      = reg_awvalid;
 
   assign M_AXI_WDATA  = WR_FIFO_DATA;
@@ -333,7 +333,7 @@ end
   end
    
   // Master Read Address
-  assign M_AXI_ARID         = 1'b0;
+  assign M_AXI_ARID         = 4'd0;
   assign M_AXI_ARADDR[31:0] = reg_rd_adrs[31:0];
   assign M_AXI_ARLEN[7:0]   = reg_r_len[7:0];
   assign M_AXI_ARSIZE[2:0]  = 3'b101 ;
@@ -342,7 +342,7 @@ end
   assign M_AXI_ARCACHE[3:0] = 4'b0011;
   assign M_AXI_ARPROT[2:0]  = 3'b000;
   assign M_AXI_ARQOS[3:0]   = 4'b0000;
-  assign M_AXI_ARUSER[0]    = 1'b1;
+  assign M_AXI_ARUSER[0]    = 1'b0;
   assign M_AXI_ARVALID      = reg_arvalid;
 
   assign M_AXI_RREADY       = M_AXI_RVALID & ~RD_FIFO_FULL;

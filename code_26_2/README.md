@@ -52,7 +52,7 @@ source/
 当前最关键的 RTL：
 
 - `source/dl_fpga_prj.v`：顶层模块 `dl_fpga_prj`，连接 HDMI 输入、DDR3、PCIe 物理接口和 DMA 数据路径。
-- `source/user/img_data_stream_reducer.v`：把 1280x720 RGB565 输入按奇偶行列抽样成 640x360。
+- `source/user/img_data_stream_reducer.v`：按 1920x1080 RGB565 直通 HDMI 图像流。
 - `source/user/pcie_image_channel_selector.v`：从 DDR3 读出 128 bit 图像数据，并响应 DMA 写数据请求。
 - `source/pcie/pcie_dma_core.v` 和 `source/pcie/ips2l_pcie_dma.v`：PCIe DMA 主链路。
 - `source/frame_ddr3/frame_read_write_256_burst.v` 等：DDR3 帧写入和读出逻辑。
@@ -73,7 +73,7 @@ project/
 
 ## RK3568 工程
 
-RK3568 侧工程位于 [rk3568/pcie_hdmi_out/pango_pcie_drm_c/](rk3568/pcie_hdmi_out/pango_pcie_drm_c/)，目标是用 PCIe DMA 读回 FPGA 图像数据，并通过 DRM/KMS 输出到 HDMI。
+RK3568 侧工程位于 [rk3568/pango_pcie_drm_c/](rk3568/pango_pcie_drm_c/)，目标是用 PCIe DMA 读回 FPGA 图像数据，并通过 DRM/KMS 输出到 HDMI。
 
 ```text
 pango_pcie_drm_c/
@@ -93,7 +93,7 @@ pango_pcie_drm_c/
 
 关键文件：
 
-- `include/pango_pcie_abi.h`：用户态和驱动共享的 ioctl、结构体、默认 `640x360`、`LINE_BYTES=1280`、`DMA_MAX_PACKET_SIZE=4096`。
+- `include/pango_pcie_abi.h`：用户态和驱动共享的 ioctl、结构体、默认 `1920x1080`、`LINE_BYTES=3840`、`DMA_MAX_PACKET_SIZE=4096`。
 - `src/pcie_probe_only.c`：只做 PCIe 枚举和链路有效性检查，安全确认后再跑 DMA。
 - `src/main.c`：逐行触发 `PCI_DMA_WRITE_CMD`，读取 RGB565 帧，转换为 XRGB8888，并通过 DRM dumb buffer 显示。
 - `driver/pango_pci_driver.c`：本工程配套 PCIe 字符设备驱动实现。
@@ -104,7 +104,7 @@ pango_pcie_drm_c/
 ```text
 HDMI MS7200 输入
   -> dl_fpga_prj.v 将 RGB888 压成 RGB565
-  -> img_data_stream_reducer.v 抽样到 640x360
+   -> img_data_stream_reducer.v 输出 1920x1080 RGB565
   -> frame_ddr3 写入/读出一帧图像
   -> pcie_image_channel_selector.v 输出 128 bit DMA 数据
   -> PCIe DMA 写入 RK3568 可读缓冲

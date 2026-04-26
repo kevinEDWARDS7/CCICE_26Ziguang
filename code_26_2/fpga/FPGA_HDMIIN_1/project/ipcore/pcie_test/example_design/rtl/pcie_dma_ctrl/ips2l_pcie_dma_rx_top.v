@@ -86,6 +86,7 @@ wire    [3:0]               cpld_dw_vld;
 wire                        multicpld_flag;
 
 wire    [1:0]               bar_hit;
+wire                        control_bar_wr_hit;
 
 //mwr wr
 wire                        mwr_wr_en;
@@ -109,6 +110,8 @@ wire                        bar2_wr_en;
 wire    [ADDR_WIDTH-1:0]    bar2_wr_addr;
 wire    [127:0]             bar2_wr_data;
 wire    [15:0]              bar2_wr_byte_en;
+
+assign control_bar_wr_hit = (bar_hit == 2'b00) || (bar_hit == 2'b01);
 
 ips2l_pcie_dma_tlp_rcv #(
     .DEVICE_TYPE            (DEVICE_TYPE            )
@@ -243,7 +246,7 @@ end
 //bar1 interface
 always@(*)
 begin
-    if(bar_hit == 2'b1 && (DEVICE_TYPE == 3'b000 || DEVICE_TYPE == 3'b001))
+    if(mwr_wr_start && control_bar_wr_hit && (DEVICE_TYPE == 3'b000 || DEVICE_TYPE == 3'b001))
     begin
         o_bar1_wr_en       = 1'b1;
         o_bar1_wr_addr     = mwr_addr[ADDR_WIDTH-1:0];

@@ -76,7 +76,6 @@ module dl_fpga_prj #(
     input       [7:0]                    hdmi_r                        ,
     input       [7:0]                    hdmi_g                        ,
     input       [7:0]                    hdmi_b                        ,
-    output                               hdmi_rx_init_done             ,
     inout                                hdmi_rx_scl                   ,
     inout                                hdmi_rx_sda                   ,
     
@@ -282,6 +281,7 @@ wire                        fmc_vs;
 wire                        fmc_de;
 wire [15:0]                 hdmi_rgb565;
 wire                        hdmi_video_rst_n;
+wire                        hdmi_rx_init_done;
 wire                        hdmi_iic_trig;
 wire                        hdmi_iic_wr;
 wire [15:0]                 hdmi_iic_addr;

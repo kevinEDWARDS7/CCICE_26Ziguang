@@ -1,4 +1,4 @@
-##### Written on 2026/04/26 15:32:10 ###############################
+##### Written on 2026/04/26 23:09:58 ###############################
 
 
 ##### INFO ##################################################
@@ -14,7 +14,7 @@ Constraint File(s) :
 
 ##### SUMMARY ######################################################
 
-Found 0 error(s), 22 critical warning(s), 5 warning(s), out of 616 constraint(s)
+Found 0 error(s), 22 critical warning(s), 4 warning(s), out of 616 constraint(s)
 
 
 Inapplicable constraints(except overwritten constraints):
@@ -102,7 +102,6 @@ W: ConstraintEditor-4019: Port Bus 'pcie_rxn' unspecified I/O constraint.
 W: ConstraintEditor-4019: Port Bus 'pcie_rxp' unspecified I/O constraint.
 W: ConstraintEditor-4019: Port Bus 'pcie_txn' unspecified I/O constraint.
 W: ConstraintEditor-4019: Port Bus 'pcie_txp' unspecified I/O constraint.
-W: ConstraintEditor-4019: Port 'hdmi_rx_init_done' unspecified I/O constraint.
 
 Constraints with matching wildcard expressions:
 ********************************************

@@ -13,7 +13,7 @@ module mem_axi_control_hub#(
     input                           ACLK,
 
     // Master Write Address
-    output      [0:0]               M_AXI_AWID,
+    output      [3:0]               M_AXI_AWID,
     output      [31:0]              M_AXI_AWADDR,
     output      [7:0]               M_AXI_AWLEN,    // Burst Length: 0-255
     output      [2:0]               M_AXI_AWSIZE,   // Burst Size: 100
@@ -35,14 +35,14 @@ module mem_axi_control_hub#(
     input                           M_AXI_WREADY,
 
     // Master Write Response
-    input       [0:0]               M_AXI_BID,
+    input       [3:0]               M_AXI_BID,
     input       [1:0]               M_AXI_BRESP,
     input       [0:0]               M_AXI_BUSER,
     input                           M_AXI_BVALID,
     output                          M_AXI_BREADY,
         
     // Master Read Address
-    output      [0:0]               M_AXI_ARID,
+    output      [3:0]               M_AXI_ARID,
     output      [31:0]              M_AXI_ARADDR,
     output      [7:0]               M_AXI_ARLEN,
     output      [2:0]               M_AXI_ARSIZE,
@@ -56,7 +56,7 @@ module mem_axi_control_hub#(
     input                           M_AXI_ARREADY,
         
     // Master Read Data 
-    input       [0:0]               M_AXI_RID,
+    input       [3:0]               M_AXI_RID,
     input       [DATA_WIDTH-1:0]    M_AXI_RDATA,//
     input       [1:0]               M_AXI_RRESP,
     input                           M_AXI_RLAST,

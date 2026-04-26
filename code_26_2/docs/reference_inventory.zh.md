@@ -121,7 +121,7 @@
 作用：
 
 - `dl_fpga_prj.v` 集成 HDMI 输入、DDR3 和 PCIe DMA。
-- `img_data_stream_reducer.v` 将 1280x720 RGB565 图像抽样为 640x360。
+- `img_data_stream_reducer.v` 将 1920x1080 RGB565 图像直通到 DDR 写入链路。
 - `pcie_image_channel_selector.v` 从 DDR3 取出 128 位图像数据并送入 DMA 写数据路径。
 
 ### RK3568 本地应用和驱动

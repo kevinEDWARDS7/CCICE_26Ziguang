@@ -44,7 +44,6 @@ module dl_fpga_prj #(
     input       [7:0]                    hdmi_r                        ,
     input       [7:0]                    hdmi_g                        ,
     input       [7:0]                    hdmi_b                        ,
-    output                               hdmi_rx_init_done             ,
     inout                                hdmi_rx_scl                   ,
     inout                                hdmi_rx_sda                   ,
     
@@ -63,11 +62,42 @@ module dl_fpga_prj #(
 //===============================================================================
 // HDMI 信号处理与 I2C 配置
 //===============================================================================
+wire hdmi_rx_init_done;
+wire hdmi_video_rst_n;
 wire [15:0] hdmi_rgb565;
 assign hdmi_rgb565      = {hdmi_r[7:3], hdmi_g[7:2], hdmi_b[7:3]};
 
-// 只有当PLL锁定、DDR准备好、且HDMI芯片配置成功时，才解除图像处理复位
-assign hdmi_video_rst_n = lock && ddr_init_done && hdmi_rx_init_done;
+localparam [19:0] HDMI_IIC_STARTUP_CYCLES = 20'd1_000_000;
+reg [19:0] hdmi_iic_startup_cnt;
+reg        hdmi_iic_rstn;
+
+always @(posedge clk_10m or negedge lock) begin
+    if (!lock) begin
+        hdmi_iic_startup_cnt <= 20'd0;
+        hdmi_iic_rstn        <= 1'b0;
+    end else if (hdmi_iic_startup_cnt == HDMI_IIC_STARTUP_CYCLES) begin
+        hdmi_iic_startup_cnt <= hdmi_iic_startup_cnt;
+        hdmi_iic_rstn        <= 1'b1;
+    end else begin
+        hdmi_iic_startup_cnt <= hdmi_iic_startup_cnt + 20'd1;
+        hdmi_iic_rstn        <= 1'b0;
+    end
+end
+
+reg [2:0] ddr_init_done_hdmi_sync;
+reg [2:0] hdmi_rx_init_done_hdmi_sync;
+
+always @(posedge hdmi_pix_clk or negedge hdmi_iic_rstn) begin
+    if (!hdmi_iic_rstn) begin
+        ddr_init_done_hdmi_sync     <= 3'd0;
+        hdmi_rx_init_done_hdmi_sync <= 3'd0;
+    end else begin
+        ddr_init_done_hdmi_sync     <= {ddr_init_done_hdmi_sync[1:0], ddr_init_done};
+        hdmi_rx_init_done_hdmi_sync <= {hdmi_rx_init_done_hdmi_sync[1:0], hdmi_rx_init_done};
+    end
+end
+
+assign hdmi_video_rst_n = ddr_init_done_hdmi_sync[2] && hdmi_rx_init_done_hdmi_sync[2];
 
 wire hdmi_iic_trig, hdmi_iic_wr, hdmi_iic_busy, hdmi_iic_byte_over;
 wire [15:0] hdmi_iic_addr;
@@ -79,7 +109,7 @@ assign hdmi_sda_in = hdmi_rx_sda;
 
 ms7200_ctl u_hdmi_rx_ms7200_ctl (
     .clk        (clk_10m),
-    .rstn       (lock),
+    .rstn       (hdmi_iic_rstn),
     .init_over  (hdmi_rx_init_done),
     .device_id  (hdmi_iic_device_id),
     .iic_trig   (hdmi_iic_trig),
@@ -100,7 +130,7 @@ iic_dri #(
     .DATA_BYTE  (2'd1)
 ) u_hdmi_rx_iic_dri (
     .clk        (clk_10m),
-    .rstn       (lock),
+    .rstn       (hdmi_iic_rstn),
     .pluse      (hdmi_iic_trig),
     .device_id  (hdmi_iic_device_id),
     .w_r        (hdmi_iic_wr),
@@ -169,10 +199,27 @@ wire [3:0]   axis_master_tkeep;
 wire [7:0]   axis_master_tuser;
 wire        axis_slave0_tready, axis_slave0_tvalid, axis_slave0_tlast, axis_slave0_tuser;
 wire [127:0] axis_slave0_tdata;
+wire        axis_slave1_tready, axis_slave1_tvalid, axis_slave1_tlast, axis_slave1_tuser;
+wire [127:0] axis_slave1_tdata;
+wire        axis_slave2_tready, axis_slave2_tvalid, axis_slave2_tlast, axis_slave2_tuser;
+wire [127:0] axis_slave2_tdata;
 
 wire dma_write_req;
 wire [11:0] dma_write_addr;
 wire [127:0] dma_write_data;
+
+reg [2:0] ddr_init_done_pclk_sync;
+wire      ch0_rframe_rst_n;
+
+always @(posedge pclk_div2 or negedge core_rst_n) begin
+    if (!core_rst_n) begin
+        ddr_init_done_pclk_sync <= 3'd0;
+    end else begin
+        ddr_init_done_pclk_sync <= {ddr_init_done_pclk_sync[1:0], ddr_init_done};
+    end
+end
+
+assign ch0_rframe_rst_n = core_rst_n && ddr_init_done_pclk_sync[2];
 
 // ===============================================================================
 // 🚀 修复版：PCIe DMA 帧同步逻辑 (原生场同步信号触发)
@@ -255,6 +302,7 @@ mem_axi_burst_ctrl_core dl_axi_ctrl_inst (
 	  .M_AXI_AWID                  (axi_awuser_id),
 	  .M_AXI_AWADDR                (axi_awaddr),
 	  .M_AXI_AWLEN                 (axi_awlen),
+      .M_AXI_AWUSER                (axi_awuser_ap),
 	  .M_AXI_AWVALID               (axi_awvalid),
 	  .M_AXI_AWREADY               (axi_awready),
 	  .M_AXI_WDATA                 (axi_wdata),
@@ -264,6 +312,7 @@ mem_axi_burst_ctrl_core dl_axi_ctrl_inst (
 	  .M_AXI_ARID                  (axi_aruser_id),
 	  .M_AXI_ARADDR                (axi_araddr),
 	  .M_AXI_ARLEN                 (axi_arlen),
+      .M_AXI_ARUSER                (axi_aruser_ap),
 	  .M_AXI_ARVALID               (axi_arvalid),
 	  .M_AXI_ARREADY               (axi_arready),
 	  .M_AXI_RID                   (axi_rid),
@@ -280,7 +329,7 @@ mem_axi_burst_ctrl_core dl_axi_ctrl_inst (
       .ch0_wframe_data_valid       (ch0_write_data_valid),         
       .ch0_wframe_data             (ch0_write_data),
       .ch0_rframe_pclk             (pclk_div2),   
-      .ch0_rframe_rst_n            (ddr_init_done), 
+    .ch0_rframe_rst_n            (ch0_rframe_rst_n),
       .ch0_rframe_vsync            (ch0_read_frame_req),
       .ch0_rframe_req              (ch0_read_frame_req),
       .ch0_rframe_req_ack          (ch0_read_req_ack),
@@ -459,10 +508,17 @@ pcie_dma_core #(
 	.o_axis_slave0_tlast	(axis_slave0_tlast),	
 	.o_axis_slave0_tuser	(axis_slave0_tuser),	
 
-	.i_axis_slave1_trdy		(1'b1),		
-	.o_axis_slave1_tvld		(),		
-	.i_axis_slave2_trdy		(1'b1),		
-	.o_axis_slave2_tvld		(),		
+    .i_axis_slave1_trdy		(axis_slave1_tready),
+    .o_axis_slave1_tvld		(axis_slave1_tvalid),
+    .o_axis_slave1_tdata	(axis_slave1_tdata),
+    .o_axis_slave1_tlast	(axis_slave1_tlast),
+    .o_axis_slave1_tuser	(axis_slave1_tuser),
+
+    .i_axis_slave2_trdy		(axis_slave2_tready),
+    .o_axis_slave2_tvld		(axis_slave2_tvalid),
+    .o_axis_slave2_tdata	(axis_slave2_tdata),
+    .o_axis_slave2_tlast	(axis_slave2_tlast),
+    .o_axis_slave2_tuser	(axis_slave2_tuser),
 
 	.i_cfg_ido_req_en		(1'b0),			
 	.i_cfg_ido_cpl_en		(1'b0),			
@@ -519,8 +575,16 @@ pcie_test dl_u_ips2l_pcie_wrap (
 	.axis_slave0_tdata			(axis_slave0_tdata),	
 	.axis_slave0_tlast			(axis_slave0_tlast),	
 	.axis_slave0_tuser			(axis_slave0_tuser),	
-	.axis_slave1_tvalid			(1'b0),	
-	.axis_slave2_tvalid			(1'b0),	
+    .axis_slave1_tready			(axis_slave1_tready),
+    .axis_slave1_tvalid			(axis_slave1_tvalid),
+    .axis_slave1_tdata			(axis_slave1_tdata),
+    .axis_slave1_tlast			(axis_slave1_tlast),
+    .axis_slave1_tuser			(axis_slave1_tuser),
+    .axis_slave2_tready			(axis_slave2_tready),
+    .axis_slave2_tvalid			(axis_slave2_tvalid),
+    .axis_slave2_tdata			(axis_slave2_tdata),
+    .axis_slave2_tlast			(axis_slave2_tlast),
+    .axis_slave2_tuser			(axis_slave2_tuser),
 	.cfg_max_rd_req_size		(cfg_max_rd_req_size),	
 	.cfg_max_payload_size		(cfg_max_payload_size),	
 	.cfg_rcb					(cfg_rcb),				
