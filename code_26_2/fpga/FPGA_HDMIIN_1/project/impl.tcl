@@ -1040,7 +1040,6 @@ dev_map
 pnr 
 report_timing 
 gen_bit_stream -compress_bitstream true -master_configuration_clock_frequency {40M} 
-<<<<<<< HEAD
 set_arch -family Logos2 -device PG2L100H -speedgrade -6 -package FBG484
 compile -top_module dl_fpga_prj
 synthesize -dir {E:/pds/PDS_2022.2-SP6.4/syn/bin/synplify_pro.exe} -ads -selected_syn_tool_opt 2 
@@ -1055,18 +1054,21 @@ dev_map
 pnr 
 report_timing 
 gen_bit_stream -compress_bitstream true -master_configuration_clock_frequency {40M} 
-=======
-set_arch -family Logos2 -device PG2L100H -speedgrade -6 -package FBG484
-compile -top_module dl_fpga_prj
-add_design "E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/FPGA_HDMIIN_1/project/source/ms72xx_ctl.v"
-set_arch -family Logos2 -device PG2L100H -speedgrade -6 -package FBG484
-compile -top_module dl_fpga_prj
-set_arch -family Logos2 -device PG2L100H -speedgrade -6 -package FBG484
-compile -top_module dl_fpga_prj
 set_arch -family Logos2 -device PG2L100H -speedgrade -6 -package FBG484
 compile -top_module dl_fpga_prj
 synthesize -dir {E:/pds/PDS_2022.2-SP6.4/syn/bin/synplify_pro.exe} -ads -selected_syn_tool_opt 2 
->>>>>>> 2a5b69e8ab9968dd106cc65817409f251b8e3864
+dev_map 
+pnr 
+report_timing 
+gen_bit_stream -compress_bitstream true -master_configuration_clock_frequency {40M} 
+set_arch -family Logos2 -device PG2L100H -speedgrade -6 -package FBG484
+compile -top_module dl_fpga_prj
+set_arch -family Logos2 -device PG2L100H -speedgrade -6 -package FBG484
+compile -top_module dl_fpga_prj
+set_arch -family Logos2 -device PG2L100H -speedgrade -6 -package FBG484
+compile -top_module dl_fpga_prj
+set_arch -family Logos2 -device PG2L100H -speedgrade -6 -package FBG484
+compile -top_module dl_fpga_prj
 set_arch -family Logos2 -device PG2L100H -speedgrade -6 -package FBG484
 compile -top_module dl_fpga_prj
 synthesize -dir {E:/pds/PDS_2022.2-SP6.4/syn/bin/synplify_pro.exe} -ads -selected_syn_tool_opt 2 

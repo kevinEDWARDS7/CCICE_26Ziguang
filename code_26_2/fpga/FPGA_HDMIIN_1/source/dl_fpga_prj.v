@@ -65,9 +65,22 @@ module dl_fpga_prj #(
 wire hdmi_rx_init_done;
 wire hdmi_video_rst_n;
 wire [15:0] hdmi_rgb565;
-assign hdmi_rgb565      = {hdmi_r[7:3], hdmi_g[7:2], hdmi_b[7:3]};
+wire [7:0] hdmi_iic_device_id;
+wire       hdmi_iic_trig;
+wire       hdmi_iic_wr;
+wire [15:0] hdmi_iic_addr;
+wire [7:0] hdmi_iic_wdata;
+wire       hdmi_iic_busy;
+wire [7:0] hdmi_iic_rdata;
+wire       hdmi_iic_byte_over;
+wire       hdmi_sda_in;
+wire       hdmi_sda_out;
+wire       hdmi_sda_oe;
 
-<<<<<<< HEAD
+assign hdmi_rgb565      = {hdmi_r[7:3], hdmi_g[7:2], hdmi_b[7:3]};
+assign hdmi_rx_sda      = hdmi_sda_oe ? hdmi_sda_out : 1'bz;
+assign hdmi_sda_in      = hdmi_rx_sda;
+
 localparam [19:0] HDMI_IIC_STARTUP_CYCLES = 20'd1_000_000;
 reg [19:0] hdmi_iic_startup_cnt;
 reg        hdmi_iic_rstn;
@@ -99,33 +112,7 @@ always @(posedge hdmi_pix_clk or negedge hdmi_iic_rstn) begin
 end
 
 assign hdmi_video_rst_n = ddr_init_done_hdmi_sync[2] && hdmi_rx_init_done_hdmi_sync[2];
-=======
->>>>>>> 2a5b69e8ab9968dd106cc65817409f251b8e3864
 
-//===============================================================================
-// 1. 纯手写上电延时复位 (保证 MS7200 芯片物理上电彻底稳定)
-//===============================================================================
-reg [19:0] pwr_on_delay_cnt;
-reg        pwr_on_rst_n;
-always @(posedge sys_clk or negedge sys_rst_n) begin
-    if (!sys_rst_n) begin
-        pwr_on_delay_cnt <= 20'd0;
-        pwr_on_rst_n <= 1'b0;
-    end else if (pwr_on_delay_cnt < 20'd500_000) begin // 25MHz 时钟下延时 20ms
-        pwr_on_delay_cnt <= pwr_on_delay_cnt + 1'b1;
-        pwr_on_rst_n <= 1'b0;
-    end else begin
-        pwr_on_rst_n <= 1'b1;
-    end
-end
-
-//===============================================================================
-// 2. 例化参考工程的 ms72xx_ctl (一劳永逸解决 I2C 时序和驱动问题)
-//===============================================================================
-wire hdmi_rx_init_done_i;
-assign hdmi_rx_init_done = hdmi_rx_init_done_i; // 输出给顶层端口
-
-<<<<<<< HEAD
 ms7200_ctl u_hdmi_rx_ms7200_ctl (
     .clk        (clk_10m),
     .rstn       (hdmi_iic_rstn),
@@ -164,25 +151,6 @@ iic_dri #(
     .sda_out    (hdmi_sda_out),
     .sda_out_en (hdmi_sda_oe)
 );
-=======
-ms72xx_ctl u_hdmi_rx_ms72xx_ctl (
-    .clk           (sys_clk),              // 输入 25MHz 系统时钟
-    .rst_n         (pwr_on_rst_n),         // 接入我们刚才写的 20ms 延时复位
-    
-    .init_over_rx  (hdmi_rx_init_done_i),  // 初始化完成标志
-    .init_over     (),                     // 仅发送端用到，悬空即可
-    .iic_scl       (hdmi_rx_scl),          // 直接连物理端口
-    .iic_sda       (hdmi_rx_sda)           // 直接连物理端口（模块内部已处理为双向 inout）
-);
-
-//===============================================================================
-// 3. 视频流复位与像素拼接
-//===============================================================================
-assign hdmi_rgb565 = {hdmi_r[7:3], hdmi_g[7:2], hdmi_b[7:3]};
-
-// 只有当 MS7200 初始化完成且 DDR3 准备好时，才解除视频处理链路的复位
-assign hdmi_video_rst_n = pwr_on_rst_n && ddr_init_done && hdmi_rx_init_done_i;
->>>>>>> 2a5b69e8ab9968dd106cc65817409f251b8e3864
 
 //===============================================================================
 // 内部参数与网络定义
@@ -329,6 +297,9 @@ mem_axi_burst_ctrl_core dl_axi_ctrl_inst (
 	  .M_AXI_WDATA                 (axi_wdata),
 	  .M_AXI_WSTRB                 (axi_wstrb),
 	  .M_AXI_WREADY                (axi_wready),
+      .M_AXI_BID                   (4'd0),
+      .M_AXI_BRESP                 (2'b00),
+      .M_AXI_BUSER                 (1'b0),
       .M_AXI_BVALID                (1'b1),
 	  .M_AXI_ARID                  (axi_aruser_id),
 	  .M_AXI_ARADDR                (axi_araddr),
@@ -338,7 +309,9 @@ mem_axi_burst_ctrl_core dl_axi_ctrl_inst (
 	  .M_AXI_ARREADY               (axi_arready),
 	  .M_AXI_RID                   (axi_rid),
 	  .M_AXI_RDATA                 (axi_rdata),
+      .M_AXI_RRESP                 (2'b00),
 	  .M_AXI_RLAST                 (axi_rlast),
+      .M_AXI_RUSER                 (1'b0),
 	  .M_AXI_RVALID                (axi_rvalid),
 
       .key                         ({1'b1,3'b111,4'b0000}),
@@ -368,6 +341,7 @@ mem_axi_burst_ctrl_core dl_axi_ctrl_inst (
       .ch1_rframe_rst_n            (1'b0), 
       .ch1_rframe_vsync            (1'b0),
       .ch1_rframe_req              (1'b0),
+    .ch1_rframe_data_en          (1'b0),
 
       .ch2_wframe_pclk             (1'b0),
       .ch2_wframe_rst_n            (1'b0),
@@ -378,6 +352,7 @@ mem_axi_burst_ctrl_core dl_axi_ctrl_inst (
       .ch2_rframe_rst_n            (1'b0), 
       .ch2_rframe_vsync            (1'b0),
       .ch2_rframe_req              (1'b0),
+    .ch2_rframe_data_en          (1'b0),
 
       .ch3_wframe_pclk             (1'b0),  
       .ch3_wframe_rst_n            (1'b0),
@@ -387,7 +362,8 @@ mem_axi_burst_ctrl_core dl_axi_ctrl_inst (
       .ch3_rframe_pclk             (1'b0),   
       .ch3_rframe_rst_n            (1'b0), 
       .ch3_rframe_vsync            (1'b0),
-      .ch3_rframe_req              (1'b0)
+    .ch3_rframe_req              (1'b0),
+    .ch3_rframe_data_en          (1'b0)
 );
 
 //===============================================================================
@@ -559,7 +535,10 @@ pcie_dma_core #(
 
     .o_dma_write_data_req   (dma_write_req),
     .o_dma_write_addr       (dma_write_addr),
-    .i_dma_write_data       (dma_write_data)
+    .i_dma_write_data       (dma_write_data),
+    .i_dma_read_data_req    (1'b0),
+    .i_dma_read_addr        (12'd0),
+    .o_dma_read_data        ()
 );
 
 pcie_test dl_u_ips2l_pcie_wrap (

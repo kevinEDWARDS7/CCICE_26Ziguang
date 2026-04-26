@@ -152,6 +152,19 @@ chmod +x scripts/*.sh
 sudo ./scripts/run_display.sh --frames 1
 ```
 
+只加载本工程驱动并做 PCIe 安全探测：
+
+```sh
+sudo ./scripts/run_display.sh --probe-only
+```
+
+完整链路优先做无显示 DMA dump，脚本会自动使用 `1920x1080 RGB565`、`line-bytes=3840` 和 DMA 哨兵：
+
+```sh
+sudo ./scripts/run_display.sh --dump-test
+sudo ./scripts/run_display.sh --dump-test /tmp/hdmi_pcie_sentinel.rgb565
+```
+
 只关闭显示应用程序：
 
 ```sh

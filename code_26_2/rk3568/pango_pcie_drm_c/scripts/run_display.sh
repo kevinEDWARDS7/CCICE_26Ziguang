@@ -1,28 +1,47 @@
-#!/bin/sh
+                                            #!/bin/sh
 set -eu
 
-cd "$(dirname "$0")/.."
+SCRIPT_DIR=$(CDPATH= cd "$(dirname "$0")" && pwd)
+cd "$SCRIPT_DIR/.."
 
-APP=./pango_pcie_drm_c
-APP_NAME=pango_pcie_drm_c
-PROBE=./pcie_probe_only
-DRIVER=./driver/pango_pci_driver.ko
-MODULE=pango_pci_driver
-PCIE_DEV=/dev/pango_pci_driver
-DRM_DEV=/dev/dri/card0
+APP=${APP:-./pango_pcie_drm_c}
+APP_NAME=${APP_NAME:-pango_pcie_drm_c}
+PROBE=${PROBE:-./pcie_probe_only}
+DRIVER=${DRIVER:-./driver/pango_pci_driver.ko}
+MODULE=${MODULE:-pango_pci_driver}
+PCIE_DEV=${PCIE_DEV:-/dev/pango_pci_driver}
+DRM_DEV=${DRM_DEV:-/dev/dri/card0}
+WIDTH=${WIDTH:-1920}
+HEIGHT=${HEIGHT:-1080}
+LINE_BYTES=${LINE_BYTES:-3840}
+DUMP_PATH=${DUMP_PATH:-/tmp/hdmi_pcie_sentinel.rgb565}
+DUMP_LINES=${DUMP_LINES:-8}
+DMA_SENTINEL=${DMA_SENTINEL:-0xa5}
 
 usage() {
-    cat <<EOF
-Usage:
-  $0 [app options]
-  $0 -c
-  $0 -c all
-
-Commands:
-  no -c      Load this project's driver, probe PCIe, then start display.
-  -c         Stop the display application only.
-  -c all     Stop the display application and unload the driver module.
-EOF
+        printf '%s\n' \
+                "Usage:" \
+                "  $0 [app options]" \
+                "  $0 -p|--probe-only" \
+                "  $0 -t|--dump-test [dump path]" \
+                "  $0 -c" \
+                "  $0 -c all" \
+                "" \
+                "Commands:" \
+                "  no command     Load this project's driver, probe PCIe, then start display." \
+                "  -p, --probe-only" \
+                "                 Load this project's driver, probe PCIe, then exit." \
+                "  -t, --dump-test [dump path]" \
+                "                 Load driver, probe PCIe, run one no-display DMA dump with sentinel." \
+                "  -c             Stop the display application only." \
+                "  -c all         Stop the display application and unload the driver module." \
+                "" \
+                "Environment overrides:" \
+                "  DRIVER=$DRIVER" \
+                "  PCIE_DEV=$PCIE_DEV" \
+                "  DRM_DEV=$DRM_DEV" \
+                "  WIDTH=$WIDTH HEIGHT=$HEIGHT LINE_BYTES=$LINE_BYTES" \
+                "  DUMP_PATH=$DUMP_PATH DUMP_LINES=$DUMP_LINES DMA_SENTINEL=$DMA_SENTINEL"
 }
 
 require_root() {
@@ -85,6 +104,50 @@ load_driver() {
     fi
 }
 
+check_programs() {
+    if [ ! -x "$PROBE" ] || [ ! -x "$APP" ]; then
+        echo "error: user programs not found; run ./scripts/build_on_rk3568.sh first" >&2
+        echo "checked: $PROBE and $APP" >&2
+        exit 1
+    fi
+}
+
+probe_pcie() {
+    "$PROBE" --pcie "$PCIE_DEV"
+}
+
+run_app() {
+    exec "$APP" \
+        --pcie "$PCIE_DEV" \
+        --drm "$DRM_DEV" \
+        --width "$WIDTH" \
+        --height "$HEIGHT" \
+        --line-bytes "$LINE_BYTES" \
+        "$@"
+}
+
+run_dump_test() {
+    echo "dumping one PCIe DMA frame to $DUMP_PATH"
+    "$APP" \
+        --pcie "$PCIE_DEV" \
+        --drm "$DRM_DEV" \
+        --width "$WIDTH" \
+        --height "$HEIGHT" \
+        --line-bytes "$LINE_BYTES" \
+        --no-display \
+        --frames 1 \
+        --dump-lines "$DUMP_LINES" \
+        --dump-frame "$DUMP_PATH" \
+        --dma-sentinel "$DMA_SENTINEL"
+
+    if [ -f "$DUMP_PATH" ]; then
+        ls -l "$DUMP_PATH"
+        if command -v hexdump >/dev/null 2>&1; then
+            hexdump -C "$DUMP_PATH" | head -40
+        fi
+    fi
+}
+
 if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
     usage
     exit 0
@@ -112,19 +175,32 @@ fi
 
 require_root
 
-if [ ! -x ./pcie_probe_only ] || [ ! -x ./pango_pcie_drm_c ]; then
-    echo "error: user programs not found; run ./scripts/build_on_rk3568.sh first" >&2
-    exit 1
-fi
+check_programs
 
 load_driver
+probe_pcie
 
-"$PROBE" --pcie "$PCIE_DEV"
+if [ "${1:-}" = "-p" ] || [ "${1:-}" = "--probe-only" ]; then
+    shift
+    if [ "$#" -ne 0 ]; then
+        usage >&2
+        exit 2
+    fi
+    exit 0
+fi
 
-exec "$APP" \
-    --pcie "$PCIE_DEV" \
-    --drm "$DRM_DEV" \
-    --width 1920 \
-    --height 1080 \
-    --line-bytes 3840 \
-    "$@"
+if [ "${1:-}" = "-t" ] || [ "${1:-}" = "--dump-test" ]; then
+    shift
+    if [ "${1:-}" != "" ]; then
+        DUMP_PATH=$1
+        shift
+    fi
+    if [ "$#" -ne 0 ]; then
+        usage >&2
+        exit 2
+    fi
+    run_dump_test
+    exit 0
+fi
+
+run_app "$@"
