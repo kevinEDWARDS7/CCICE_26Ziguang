@@ -1,5 +1,5 @@
 #Build: Fabric Compiler 2022.2-SP6.4, Build 146967, Jan 31 01:39 2024
-#Install: F:\Ziguang\PDS_2022.2-SP6.4\bin
+#Install: E:\pds\PDS_2022.2-SP6.4\bin
 #Application name: pds.exe
 #OS: Windows 10 10.0.26200
 #Hostname: KevinEdwards
@@ -10,15 +10,15 @@ Parse module hierarchy of project 'F:/Codex/CCICE_26Ziguang/code_26_2/fpga/templ
 Process "Compile" started.
 Current time: Sun Apr 26 02:01:39 2026
 Compiling architecture definition.
-Analyzing project file 'F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/dl_prj.pds'.
-License checkout: fabric_ads from F:\Ziguang\PDS_2022.2-SP6.4\license\new_pds_F4A80DA47D72.lic
+Analyzing project file 'E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/dl_prj.pds'.
+License checkout: fabric_ads from D:\pango\license\new_pds_F4A80DA47D72.lic
 Compiling verification operator library.
 Loading technology operator library.
 Compiling technology operator library.
 Compiling technology operator (valence) library.
-W: Flow-4058: The device information PG2L50H-6FBG484 of IP 'F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/ipcore/ddr3/ddr3.idf' is not the same as the current project.
-W: Flow-4058: The device information PG2L50H-6FBG484 of IP 'F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/ipcore/afifo_16i_128o_512/afifo_16i_128o_512.idf' is not the same as the current project.
-W: Flow-4058: The device information PG2L50H-6FBG484 of IP 'F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/ipcore/afifo_128i_128o_512/afifo_128i_128o_512.idf' is not the same as the current project.
+W: Flow-4058: The device information PG2L50H-6FBG484 of IP 'E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/ipcore/ddr3/ddr3.idf' is not the same as the current project.
+W: Flow-4058: The device information PG2L50H-6FBG484 of IP 'E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/ipcore/afifo_16i_128o_512/afifo_16i_128o_512.idf' is not the same as the current project.
+W: Flow-4058: The device information PG2L50H-6FBG484 of IP 'E:/Ziguang/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/ipcore/afifo_128i_128o_512/afifo_128i_128o_512.idf' is not the same as the current project.
 I: Enable Verilog2k features and keywords
 Start rtl-analyze.
 Executing : .rtl_analyze -work work -include_path {F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project} F:/Codex/CCICE_26Ziguang/code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/source/pcie/pcie_dma_ctrl/ipm_distributed_sdpram_v1_2.v
