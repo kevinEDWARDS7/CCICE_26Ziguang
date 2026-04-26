@@ -492,36 +492,54 @@ define_attribute {p:hdmi_rx_sda} {PAP_IO_DIRECTION} {INOUT}
 define_attribute {p:hdmi_rx_sda} {PAP_IO_LOC} {AA20}
 define_attribute {p:hdmi_rx_sda} {PAP_IO_VCCIO} {3.3}
 define_attribute {p:hdmi_rx_sda} {PAP_IO_STANDARD} {LVCMOS33}
-define_attribute {p:hdmi_rx_sda} {PAP_IO_DRIVE} {4}
+define_attribute {p:hdmi_rx_sda} {PAP_IO_DRIVE} {8}
 define_attribute {p:hdmi_rx_sda} {PAP_IO_PULLUP} {TRUE}
-define_attribute {p:hdmi_rx_sda} {PAP_IO_SLEW} {FAST}
+define_attribute {p:hdmi_rx_sda} {PAP_IO_SLEW} {SLOW}
 
 define_attribute {p:hdmi_rx_scl} {PAP_IO_DIRECTION} {OUTPUT}
 define_attribute {p:hdmi_rx_scl} {PAP_IO_LOC} {AA21}
 define_attribute {p:hdmi_rx_scl} {PAP_IO_VCCIO} {3.3}
 define_attribute {p:hdmi_rx_scl} {PAP_IO_STANDARD} {LVCMOS33}
-define_attribute {p:hdmi_rx_scl} {PAP_IO_DRIVE} {4}
+define_attribute {p:hdmi_rx_scl} {PAP_IO_DRIVE} {8}
 define_attribute {p:hdmi_rx_scl} {PAP_IO_NONE} {TRUE}
-define_attribute {p:hdmi_rx_scl} {PAP_IO_SLEW} {FAST}
+define_attribute {p:hdmi_rx_scl} {PAP_IO_SLEW} {SLOW}
 
-# G25 is not placeable for the current device/package. Leave rstn_out
-# unconstrained until the board-specific MS7200 reset pin is confirmed.
+# G25 is not placeable for the current device/package. Keep rstn_out
+# internal until the board-specific MS7200 reset pin is confirmed.
 # A partial IO constraint block (VCCIO/IOSTANDARD without LOC) is rejected
 # by ConstraintEditor-0040 during synthesize.
-# define_attribute {p:rstn_out} {PAP_IO_DIRECTION} {OUTPUT}
-# define_attribute {p:rstn_out} {PAP_IO_LOC} {G25}
-# define_attribute {p:rstn_out} {PAP_IO_VCCIO} {3.3}
-# define_attribute {p:rstn_out} {PAP_IO_STANDARD} {LVCMOS33}
-# define_attribute {p:rstn_out} {PAP_IO_DRIVE} {8}
-# define_attribute {p:rstn_out} {PAP_IO_NONE} {TRUE}
-# define_attribute {p:rstn_out} {PAP_IO_SLEW} {SLOW}
-#region agent log
-agent_debug_log post-fix H6 project/project.fdc:rstn_out {rstn_out constraint block intentionally disabled}
-#endregion
 
 # =========================================================
 # HDMI 数据通道约束
 # =========================================================
+define_attribute {p:hdmi_b[7]} {PAP_IO_REGISTER} {TRUE}
+define_attribute {p:hdmi_b[6]} {PAP_IO_REGISTER} {TRUE}
+define_attribute {p:hdmi_b[5]} {PAP_IO_REGISTER} {TRUE}
+define_attribute {p:hdmi_b[4]} {PAP_IO_REGISTER} {TRUE}
+define_attribute {p:hdmi_b[3]} {PAP_IO_REGISTER} {TRUE}
+define_attribute {p:hdmi_b[2]} {PAP_IO_REGISTER} {TRUE}
+define_attribute {p:hdmi_b[1]} {PAP_IO_REGISTER} {TRUE}
+define_attribute {p:hdmi_b[0]} {PAP_IO_REGISTER} {TRUE}
+define_attribute {p:hdmi_g[7]} {PAP_IO_REGISTER} {TRUE}
+define_attribute {p:hdmi_g[6]} {PAP_IO_REGISTER} {TRUE}
+define_attribute {p:hdmi_g[5]} {PAP_IO_REGISTER} {TRUE}
+define_attribute {p:hdmi_g[4]} {PAP_IO_REGISTER} {TRUE}
+define_attribute {p:hdmi_g[3]} {PAP_IO_REGISTER} {TRUE}
+define_attribute {p:hdmi_g[2]} {PAP_IO_REGISTER} {TRUE}
+define_attribute {p:hdmi_g[1]} {PAP_IO_REGISTER} {TRUE}
+define_attribute {p:hdmi_g[0]} {PAP_IO_REGISTER} {TRUE}
+define_attribute {p:hdmi_r[7]} {PAP_IO_REGISTER} {TRUE}
+define_attribute {p:hdmi_r[6]} {PAP_IO_REGISTER} {TRUE}
+define_attribute {p:hdmi_r[5]} {PAP_IO_REGISTER} {TRUE}
+define_attribute {p:hdmi_r[4]} {PAP_IO_REGISTER} {TRUE}
+define_attribute {p:hdmi_r[3]} {PAP_IO_REGISTER} {TRUE}
+define_attribute {p:hdmi_r[2]} {PAP_IO_REGISTER} {TRUE}
+define_attribute {p:hdmi_r[1]} {PAP_IO_REGISTER} {TRUE}
+define_attribute {p:hdmi_r[0]} {PAP_IO_REGISTER} {TRUE}
+define_attribute {p:hdmi_de} {PAP_IO_REGISTER} {TRUE}
+define_attribute {p:hdmi_hs} {PAP_IO_REGISTER} {TRUE}
+define_attribute {p:hdmi_pix_clk} {PAP_IO_REGISTER} {TRUE}
+define_attribute {p:hdmi_vs} {PAP_IO_REGISTER} {TRUE}
 create_clock -name {hdmi_pix_clk} [get_ports {hdmi_pix_clk}] -period {6.670} -waveform {0.000 3.335}
 define_attribute {p:hdmi_pix_clk} {PAP_IO_DIRECTION} {INPUT}
 define_attribute {p:hdmi_pix_clk} {PAP_IO_LOC} {W19} 

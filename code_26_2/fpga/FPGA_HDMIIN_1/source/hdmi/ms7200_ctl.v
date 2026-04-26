@@ -19,7 +19,9 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 `define UD #1
-module ms7200_ctl(
+module ms7200_ctl #(
+    parameter [7:0] DEVICE_ID = 8'h56
+)(
     input               clk,
     input               rstn,
                         
@@ -33,7 +35,7 @@ module ms7200_ctl(
     input        [ 7:0] data_out ,
     input               byte_over 
 );
-    assign device_id = 8'h56;
+    assign device_id = DEVICE_ID;
 function [23:0] cmd_data;
 input [9:0] index;
     begin

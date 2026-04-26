@@ -7,7 +7,8 @@ module dl_fpga_prj #(
    parameter MEM_COLUMN_WIDTH     = 10         ,    // DDR3列地址宽度
    parameter MEM_BANK_WIDTH       = 3          ,    // DDR3 Bank地址宽度
    parameter MEM_DQ_WIDTH         = 16         ,    // DDR3数据位宽
-   parameter MEM_DQS_WIDTH        = 2               // DDR3 DQS信号数量
+   parameter MEM_DQS_WIDTH        = 2          ,    // DDR3 DQS信号数量
+   parameter [7:0] MS7200_DEVICE_ID = 8'h56         // 8-bit I2C address, SA-low default
 )(
     //===========================================================================
     // 系统时钟和复位信号
@@ -46,7 +47,6 @@ module dl_fpga_prj #(
     input       [7:0]                    hdmi_b                        ,
     output                               hdmi_rx_scl                   ,
     inout                                hdmi_rx_sda                   ,
-    output                               rstn_out                      ,
     
     //===========================================================================
     // PCIe物理接口信号
@@ -77,48 +77,29 @@ wire       hdmi_iic_byte_over;
 wire       hdmi_sda_in;
 wire       hdmi_sda_out;
 wire       hdmi_sda_oe;
+wire       rstn_out;
 
 assign hdmi_rgb565      = {hdmi_r[7:3], hdmi_g[7:2], hdmi_b[7:3]};
 assign hdmi_rx_sda      = hdmi_sda_oe ? hdmi_sda_out : 1'bz;
 assign hdmi_sda_in      = hdmi_rx_sda;
-assign rstn_out         = hdmi_power_stable;
 
-localparam [19:0] HDMI_POWER_STABLE_CYCLES = 20'd200_000;
-localparam [19:0] HDMI_IIC_STARTUP_CYCLES = 20'd1_000_000;
-reg [19:0] hdmi_startup_cnt;
-reg        hdmi_power_stable;
-reg        hdmi_iic_rstn;
+reg [15:0] hdmi_rstn_1ms;
+wire       hdmi_rstn_out;
+wire       hdmi_iic_rstn;
 wire       hdmi_cfg_rst_n;
 
 assign hdmi_cfg_rst_n = lock && sys_rst_n;
+assign hdmi_rstn_out  = (hdmi_rstn_1ms == 16'h2710);
+assign rstn_out       = hdmi_rstn_out;
+assign hdmi_iic_rstn  = hdmi_rstn_out;
 
 always @(posedge clk_10m or negedge hdmi_cfg_rst_n) begin
     if (!hdmi_cfg_rst_n) begin
-        hdmi_startup_cnt  <= 20'd0;
-        hdmi_power_stable <= 1'b0;
-        hdmi_iic_rstn     <= 1'b0;
-    end else if (!hdmi_power_stable) begin
-        if (hdmi_startup_cnt == HDMI_POWER_STABLE_CYCLES) begin
-            hdmi_startup_cnt  <= 20'd0;
-            hdmi_power_stable <= 1'b1;
-            hdmi_iic_rstn     <= 1'b0;
-        end else begin
-            hdmi_startup_cnt  <= hdmi_startup_cnt + 20'd1;
-            hdmi_power_stable <= 1'b0;
-            hdmi_iic_rstn     <= 1'b0;
-        end
-    end else if (!hdmi_iic_rstn) begin
-        if (hdmi_startup_cnt == HDMI_IIC_STARTUP_CYCLES) begin
-            hdmi_startup_cnt <= hdmi_startup_cnt;
-            hdmi_iic_rstn    <= 1'b1;
-        end else begin
-            hdmi_startup_cnt <= hdmi_startup_cnt + 20'd1;
-            hdmi_iic_rstn    <= 1'b0;
-        end
+        hdmi_rstn_1ms <= 16'd0;
+    end else if (hdmi_rstn_1ms == 16'h2710) begin
+        hdmi_rstn_1ms <= hdmi_rstn_1ms;
     end else begin
-        hdmi_startup_cnt  <= hdmi_startup_cnt;
-        hdmi_power_stable <= hdmi_power_stable;
-        hdmi_iic_rstn     <= hdmi_iic_rstn;
+        hdmi_rstn_1ms <= hdmi_rstn_1ms + 16'd1;
     end
 end
 
@@ -137,7 +118,9 @@ end
 
 assign hdmi_video_rst_n = ddr_init_done_hdmi_sync[2] && hdmi_rx_init_done_hdmi_sync[2];
 
-ms7200_ctl u_hdmi_rx_ms7200_ctl (
+ms7200_ctl #(
+    .DEVICE_ID  (MS7200_DEVICE_ID)
+) u_hdmi_rx_ms7200_ctl (
     .clk        (clk_10m),
     .rstn       (hdmi_iic_rstn),
     .init_over  (hdmi_rx_init_done),
