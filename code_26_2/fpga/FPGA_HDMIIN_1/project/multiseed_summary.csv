@@ -3,23 +3,39 @@ project name,dl_prj.pds
 
 Single Seed:
 Seed,State,Convergence,Setup(Slow),Setup(Fast),Hold(Slow),Hold(Fast),Recovery(Slow),Recovery(Fast),Removal(Slow),Removal(Fast),PBM-GP,PBM-PreGP,PBM-PostGP,LP,Total Placement Cpu Time,Detailed routing,Total Routing Cpu Time,Wire Length After Post-GP,Wire Length After LP,Wire Length After DP,Routing Arc Length,Worst Slack After GP Timing,Worst Slack After LP Timing,Worst Slack Before RP,Worst Slack Before DP,Worst Slack After DP,Worst Slack After Placement,Worst Slack After TA By Preroute,TNS After DP,TNS Before Route,Setup(Slow) Total Failing TNS,Setup(Slow) Total Failing Endpoints,Hold(Slow) Total Failing THS,Hold(Slow) Total Failing Endpoints,Power
+<<<<<<< HEAD
 single,OK,Fail,-7.480,-4.078,0.138,0.100,-5.433,-3.865,0.277,0.248,NA,NA,NA,1.09,33.83,30.45,48.94,NA,NA,NA,151204,NA,NA,-3692,-3692,-3598,-4760,NA,-48358,-168431,-150.185,30,0.000,0,NA
+=======
+single,OK,Fail,-7.407,-5.414,0.132,0.090,-6.632,-4.828,0.260,0.190,NA,NA,NA,0.52,18.62,16.81,31.50,NA,NA,NA,130419,NA,NA,-3676,-3676,-3538,-6900,NA,-40759,-178053,-173.552,48,0.000,0,NA
+>>>>>>> 2a5b69e8ab9968dd106cc65817409f251b8e3864
 Pass Rate/Convergence Rate,100.00%,0.00%
 
 Synthesize:
 control_set,285
 Synthesize Performance Summary:
 slack category,Synthesize Setup WNS,Synthesize Setup TNS,Synthesize Recovery WNS,Synthesize Recovery TNS
+<<<<<<< HEAD
 slack value,-8.223,-102.127,-8.812,-405.552
 Synthesize Process Cpu Time,0h:0m:58s
+=======
+slack value,-8.227,-91.921,-8.820,-451.560
+Synthesize Process Cpu Time,0h:0m:33s
+>>>>>>> 2a5b69e8ab9968dd106cc65817409f251b8e3864
 
 Device Map:
 Device Map Resource Usage Summary:
 Logic Utilization,LUT,FF,DRM,APM,Distributed RAM,HSSTHP,USCM,HCKB,RCKB
+<<<<<<< HEAD
 Used,7115,7590,31,0,605,NA,7,0,2
 Available,66600,133200,155,240,19900,NA,32,96,24
 Utilization(%),11%,6%,20%,0%,4%,NA,22%,0%,9%
 Device Map Process Cpu Time,0h:0m:17s
+=======
+Used,6108,6412,27,0,349,NA,6,0,2
+Available,66600,133200,155,240,19900,NA,32,96,24
+Utilization(%),10%,5%,18%,0%,2%,NA,19%,0%,9%
+Device Map Process Cpu Time,0h:0m:12s
+>>>>>>> 2a5b69e8ab9968dd106cc65817409f251b8e3864
 
 Project Configurations:
 top module,dl_fpga_prj
