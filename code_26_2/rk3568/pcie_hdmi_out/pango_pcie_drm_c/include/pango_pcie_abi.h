@@ -32,6 +32,9 @@ extern "C" {
 #define DMA_MAX_PACKET_SIZE           4096U
 #define DMA_MIN_PACKET_SIZE           4U
 
+#define DMA_CMD_SENTINEL_ENABLE       0x80000000U
+#define DMA_CMD_SENTINEL_MASK         0x000000ffU
+
 typedef struct _BAR_INFO_ {
     unsigned long bar_base;
     unsigned long bar_len;

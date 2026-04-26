@@ -40,6 +40,8 @@ struct app_options {
     int no_display;
     const char *dump_frame_path;
     unsigned int dump_lines;
+    int dma_sentinel_enabled;
+    unsigned int dma_sentinel_byte;
 };
 
 struct dumb_buffer {
@@ -86,6 +88,7 @@ static void usage(const char *prog)
             "  --no-display         Read PCIe frames and print statistics without opening DRM.\n"
             "  --dump-frame PATH    Dump raw RGB565 bytes read from PCIe.\n"
             "  --dump-lines N       Dump only the first N lines. Default with --dump-frame: full frame.\n"
+            "  --dma-sentinel N     Fill the DMA destination with byte N before FPGA MWr for debug.\n"
             "  -h, --help           Show this help.\n",
             prog,
             PCIE_DRIVER_FILE_PATH,
@@ -132,6 +135,8 @@ static int parse_args(int argc, char **argv, struct app_options *opts)
     opts->no_display = 0;
     opts->dump_frame_path = NULL;
     opts->dump_lines = 0U;
+    opts->dma_sentinel_enabled = 0;
+    opts->dma_sentinel_byte = 0U;
 
     for (int i = 1; i < argc; ++i) {
         if (strcmp(argv[i], "--pcie") == 0 && i + 1 < argc) {
@@ -166,6 +171,11 @@ static int parse_args(int argc, char **argv, struct app_options *opts)
             if (parse_u32(argv[++i], &opts->dump_lines) != 0) {
                 return -1;
             }
+        } else if (strcmp(argv[i], "--dma-sentinel") == 0 && i + 1 < argc) {
+            if (parse_u32(argv[++i], &opts->dma_sentinel_byte) != 0) {
+                return -1;
+            }
+            opts->dma_sentinel_enabled = 1;
         } else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
             usage(argv[0]);
             exit(0);
@@ -192,6 +202,10 @@ static int parse_args(int argc, char **argv, struct app_options *opts)
     }
     if (opts->dump_lines > opts->input_height) {
         fprintf(stderr, "dump lines must be less than or equal to height\n");
+        return -1;
+    }
+    if (opts->dma_sentinel_enabled && opts->dma_sentinel_byte > 0xffU) {
+        fprintf(stderr, "DMA sentinel byte must be in range 0..255\n");
         return -1;
     }
 
@@ -310,6 +324,9 @@ static int pcie_read_frame_rgb565(int fd, unsigned char *frame, const struct app
 
     dma->current_len = opts->line_bytes / 4U;
     dma->offset_addr = 0U;
+    if (opts->dma_sentinel_enabled) {
+        dma->cmd = DMA_CMD_SENTINEL_ENABLE | (opts->dma_sentinel_byte & DMA_CMD_SENTINEL_MASK);
+    }
     memset(dma->data.write_buf, 0, DMA_MAX_PACKET_SIZE);
     memset(dma->data.read_buf, 0, DMA_MAX_PACKET_SIZE);
 
@@ -446,6 +463,7 @@ static int dump_frame_if_requested(const unsigned char *frame,
 static void print_frame_stats(const unsigned char *frame, size_t frame_bytes, const struct app_options *opts)
 {
     size_t nonzero_bytes = 0U;
+    size_t sentinel_bytes = 0U;
     size_t first_count = frame_bytes < 64U ? frame_bytes : 64U;
     unsigned int lines = opts->dump_lines == 0U ? opts->input_height : opts->dump_lines;
     size_t dump_bytes = (size_t)lines * opts->line_bytes;
@@ -458,12 +476,20 @@ static void print_frame_stats(const unsigned char *frame, size_t frame_bytes, co
         if (frame[i] != 0U) {
             ++nonzero_bytes;
         }
+        if (opts->dma_sentinel_enabled && frame[i] == (unsigned char)opts->dma_sentinel_byte) {
+            ++sentinel_bytes;
+        }
     }
 
     printf("frame_bytes=%zu dump_bytes=%zu nonzero_bytes=%zu\n",
            frame_bytes,
            dump_bytes,
            nonzero_bytes);
+    if (opts->dma_sentinel_enabled) {
+        printf("dma_sentinel=0x%02x sentinel_bytes=%zu\n",
+               opts->dma_sentinel_byte & 0xffU,
+               sentinel_bytes);
+    }
     printf("first_64_bytes:");
     if (first_count > 0U) {
         printf(" ");
