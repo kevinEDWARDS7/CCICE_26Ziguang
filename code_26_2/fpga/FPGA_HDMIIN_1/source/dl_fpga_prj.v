@@ -253,20 +253,26 @@ end
 
 // 2. 检测 hdmi_vs 的下降沿（代表一帧图像从 HDMI 接收完毕，已存入 DDR3）
 wire frame_done_pulse = (~hdmi_vs_d2) & hdmi_vs_d3;
-wire pcie_frame_output_done;
 reg  pcie_read_busy;
 reg  pcie_frame_pending;
 reg  pcie_frame_start_pulse;
+reg  [17:0] pcie_frame_word_cnt;
+
+localparam [17:0] PCIE_FRAME_WORDS = 18'd259200; // 1920*1080*16/128
+wire pcie_frame_output_done = pcie_read_busy && dma_write_req &&
+                              (pcie_frame_word_cnt == PCIE_FRAME_WORDS - 18'd1);
 
 always @(posedge pclk_div2) begin
     if (!core_rst_n) begin
         pcie_read_busy <= 1'b0;
         pcie_frame_pending <= 1'b0;
         pcie_frame_start_pulse <= 1'b0;
+        pcie_frame_word_cnt <= 18'd0;
     end else begin
         pcie_frame_start_pulse <= 1'b0;
 
         if (pcie_frame_output_done) begin
+            pcie_frame_word_cnt <= 18'd0;
             if (pcie_frame_pending || frame_done_pulse) begin
                 pcie_frame_start_pulse <= 1'b1;
                 pcie_read_busy <= 1'b1;
@@ -278,8 +284,11 @@ always @(posedge pclk_div2) begin
             pcie_frame_start_pulse <= 1'b1;
             pcie_read_busy <= 1'b1;
             pcie_frame_pending <= 1'b0;
+            pcie_frame_word_cnt <= 18'd0;
         end else if (pcie_read_busy && frame_done_pulse) begin
             pcie_frame_pending <= 1'b1;
+        end else if (pcie_read_busy && dma_write_req) begin
+            pcie_frame_word_cnt <= pcie_frame_word_cnt + 18'd1;
         end
     end
 end
@@ -315,8 +324,7 @@ pcie_image_channel_selector dl_pcie_img_select_inst(
     .ch3_data                    (128'd0),     
 
     .dma_wr_data_req             (dma_write_req),     
-    .dma_wr_data                 (dma_write_data),
-    .frame_output_done           (pcie_frame_output_done)
+    .dma_wr_data                 (dma_write_data)
 );
 
 //===============================================================================
