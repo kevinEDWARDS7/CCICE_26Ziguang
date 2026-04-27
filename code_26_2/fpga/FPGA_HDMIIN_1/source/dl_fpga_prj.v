@@ -83,6 +83,18 @@ assign hdmi_rgb565      = {hdmi_r[7:3], hdmi_g[7:2], hdmi_b[7:3]};
 assign hdmi_rx_sda      = hdmi_sda_oe ? hdmi_sda_out : 1'bz;
 assign hdmi_sda_in      = hdmi_rx_sda;
 
+wire       hdmi_rx_init_done_dbg /*synthesis PAP_MARK_DEBUG="1"*/;
+wire       hdmi_video_rst_n_dbg  /*synthesis PAP_MARK_DEBUG="1"*/;
+wire       hdmi_de_dbg           /*synthesis PAP_MARK_DEBUG="1"*/;
+wire       hdmi_vs_dbg           /*synthesis PAP_MARK_DEBUG="1"*/;
+wire [15:0] hdmi_rgb565_dbg      /*synthesis PAP_MARK_DEBUG="1"*/;
+
+assign hdmi_rx_init_done_dbg = hdmi_rx_init_done;
+assign hdmi_video_rst_n_dbg  = hdmi_video_rst_n;
+assign hdmi_de_dbg           = hdmi_de;
+assign hdmi_vs_dbg           = hdmi_vs;
+assign hdmi_rgb565_dbg       = hdmi_rgb565;
+
 reg [15:0] hdmi_rstn_1ms;
 wire       hdmi_rstn_out;
 wire       hdmi_iic_rstn;
@@ -252,8 +264,8 @@ always @(posedge pclk_div2) begin
     end
 end
 
-// 2. DDR 写通道使用 ~hdmi_vs 的下降沿切帧，因此这里用 hdmi_vs 上升沿作为可读帧完成点
-wire frame_done_pulse = hdmi_vs_d2 & (~hdmi_vs_d3);
+// 2. DDR 写通道检测 ch0_wframe_vsync 的上升沿；顶层接入 ~hdmi_vs，因此用 hdmi_vs 下降沿作为可读帧完成点
+wire frame_done_pulse = (~hdmi_vs_d2) & hdmi_vs_d3;
 reg  pcie_read_busy;
 reg  pcie_frame_pending;
 reg  pcie_frame_start_pulse;
@@ -326,6 +338,7 @@ pcie_image_channel_selector dl_pcie_img_select_inst(
     .ch3_data                    (128'd0),     
 
     .dma_wr_data_req             (dma_write_req),     
+    .dma_wr_data_addr            (dma_write_addr),
     .dma_wr_data                 (dma_write_data),
     .dma_wr_data_valid           (pcie_dma_write_valid)
 );
