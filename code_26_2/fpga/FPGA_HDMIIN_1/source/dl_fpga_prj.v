@@ -83,6 +83,18 @@ assign hdmi_rgb565      = {hdmi_r[7:3], hdmi_g[7:2], hdmi_b[7:3]};
 assign hdmi_rx_sda      = hdmi_sda_oe ? hdmi_sda_out : 1'bz;
 assign hdmi_sda_in      = hdmi_rx_sda;
 
+wire       hdmi_rx_init_done_dbg /*synthesis PAP_MARK_DEBUG="1"*/;
+wire       hdmi_video_rst_n_dbg  /*synthesis PAP_MARK_DEBUG="1"*/;
+wire       hdmi_de_dbg           /*synthesis PAP_MARK_DEBUG="1"*/;
+wire       hdmi_vs_dbg           /*synthesis PAP_MARK_DEBUG="1"*/;
+wire [15:0] hdmi_rgb565_dbg      /*synthesis PAP_MARK_DEBUG="1"*/;
+
+assign hdmi_rx_init_done_dbg = hdmi_rx_init_done;
+assign hdmi_video_rst_n_dbg  = hdmi_video_rst_n;
+assign hdmi_de_dbg           = hdmi_de;
+assign hdmi_vs_dbg           = hdmi_vs;
+assign hdmi_rgb565_dbg       = hdmi_rgb565;
+
 reg [15:0] hdmi_rstn_1ms;
 wire       hdmi_rstn_out;
 wire       hdmi_iic_rstn;
@@ -203,6 +215,7 @@ wire [127:0] axis_slave2_tdata;
 wire dma_write_req;
 wire [11:0] dma_write_addr;
 wire [127:0] dma_write_data;
+wire pcie_dma_write_valid;
 
 reg [2:0] ddr_init_done_pclk_sync;
 wire      ch0_rframe_rst_n;
@@ -221,21 +234,10 @@ assign ch0_rframe_rst_n = core_rst_n && ddr_init_done_pclk_sync[2];
 // 🚀 修复版：PCIe DMA 帧同步逻辑 (原生场同步信号触发)
 // ===============================================================================
 reg          ch0_read_frame_req;
-wire         ch0_read_req_ack, ch0_read_data_en, ch0_line_full_flag;
+wire         ch0_read_req_ack, ch0_read_data_en, ch0_read_data_valid, ch0_line_full_flag;
 wire [127:0] ch0_read_data;
 
-reg ch0_read_req_ack_d1, ch0_read_req_ack_d2;
-wire ch0_read_req_ack_pclk = ch0_read_req_ack_d2;
-
-always @(posedge pclk_div2) begin
-    if (!core_rst_n) begin
-        ch0_read_req_ack_d1 <= 1'b0;
-        ch0_read_req_ack_d2 <= 1'b0;
-    end else begin
-        ch0_read_req_ack_d1 <= ch0_read_req_ack;
-        ch0_read_req_ack_d2 <= ch0_read_req_ack_d1;
-    end
-end
+wire ch0_read_req_ack_pclk = ch0_read_req_ack;
 
 // 1. 将 hdmi_vs 信号跨时钟域同步到 PCIe 时钟域 (pclk_div2)，并消除亚稳态
 reg hdmi_vs_d1, hdmi_vs_d2, hdmi_vs_d3;
@@ -251,7 +253,7 @@ always @(posedge pclk_div2) begin
     end
 end
 
-// 2. 检测 hdmi_vs 的下降沿（代表一帧图像从 HDMI 接收完毕，已存入 DDR3）
+// 2. DDR 写通道检测 ch0_wframe_vsync 的上升沿；顶层接入 ~hdmi_vs，因此用 hdmi_vs 下降沿作为可读帧完成点
 wire frame_done_pulse = (~hdmi_vs_d2) & hdmi_vs_d3;
 reg  pcie_read_busy;
 reg  pcie_frame_pending;
@@ -259,7 +261,7 @@ reg  pcie_frame_start_pulse;
 reg  [17:0] pcie_frame_word_cnt;
 
 localparam [17:0] PCIE_FRAME_WORDS = 18'd259200; // 1920*1080*16/128
-wire pcie_frame_output_done = pcie_read_busy && dma_write_req &&
+wire pcie_frame_output_done = pcie_read_busy && pcie_dma_write_valid &&
                               (pcie_frame_word_cnt == PCIE_FRAME_WORDS - 18'd1);
 
 always @(posedge pclk_div2) begin
@@ -287,7 +289,7 @@ always @(posedge pclk_div2) begin
             pcie_frame_word_cnt <= 18'd0;
         end else if (pcie_read_busy && frame_done_pulse) begin
             pcie_frame_pending <= 1'b1;
-        end else if (pcie_read_busy && dma_write_req) begin
+        end else if (pcie_read_busy && pcie_dma_write_valid) begin
             pcie_frame_word_cnt <= pcie_frame_word_cnt + 18'd1;
         end
     end
@@ -314,6 +316,7 @@ pcie_image_channel_selector dl_pcie_img_select_inst(
 
     .ch0_data_req                (ch0_read_data_en),     
     .ch0_data                    (ch0_read_data),     
+    .ch0_data_valid              (ch0_read_data_valid),
     
     // 空闲通道 1,2,3 安全接地处理
     .ch1_data_req                (),     
@@ -324,7 +327,9 @@ pcie_image_channel_selector dl_pcie_img_select_inst(
     .ch3_data                    (128'd0),     
 
     .dma_wr_data_req             (dma_write_req),     
-    .dma_wr_data                 (dma_write_data)
+    .dma_wr_data_addr            (dma_write_addr),
+    .dma_wr_data                 (dma_write_data),
+    .dma_wr_data_valid           (pcie_dma_write_valid)
 );
 
 //===============================================================================
@@ -374,6 +379,7 @@ mem_axi_burst_ctrl_core dl_axi_ctrl_inst (
       .ch0_rframe_req_ack          (ch0_read_req_ack),
       .ch0_rframe_data_en          (ch0_read_data_en),
       .ch0_rframe_data             (ch0_read_data),      
+    .ch0_rframe_data_valid       (ch0_read_data_valid),
       .ch0_read_line_full          (ch0_line_full_flag),
 
       // 通道1,2,3 安全屏蔽

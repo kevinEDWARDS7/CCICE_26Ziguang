@@ -14,9 +14,11 @@ DRM_DEV=${DRM_DEV:-/dev/dri/card0}
 WIDTH=${WIDTH:-1920}
 HEIGHT=${HEIGHT:-1080}
 LINE_BYTES=${LINE_BYTES:-3840}
+INITIAL_DELAY_LOOPS=${INITIAL_DELAY_LOOPS:-1000000}
 DUMP_PATH=${DUMP_PATH:-/tmp/hdmi_pcie_sentinel.rgb565}
 DUMP_LINES=${DUMP_LINES:-8}
 DMA_SENTINEL=${DMA_SENTINEL:-0xa5}
+AUTO_STOP_DESKTOP=${AUTO_STOP_DESKTOP:-1}
 
 usage() {
         printf '%s\n' \
@@ -41,7 +43,9 @@ usage() {
                 "  PCIE_DEV=$PCIE_DEV" \
                 "  DRM_DEV=$DRM_DEV" \
                 "  WIDTH=$WIDTH HEIGHT=$HEIGHT LINE_BYTES=$LINE_BYTES" \
-                "  DUMP_PATH=$DUMP_PATH DUMP_LINES=$DUMP_LINES DMA_SENTINEL=$DMA_SENTINEL"
+                "  INITIAL_DELAY_LOOPS=$INITIAL_DELAY_LOOPS" \
+                "  DUMP_PATH=$DUMP_PATH DUMP_LINES=$DUMP_LINES DMA_SENTINEL=$DMA_SENTINEL" \
+                "  AUTO_STOP_DESKTOP=$AUTO_STOP_DESKTOP"
 }
 
 require_root() {
@@ -85,6 +89,24 @@ unload_driver() {
     fi
 }
 
+stop_desktop() {
+    if [ "$AUTO_STOP_DESKTOP" = "0" ]; then
+        echo "AUTO_STOP_DESKTOP=0; skip desktop shutdown"
+        return 0
+    fi
+
+    echo "stopping desktop/display services if present"
+    if command -v systemctl >/dev/null 2>&1; then
+        for svc in display-manager weston lightdm gdm gdm3 sddm xdm; do
+            systemctl stop "$svc" >/dev/null 2>&1 || true
+        done
+    fi
+
+    for proc in weston Xorg Xwayland kwin_wayland gnome-shell; do
+        pkill -x "$proc" >/dev/null 2>&1 || true
+    done
+}
+
 load_driver() {
     if [ ! -f "$DRIVER" ]; then
         echo "error: $DRIVER not found; run ./scripts/build_on_rk3568.sh first" >&2
@@ -104,12 +126,25 @@ load_driver() {
     fi
 }
 
-check_programs() {
-    if [ ! -x "$PROBE" ] || [ ! -x "$APP" ]; then
-        echo "error: user programs not found; run ./scripts/build_on_rk3568.sh first" >&2
-        echo "checked: $PROBE and $APP" >&2
+check_probe_program() {
+    if [ ! -x "$PROBE" ]; then
+        echo "error: probe program not found; run ./scripts/build_on_rk3568.sh first" >&2
+        echo "checked: $PROBE" >&2
         exit 1
     fi
+}
+
+check_app_program() {
+    if [ ! -x "$APP" ]; then
+        echo "error: display program not found; run ./scripts/build_on_rk3568.sh first" >&2
+        echo "checked: $APP" >&2
+        exit 1
+    fi
+}
+
+check_programs() {
+    check_probe_program
+    check_app_program
 }
 
 find_pcie_bdf() {
@@ -156,6 +191,7 @@ run_app() {
         --width "$WIDTH" \
         --height "$HEIGHT" \
         --line-bytes "$LINE_BYTES" \
+        --initial-delay-loops "$INITIAL_DELAY_LOOPS" \
         "$@"
 }
 
@@ -167,6 +203,7 @@ run_dump_test() {
         --width "$WIDTH" \
         --height "$HEIGHT" \
         --line-bytes "$LINE_BYTES" \
+        --initial-delay-loops "$INITIAL_DELAY_LOOPS" \
         --no-display \
         --frames 1 \
         --dump-lines "$DUMP_LINES" \
@@ -208,7 +245,11 @@ fi
 
 require_root
 
-check_programs
+if [ "${1:-}" = "-p" ] || [ "${1:-}" = "--probe-only" ]; then
+    check_probe_program
+else
+    check_programs
+fi
 
 load_driver
 probe_pcie
@@ -236,4 +277,5 @@ if [ "${1:-}" = "-t" ] || [ "${1:-}" = "--dump-test" ]; then
     exit 0
 fi
 
+stop_desktop
 run_app "$@"
