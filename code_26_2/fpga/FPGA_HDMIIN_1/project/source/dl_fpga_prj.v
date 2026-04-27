@@ -1,45 +1,55 @@
-//FPGA我只用小眼睛队一体板FPGA工程
+
 `timescale 1ns / 1ps
+<<<<<<< HEAD:code_26_2/fpga/FPGA_HDMIIN_1/project/source/dl_fpga_prj.v
 //===============================================================================
 // 模块声明：顶层FPGA工程模块
 //===============================================================================
+=======
+`ifndef USE_PCIE_COLORBAR_TEST
+`define USE_PCIE_COLORBAR_TEST 0
+`endif
+
+
+
+>>>>>>> 142256c861bf7492833c91a9aacc6afd94f45d52:code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/source/dl_fpga_prj.v
 module dl_fpga_prj #(
-   //===========================================================================
-   // DDR3内存参数配置
-   //===========================================================================
-   parameter MEM_ROW_WIDTH        = 15         ,    // DDR3行地址宽度（15bit = 32K行）
-   parameter MEM_COLUMN_WIDTH     = 10         ,    // DDR3列地址宽度（10bit = 1K列）
-   parameter MEM_BANK_WIDTH       = 3          ,    // DDR3 Bank地址宽度（3bit = 8个Bank）
-   parameter MEM_DQ_WIDTH          = 16         ,    // DDR3数据位宽（16bit数据总线）
-   parameter MEM_DQS_WIDTH         = 2              // DDR3 DQS信号数量（2个，对应8bit字节使能）
-
+    parameter MEM_ROW_WIDTH    = 15,
+    parameter MEM_COLUMN_WIDTH = 10,
+    parameter MEM_BANK_WIDTH   = 3,
+    parameter MEM_DQ_WIDTH     = 16,
+    parameter MEM_DQS_WIDTH    = 2
 )(
-    //===========================================================================
-    // 系统时钟和复位信号
-    //===========================================================================
-    input                                sys_clk                      ,    // 系统参考时钟（40MHz），用于PLL输入
-    input                                sys_rst_n                    ,    // 系统复位信号（低有效），来自板级复位源
+    input                               sys_clk,
+    input                               sys_rst_n,
 
-    //=====================.======================================================
-    // DDR3物理接口信号（直接连接到DDR3颗粒）
-    //===========================================================================
-    output                               ddr3_cs_n                    ,    // 片选信号（低有效）
-    output                               ddr3_rst_n                   ,    // DDR3复位信号（低有效）
-    output                               ddr3_ck                      ,    // DDR3时钟信号（差分正）
-    output                               ddr3_ck_n                    ,    // DDR3时钟信号（差分负）
-    output                               ddr3_cke                     ,    // 时钟使能信号（高有效）
-    output                               ddr3_ras_n                   ,    // 行地址选通（低有效）
-    output                               ddr3_cas_n                   ,    // 列地址选通（低有效）
-    output                               ddr3_we_n                    ,    // 写使能信号（低有效）
-    output                               ddr3_odt                     ,    // 片上终端电阻控制
-    output      [MEM_ROW_WIDTH-1:0]      ddr3_a                       ,    // 地址总线（行/列地址复用）
-    output      [MEM_BANK_WIDTH-1:0]     ddr3_ba                      ,    // Bank地址总线
-    inout       [MEM_DQ_WIDTH/8-1:0]     ddr3_dqs                     ,    // 数据选通信号（差分正，输入输出）
-    inout       [MEM_DQ_WIDTH/8-1:0]     ddr3_dqs_n                   ,    // 数据选通信号（差分负，输入输出）
-    inout       [MEM_DQ_WIDTH-1:0]       ddr3_dq                      ,    // 数据总线（16bit，输入输出）
-    output      [MEM_DQ_WIDTH/8-1:0]     ddr3_dm                      ,    // 数据掩码信号（写使能控制）
+    output                              ddr3_cs_n,
+    output                              ddr3_rst_n,
+    output                              ddr3_ck,
+    output                              ddr3_ck_n,
+    output                              ddr3_cke,
+    output                              ddr3_ras_n,
+    output                              ddr3_cas_n,
+    output                              ddr3_we_n,
+    output                              ddr3_odt,
+    output      [MEM_ROW_WIDTH-1:0]     ddr3_a,
+    output      [MEM_BANK_WIDTH-1:0]    ddr3_ba,
+    inout       [MEM_DQ_WIDTH/8-1:0]    ddr3_dqs,
+    inout       [MEM_DQ_WIDTH/8-1:0]    ddr3_dqs_n,
+    inout       [MEM_DQ_WIDTH-1:0]      ddr3_dq,
+    output      [MEM_DQ_WIDTH/8-1:0]    ddr3_dm,
 
+    input                               hdmi_pix_clk,
+    input                               hdmi_vs,
+    input                               hdmi_hs,
+    input                               hdmi_de,
+    input       [7:0]                   hdmi_r,
+    input       [7:0]                   hdmi_g,
+    input       [7:0]                   hdmi_b,
+    output                              hdmi_rx_init_done,
+    inout                               hdmi_rx_scl,
+    inout                               hdmi_rx_sda,
 
+<<<<<<< HEAD:code_26_2/fpga/FPGA_HDMIIN_1/project/source/dl_fpga_prj.v
     //===========================================================================
     // HSST光纤信号
     //===========================================================================
@@ -122,20 +132,37 @@ module dl_fpga_prj #(
 	output wire	[1:0]		             pcie_txn                      ,    // PCIe发送数据（差分负，Lane[1:0]）
 	output wire	[1:0]		             pcie_txp                          // PCIe发送数据（差分正，Lane[1:0]）
    
+=======
+    input                               pcie_refclk_p,
+    input                               pcie_refclk_n,
+    input                               pcie_perst_n,
+    input       [1:0]                   pcie_rxn,
+    input       [1:0]                   pcie_rxp,
+    output wire [1:0]                   pcie_txn,
+    output wire [1:0]                   pcie_txp
+>>>>>>> 142256c861bf7492833c91a9aacc6afd94f45d52:code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/source/dl_fpga_prj.v
 );
 
-//tx_disable接收，拉高
-assign tx_disable = 1'b1;
 
 assign hdmi_rgb565      = {hdmi_r[7:3], hdmi_g[7:2], hdmi_b[7:3]};
 assign hdmi_video_rst_n = lock && ddr_init_done && hdmi_rx_init_done;
+<<<<<<< HEAD:code_26_2/fpga/FPGA_HDMIIN_1/project/source/dl_fpga_prj.v
 assign hdmi_rx_sda      = hdmi_sda_oe ? hdmi_sda_out : 1'bz;
+=======
+assign hdmi_rx_init_done = hdmi_rx_init_done_i;
+assign hdmi_rx_scl      = (hdmi_scl_raw == 1'b0) ? 1'b0 : 1'bz;
+assign hdmi_rx_sda      = (hdmi_sda_oe && (hdmi_sda_out == 1'b0)) ? 1'b0 : 1'bz;
+>>>>>>> 142256c861bf7492833c91a9aacc6afd94f45d52:code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/source/dl_fpga_prj.v
 assign hdmi_sda_in      = hdmi_rx_sda;
 
 ms7200_ctl u_hdmi_rx_ms7200_ctl (
     .clk        (clk_10m),
     .rstn       (lock),
+<<<<<<< HEAD:code_26_2/fpga/FPGA_HDMIIN_1/project/source/dl_fpga_prj.v
     .init_over  (hdmi_rx_init_done),
+=======
+    .init_over  (hdmi_rx_init_done_i),
+>>>>>>> 142256c861bf7492833c91a9aacc6afd94f45d52:code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/source/dl_fpga_prj.v
     .device_id  (hdmi_iic_device_id),
     .iic_trig   (hdmi_iic_trig),
     .w_r        (hdmi_iic_wr),
@@ -171,6 +198,7 @@ iic_dri #(
     .sda_out_en (hdmi_sda_oe)
 );
 
+<<<<<<< HEAD:code_26_2/fpga/FPGA_HDMIIN_1/project/source/dl_fpga_prj.v
 //===============================================================================
 // 内部参数定义
 //===============================================================================
@@ -746,6 +774,276 @@ assign     fmc_pclk   = hdmi_pix_clk;
 assign     fmc_vs     = hdmi_vs;
 assign     fmc_de     = hdmi_de;
 assign     fmc_rgb565 = hdmi_rgb565;
+=======
+
+parameter CTRL_ADDR_WIDTH = MEM_ROW_WIDTH + MEM_BANK_WIDTH + MEM_COLUMN_WIDTH;
+parameter TH_1S = 27'd33000000;
+parameter REM_DQS_WIDTH = 9 - MEM_DQS_WIDTH;
+
+
+reg heart_beat_led;
+reg pclk_led;
+reg ref_led;
+
+
+wire ddrphy_cpd_lock;
+wire ddr_init_done /*synthesis PAP_MARK_DEBUG="1"*/;
+wire pll_lock;
+wire phy_pll_lock;
+wire gpll_lock;
+wire rst_gpll_lock;
+wire core_clk;
+
+
+wire [CTRL_ADDR_WIDTH-1:0]  axi_awaddr;
+wire                        axi_awuser_ap;
+wire [3:0]                  axi_awuser_id;
+wire [3:0]                  axi_awlen;
+wire                        axi_awready;
+wire                        axi_awvalid;
+wire [MEM_DQ_WIDTH*8-1:0]   axi_wdata;
+wire [MEM_DQ_WIDTH*8/8-1:0] axi_wstrb;
+wire                        axi_wready;
+wire [3:0]                  axi_wusero_id;
+wire                        axi_wusero_last;
+
+
+wire [CTRL_ADDR_WIDTH-1:0]  axi_araddr;
+wire                        axi_aruser_ap;
+wire [3:0]                  axi_aruser_id;
+wire [3:0]                  axi_arlen;
+wire                        axi_arready;
+wire                        axi_arvalid;
+wire [MEM_DQ_WIDTH*8-1:0]   axi_rdata  /* synthesis syn_keep = 1 */;
+wire                        axi_rvalid /* synthesis syn_keep = 1 */;
+wire [3:0]                  axi_rid;
+wire                        axi_rlast;
+
+
+wire resetn;
+reg  [26:0] cnt;
+wire [7:0]  err_cnt;
+wire        free_clk_g;
+
+
+wire [15:0] o_rgb565;
+wire        pclk_in_test;
+wire        vs_in_test;
+wire        de_in_test;
+wire [15:0] i_rgb565;
+wire        pclk_in_test_2;
+wire        vs_in_test_2;
+wire        de_in_test_2;
+wire [15:0] i_rgb565_2;
+wire [15:0] fmc_rgb565;
+wire        fmc_pclk;
+wire        fmc_vs;
+wire        fmc_de;
+wire [15:0] hdmi_rgb565;
+wire        hdmi_video_rst_n;
+
+
+wire        hdmi_iic_trig;
+wire        hdmi_iic_wr;
+wire [15:0] hdmi_iic_addr;
+wire [7:0]  hdmi_iic_wdata;
+wire [7:0]  hdmi_iic_rdata;
+wire [7:0]  hdmi_iic_device_id;
+wire        hdmi_iic_busy;
+wire        hdmi_iic_byte_over;
+wire        hdmi_sda_in;
+wire        hdmi_sda_out;
+wire        hdmi_sda_oe;
+wire        hdmi_scl_raw              /*synthesis PAP_MARK_DEBUG="1"*/;
+wire        hdmi_rx_init_done_i       /*synthesis PAP_MARK_DEBUG="1"*/;
+
+
+wire lock;
+wire clk_10m;
+wire clk_25m;
+wire clk_50m;
+
+
+localparam DEVICE_TYPE = 3'b000;
+localparam AXIS_SLAVE_NUM = 3;
+
+
+wire        pcie_cfg_ctrl_en;
+wire        axis_master_tready_cfg;
+wire        cfg_axis_slave0_tvalid;
+wire [127:0] cfg_axis_slave0_tdata;
+wire        cfg_axis_slave0_tlast;
+wire        cfg_axis_slave0_tuser;
+
+wire        axis_master_tready_mem;
+wire        axis_master_tvalid_mem;
+wire [127:0] axis_master_tdata_mem;
+wire [3:0]  axis_master_tkeep_mem;
+wire        axis_master_tlast_mem;
+wire [7:0]  axis_master_tuser_mem;
+
+wire        cross_4kb_boundary;
+wire        dma_axis_slave0_tvalid;
+wire [127:0] dma_axis_slave0_tdata;
+wire        dma_axis_slave0_tlast;
+wire        dma_axis_slave0_tuser;
+
+
+wire        sync_button_rst_n;
+wire        ref_core_rst_n;
+wire        sync_perst_n;
+wire        s_pclk_rstn;
+
+
+wire        pclk_div2 /*synthesis PAP_MARK_DEBUG="1"*/;
+wire        pclk      /*synthesis PAP_MARK_DEBUG="1"*/;
+wire        ref_clk;
+wire        core_rst_n;
+
+
+wire        axis_master_tvalid;
+wire        axis_master_tready;
+wire [127:0] axis_master_tdata;
+wire [3:0]  axis_master_tkeep;
+wire        axis_master_tlast;
+wire [7:0]  axis_master_tuser;
+
+
+wire        axis_slave0_tready;
+wire        axis_slave0_tvalid;
+wire [127:0] axis_slave0_tdata;
+wire        axis_slave0_tlast;
+wire        axis_slave0_tuser;
+wire        axis_slave1_tready;
+wire        axis_slave1_tvalid;
+wire [127:0] axis_slave1_tdata;
+wire        axis_slave1_tlast;
+wire        axis_slave1_tuser;
+wire        axis_slave2_tready;
+wire        axis_slave2_tvalid;
+wire [127:0] axis_slave2_tdata;
+wire        axis_slave2_tlast;
+wire        axis_slave2_tuser;
+
+
+wire [7:0] cfg_pbus_num;
+wire [4:0] cfg_pbus_dev_num;
+wire [2:0] cfg_max_rd_req_size;
+wire [2:0] cfg_max_payload_size;
+wire       cfg_rcb;
+wire       cfg_ido_req_en;
+wire       cfg_ido_cpl_en;
+wire [7:0]  xadm_ph_cdts;
+wire [11:0] xadm_pd_cdts;
+wire [7:0]  xadm_nph_cdts;
+wire [11:0] xadm_npd_cdts;
+wire [7:0]  xadm_cplh_cdts;
+wire [11:0] xadm_cpld_cdts;
+
+
+wire [4:0] smlh_ltssm_state /*synthesis PAP_MARK_DEBUG="1"*/;
+reg  [22:0] ref_led_cnt;
+reg  [26:0] pclk_led_cnt;
+wire        smlh_link_up;
+wire        rdlh_link_up;
+
+
+wire        uart_p_sel;
+wire [3:0]  uart_p_strb;
+wire [15:0] uart_p_addr;
+wire [31:0] uart_p_wdata;
+wire        uart_p_ce;
+wire        uart_p_we;
+wire        uart_p_rdy;
+wire [31:0] uart_p_rdata;
+
+
+wire [3:0]  p_strb;
+wire [15:0] p_addr;
+wire [31:0] p_wdata;
+wire        p_ce;
+wire        p_we;
+wire        p_sel_pcie;
+wire        p_sel_cfg;
+wire        p_sel_dma;
+wire [31:0] p_rdata_pcie;
+wire [31:0] p_rdata_cfg;
+wire [31:0] p_rdata_dma;
+wire        p_rdy_pcie;
+wire        p_rdy_cfg;
+wire        p_rdy_dma;
+
+
+wire          ch0_write_data_valid;
+wire [15:0]   ch0_write_data;
+reg           ch0_read_frame_req;
+wire          ch0_read_req_ack;
+wire          ch0_read_data_en /*synthesis PAP_MARK_DEBUG="1"*/;
+wire  [127:0] ch0_read_data    /*synthesis PAP_MARK_DEBUG="1"*/;
+wire          ch0_read_data_valid;
+wire          ch1_write_data_valid;
+wire [15:0]   ch1_write_data;
+reg           ch1_read_frame_req;
+wire          ch1_read_req_ack;
+wire          ch1_read_data_en;
+wire  [127:0] ch1_read_data;
+wire          ch1_read_data_valid;
+wire          ch2_write_data_valid;
+wire [15:0]   ch2_write_data;
+reg           ch2_read_frame_req;
+wire          ch2_read_req_ack;
+wire          ch2_read_data_en;
+wire  [127:0] ch2_read_data;
+wire          ch2_read_data_valid;
+wire          ch3_write_data_valid;
+wire [15:0]   ch3_write_data;
+reg           ch3_read_frame_req;
+wire          ch3_read_req_ack;
+wire          ch3_read_data_en;
+wire  [127:0] ch3_read_data;
+wire          ch3_read_data_valid;
+
+
+wire          dma_write_req /*synthesis PAP_MARK_DEBUG="1"*/;
+wire [11:0]   dma_write_addr;
+wire [127:0]  dma_write_data;
+
+
+wire          ch0_line_full_flag /*synthesis PAP_MARK_DEBUG="1"*/;
+wire          ch1_line_full_flag;
+wire          ch2_line_full_flag;
+wire          ch3_line_full_flag;
+wire [11:0]   debug_read_line_index /*synthesis PAP_MARK_DEBUG="1"*/;
+wire [11:0]   debug_read_beat_index /*synthesis PAP_MARK_DEBUG="1"*/;
+wire [31:0]   debug_dma_req_line_count /*synthesis PAP_MARK_DEBUG="1"*/;
+wire [31:0]   debug_dma_req_beat_count /*synthesis PAP_MARK_DEBUG="1"*/;
+wire [31:0]   debug_dma_underflow_count /*synthesis PAP_MARK_DEBUG="1"*/;
+wire [31:0]   debug_dma_zero_output_count /*synthesis PAP_MARK_DEBUG="1"*/;
+wire [31:0]   debug_ch0_data_nonzero_count /*synthesis PAP_MARK_DEBUG="1"*/;
+wire          debug_read_frame_active /*synthesis PAP_MARK_DEBUG="1"*/;
+reg  [31:0]   hdmi_pix_clk_alive       /*synthesis PAP_MARK_DEBUG="1"*/;
+reg  [31:0]   hdmi_vs_counter          /*synthesis PAP_MARK_DEBUG="1"*/;
+reg  [31:0]   hdmi_hs_counter          /*synthesis PAP_MARK_DEBUG="1"*/;
+reg  [31:0]   hdmi_de_pixel_counter    /*synthesis PAP_MARK_DEBUG="1"*/;
+reg  [31:0]   hdmi_rgb_nonzero_counter /*synthesis PAP_MARK_DEBUG="1"*/;
+reg  [31:0]   hdmi_frame_count         /*synthesis PAP_MARK_DEBUG="1"*/;
+reg           hdmi_vs_d0;
+reg           hdmi_vs_d1;
+reg           hdmi_hs_d0;
+reg           hdmi_hs_d1;
+assign     pclk_in_test    = hdmi_pix_clk;
+assign     vs_in_test      = hdmi_vs;
+assign     de_in_test      = hdmi_de;
+assign     i_rgb565        = hdmi_rgb565;
+assign     pclk_in_test_2  = hdmi_pix_clk;
+assign     vs_in_test_2    = hdmi_vs;
+assign     de_in_test_2    = hdmi_de;
+assign     i_rgb565_2      = hdmi_rgb565;
+assign     fmc_pclk        = hdmi_pix_clk;
+assign     fmc_vs          = hdmi_vs;
+assign     fmc_de          = hdmi_de;
+assign     fmc_rgb565      = hdmi_rgb565;
+>>>>>>> 142256c861bf7492833c91a9aacc6afd94f45d52:code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/source/dl_fpga_prj.v
 
 
 wire [15: 0] channel_0_data;
@@ -829,129 +1127,33 @@ image_filter u_image_fliter_3
 );
 
 
-always@(posedge core_clk or negedge ddr_init_done)
-begin
-   if (!ddr_init_done)
-      cnt <= 27'd0;              // DDR未初始化完成，计数器清零
-   else if ( cnt >= TH_1S )      // 计数到1秒（33,000,000个时钟周期）
-      cnt <= 27'd0;               // 计数器清零
-   else
-      cnt <= cnt + 27'd1;        // 计数器递增
+always @(posedge core_clk or negedge ddr_init_done) begin
+   if (!ddr_init_done) begin
+      cnt <= 27'd0;
+   end
+   else if (cnt >= TH_1S) begin
+      cnt <= 27'd0;
+   end
+   else begin
+      cnt <= cnt + 27'd1;
+   end
 end
 
-// 心跳LED控制：每秒翻转一次LED状态
 always @(posedge core_clk or negedge ddr_init_done)
 begin
    if (!ddr_init_done)
-      heart_beat_led <= 1'd1;     // DDR未初始化完成，LED保持高电平
-   else if ( cnt >= TH_1S )       // 每1秒翻转一次
+      heart_beat_led <= 1'b1;
+   else if (cnt >= TH_1S)
       heart_beat_led <= ~heart_beat_led;
 end
 
-//添加光纤HSST的例化模块及信号声明
-wire tx_clk;
-wire rx_clk;
-wire i_p_pcs_word_align_en_2 = 1'b1;
-wire [ 3:0] i_tdispsel_2 = 4'b0;
-wire [ 3:0] i_tdispctrl_2 = 4'b0;
-wire [ 2:0] o_rxstatus_2;
-wire [ 3:0] o_rdisper_2;
-wire [31:0] tx_data;
-wire [ 3:0] tx_kchar; 
-wire [31:0] rx_data;
-wire [ 3:0] rx_kchar; 
 
-hsst_tran_video U_INST (
-    .i_free_clk                    (sys_clk                    ), // input          
-    .i_wtchdg_clr_0                (i_wtchdg_clr_0                ), // input          
-    .o_wtchdg_st_0                 (o_wtchdg_st_0                 ), // output [1:0]   
-    .o_pll_done_0                  (o_pll_done_0                  ), // output         
-    .o_txlane_done_2               (o_txlane_done_2               ), // output         
-    .o_rxlane_done_2               (o_rxlane_done_2               ), // output         
-    .i_p_refckn_0                  (pcie_refclk_n                  ), // input          
-    .i_p_refckp_0                  (pcie_refclk_p                  ), // input          
-    .o_p_clk2core_tx_2             (tx_clk                        ), // output         
-    .i_p_tx2_clk_fr_core           (tx_clk                        ), // input   o_p_clk2core_tx_0       
-    .o_p_clk2core_rx_2             (rx_clk                        ), // output         
-    .i_p_rx2_clk_fr_core           (rx_clk                        ), // input          
-    .o_p_pll_lock_0                (o_p_pll_lock_0                ), // output         
-    .o_p_rx_sigdet_sta_2           (o_p_rx_sigdet_sta_2           ), // output         
-    .o_p_lx_cdr_align_2            (o_p_lx_cdr_align_2            ), // output         
-    .i_p_pcs_word_align_en_2       (i_p_pcs_word_align_en_2       ), // input          
-    .i_p_l2rxn                     (i_p_l2rxn                     ), // input          
-    .i_p_l2rxp                     (i_p_l2rxp                     ), // input          
-    .o_p_l2txn                     (o_p_l2txn                     ), // output         
-    .o_p_l2txp                     (o_p_l2txp                     ), // output         
-    .i_txd_2                       (tx_data                       ), // input  [31:0]  
-    .i_tdispsel_2                  (i_tdispsel_2                  ), // input  [3:0]   
-    .i_tdispctrl_2                 (i_tdispctrl_2                 ), // input  [3:0]   
-    .i_txk_2                       (tx_kchar                      ), // input  [3:0]   
-    .o_rxstatus_2                  (o_rxstatus_2[2:0]             ), // output [2:0]   
-    .o_rxd_2                       (rx_data                       ), // output [31:0]  
-    .o_rdisper_2                   (o_rdisper_2[3:0]              ), // output [3:0]   
-    .o_rdecer_2                    (o_rdecer_2[3:0]               ), // output [3:0]   
-    .o_rxk_2                       (rx_kchar                      ), // output [3:0]   
-    .i_pll_rst_0                   (~rstn_out                   )  // input  
-);
 
-//接纳第四个输入源,从光纤中解包数据
-reg  [15:0] rstn_1ms;
-always @(posedge clk_10m)
-begin
-	if(!lock)
-	    rstn_1ms <= 16'd0;
-	else
-	begin
-		if(rstn_1ms == 16'h2710)
-		    rstn_1ms <= rstn_1ms;
-		else
-		    rstn_1ms <= rstn_1ms + 1'b1;
-	end
-end
 
-assign rstn_out = (rstn_1ms == 16'h2710);
-//32位数据对齐模块
-wire[31:0] rx_data_align /* synthesis PAP_MARK_DEBUG="true" */;
-wire[ 3:0] rx_ctrl_align /* synthesis PAP_MARK_DEBUG="true" */;
-word_align u_word_align
-(
-    .rst                        (~rstn_out               ),
-    .rx_clk                     (rx_clk                  ),
-    .gt_rx_data                 (rx_data                 ),
-    .gt_rx_ctrl                 (rx_kchar                ),
-    .rx_data_align              (rx_data_align           ),
-    .rx_ctrl_align              (rx_ctrl_align           )
-);
 
-//GTP视频数据解析模块
-wire vs_wr;
-wire de_wr;
-wire[15:0] vout_data_r;
 
-video_packet_rec u_video_packet_rec
-(
-	.rst                        (~rstn_out               ),
-	.rx_clk                     (rx_clk                  ),
-	.gt_rx_data                 (rx_data_align           ),
-	.gt_rx_ctrl                 (rx_ctrl_align           ),
-	.vout_width                 (16'd1280                ),
-	
-	.vs                         (vs_wr                   ),
-	.de                         (de_wr                   ),
-	.vout_data                  (vout_data_r             )
-);
 
-//===============================================================================
-// DDR3内存控制器IP核例化：提供高速数据缓存功能
-//===============================================================================
-// 参数说明：
-//   MEM_ROW_WIDTH      : 行地址宽度（15bit，支持32K行）
-//   MEM_COLUMN_WIDTH   : 列地址宽度（10bit，支持1K列）
-//   MEM_BANK_WIDTH     : Bank地址宽度（3bit，支持8个Bank）
-//   MEM_DQ_WIDTH       : 数据位宽（16bit）
-//   MEM_DM_WIDTH       : 数据掩码宽度（等于DQS数量）
-//   MEM_DQS_WIDTH      : DQS信号数量（2个，对应2个字节）
-//   CTRL_ADDR_WIDTH    : 控制器地址总宽度（28bit，包含行、列、Bank）
+
 ddr3 #(
     .MEM_ROW_WIDTH              (MEM_ROW_WIDTH                ),
     .MEM_COLUMN_WIDTH           (MEM_COLUMN_WIDTH             ),
@@ -961,9 +1163,8 @@ ddr3 #(
     .MEM_DQS_WIDTH              (MEM_DQS_WIDTH                ),
     .CTRL_ADDR_WIDTH            (CTRL_ADDR_WIDTH              )
   )dl_I_ips_ddr_top(
-    // 时钟和复位接口
-    .ref_clk                    (sys_clk                     ),    // 输入：参考时钟（40MHz系统时钟）
-    .resetn                     (sys_rst_n                  ),    // 输入：复位信号（低有效）
+    .ref_clk                    (sys_clk                     ),
+    .resetn                     (sys_rst_n                   ),
     .core_clk                   (core_clk                     ),
     .pll_lock                   (pll_lock                     ),
     .phy_pll_lock               (phy_pll_lock                 ),
@@ -997,16 +1198,12 @@ ddr3 #(
     .axi_rlast                  (axi_rlast                    ),
     .axi_rvalid                 (axi_rvalid                   ),
 
-    // APB配置接口
-    .apb_clk                    (1'b0                         ),    // APB时钟（禁用）
-    .apb_rst_n                  (1'b0                         ),    // APB复位（禁用）
-    .apb_sel                    (1'b0                         ),    // APB选择（禁用）
-    .apb_enable                 (1'b0                         ),    // APB使能（禁用）
-    .apb_addr                   (8'd0                         ),    // APB地址（固定为0）
-    .apb_write                  (1'b0                         ),    // APB写使能（禁用）
-    .apb_ready                  (                             ),    // APB就绪（未连接）
-    .apb_wdata                  (16'd0                        ),    // APB写数据（固定为0）
-    .apb_rdata                  (                             ),    // APB读数据（未连接）
+
+    .apb_clk                    (1'b0                         ),
+    .apb_rst_n                  (1'b0                         ),
+    .apb_sel                    (1'b0                         ),
+    .apb_enable                 (1'b0                         ),
+    .apb_addr                   (8'd0                         ),
 
 
     .mem_cs_n                   (ddr3_cs_n                     ),
@@ -1026,62 +1223,48 @@ ddr3 #(
     .mem_dq                     (ddr3_dq                       ),
     .mem_dm                     (ddr3_dm                       ),
 
-    //===========================================================================
-    // DDR3调试和校准接口（当前未使用，使用默认值）
-    //===========================================================================
-    // 调试控制信号
-    .dbg_gate_start             (1'b0                         ),    // 调试门控启动（禁用）
-    .dbg_cpd_start              (1'b0                         ),    // 调试CPD启动（禁用）
-    .dbg_ddrphy_rst_n           (1'b1                         ),    // 调试DDR PHY复位（保持使能）
-    .dbg_gpll_scan_rst          (1'b0                         ),    // 调试GPLL扫描复位（禁用）
 
-    // 采样位置校准（用于调整数据采样窗口）
-    .samp_position_dyn_adj      (1'b0                         ),    // 动态采样位置调整（禁用）
-    .init_samp_position_even    (16'd0                        ),    // 初始偶数采样位置（使用默认值）
-    .init_samp_position_odd     (16'd0                        ),    // 初始奇数采样位置（使用默认值）
 
-    // 写校准位置（用于调整写时序）
-    .wrcal_position_dyn_adj     (1'b0                         ),    // 动态写校准位置调整（禁用）
-    .init_wrcal_position        (16'd0                        ),    // 初始写校准位置（使用默认值）
 
-    // 读时钟控制（用于调整读时钟相位）
-    .force_read_clk_ctrl        (1'b0                         ),    // 强制读时钟控制（禁用）
-    .init_slip_step             (8'd0                         ),    // 初始滑移步数（使用默认值）
-    .init_read_clk_ctrl         (6'd0                         ),    // 初始读时钟控制（使用默认值）
 
-    // 调试输出信号（未连接，可用于调试时监控）
-    .debug_calib_ctrl           (                             ),    // 调试校准控制状态（未连接）
-    .dbg_dll_upd_state          (                             ),    // 调试DLL更新状态（未连接）
-    .dbg_slice_status           (                             ),    // 调试Slice状态（未连接）
-    .dbg_slice_state            (                             ),    // 调试Slice状态机（未连接）
-    .debug_data                 (                             ),    // 调试数据输出（未连接）
-    .debug_gpll_dps_phase       (                             ),    // 调试GPLL DPS相位（未连接）
+    .dbg_gate_start             (1'b0                         ),
+    .dbg_cpd_start              (1'b0                         ),
+    .dbg_ddrphy_rst_n           (1'b1                         ),
+    .dbg_gpll_scan_rst          (1'b0                         ),
 
-    // 调试状态输出
-    .dbg_rst_dps_state          (                             ),    // 调试复位DPS状态（未连接）
-    .dbg_tran_err_rst_cnt       (                             ),    // 调试传输错误复位计数（未连接）
-    .dbg_ddrphy_init_fail       (                             ),    // 调试DDR PHY初始化失败标志（未连接）
 
-    // CPD（Clock Phase Detector）调试接口
-    .debug_cpd_offset_adj       (1'b0                         ),    // 调试CPD偏移调整（禁用）
-    .debug_cpd_offset_dir       (1'b0                         ),    // 调试CPD偏移方向（禁用）
-    .debug_cpd_offset           (10'd0                        ),    // 调试CPD偏移值（固定为0）
-    .debug_dps_cnt_dir0         (                             ),    // 调试DPS计数方向0（未连接）
-    .debug_dps_cnt_dir1         (                             ),    // 调试DPS计数方向1（未连接）
+    .samp_position_dyn_adj      (1'b0                         ),
+    .init_samp_position_odd     (16'd0                        ),
 
-    // 时钟延迟控制（用于调整时钟树延迟）
-    .ck_dly_en                  (1'b0                         ),    // 时钟延迟使能（禁用）
-    .init_ck_dly_step           (8'd0                         ),    // 初始时钟延迟步数（使用默认值）
-    .ck_dly_set_bin             (                             ),    // 时钟延迟设置二进制值（未连接）
 
-    // 校准和状态监控
-    .align_error                (                             ),    // 对齐错误标志（未连接，可用于错误检测）
-    .debug_rst_state            (                             ),    // 调试复位状态（未连接）
-    .debug_cpd_state            (                             )     // 调试CPD状态（未连接）
+    .wrcal_position_dyn_adj     (1'b0                         ),
+    .init_wrcal_position        (16'd0                        ),
+
+
+    .force_read_clk_ctrl        (1'b0                         ),
+    .init_read_clk_ctrl         (6'd0                         ),
+
+
+    .debug_calib_ctrl           (                             ),
+    .dbg_dll_upd_state          (                             ),
+    .dbg_slice_status           (                             ),
+    .dbg_slice_state            (                             ),
+
+    .dbg_tran_err_rst_cnt       (                             ),
+    .debug_cpd_offset_adj       (1'b0                         ),
+    .debug_cpd_offset_dir       (1'b0                         ),
+    .debug_cpd_offset           (10'd0                        ),
+    .ck_dly_en                  (1'b0                         ),
+    .init_ck_dly_step           (8'd0                         ),
+    .ck_dly_set_bin             (                             ),
+    .align_error                (                             ),
+    .debug_rst_state            (                             ),
+    .debug_cpd_state            (                             )
 
   );
 
 
+<<<<<<< HEAD:code_26_2/fpga/FPGA_HDMIIN_1/project/source/dl_fpga_prj.v
 //*==============================================================================
 // 图像整形模块：将图像数据格式化为适合DDR写入的格式
 //*==============================================================================
@@ -1122,6 +1305,48 @@ ddr3 #(
 //    .video_width_out      ( 640               ),
 //    .video_height_out     ( 360               )
 //);
+=======
+
+
+always @(posedge hdmi_pix_clk) begin
+    if (!lock) begin
+        hdmi_pix_clk_alive <= 32'd0;
+        hdmi_vs_counter <= 32'd0;
+        hdmi_hs_counter <= 32'd0;
+        hdmi_de_pixel_counter <= 32'd0;
+        hdmi_rgb_nonzero_counter <= 32'd0;
+        hdmi_frame_count <= 32'd0;
+        hdmi_vs_d0 <= 1'b0;
+        hdmi_vs_d1 <= 1'b0;
+        hdmi_hs_d0 <= 1'b0;
+        hdmi_hs_d1 <= 1'b0;
+    end
+    else begin
+        hdmi_pix_clk_alive <= hdmi_pix_clk_alive + 32'd1;
+        hdmi_vs_d0 <= hdmi_vs;
+        hdmi_vs_d1 <= hdmi_vs_d0;
+        hdmi_hs_d0 <= hdmi_hs;
+        hdmi_hs_d1 <= hdmi_hs_d0;
+
+        if (hdmi_vs_d0 && !hdmi_vs_d1) begin
+            hdmi_vs_counter <= hdmi_vs_counter + 32'd1;
+            hdmi_frame_count <= hdmi_frame_count + 32'd1;
+            hdmi_de_pixel_counter <= 32'd0;
+        end
+        else if (hdmi_de) begin
+            hdmi_de_pixel_counter <= hdmi_de_pixel_counter + 32'd1;
+            if (hdmi_rgb565 != 16'd0) begin
+                hdmi_rgb_nonzero_counter <= hdmi_rgb_nonzero_counter + 32'd1;
+            end
+        end
+
+        if (hdmi_hs_d0 && !hdmi_hs_d1) begin
+            hdmi_hs_counter <= hdmi_hs_counter + 32'd1;
+        end
+    end
+end
+
+>>>>>>> 142256c861bf7492833c91a9aacc6afd94f45d52:code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/source/dl_fpga_prj.v
 
 img_data_stream_reducer dl_ch0_image_reshape(
     .clk                    (hdmi_pix_clk               ),
@@ -1131,52 +1356,45 @@ img_data_stream_reducer dl_ch0_image_reshape(
     .img_data_valid         (hdmi_de                    ),
     .img_data               (hdmi_rgb565                ),
    
-    .img_data_valid_out     (ch0_write_data_valid       ),   // 输出：格式化后的数据有效信号
-    .img_data_out           (ch0_write_data             )    // 输出：格式化后的16bit图像数据
+    .img_data_valid_out     (ch0_write_data_valid       ),
+    .img_data_out           (ch0_write_data             )
 );
 
-// 通道1图像整形：与通道0使用相同输入源（摄像头1），用于多通道处理
+
 img_data_stream_reducer dl_ch1_image_reshape(
-    .clk                    (pclk_in_test               ),   // 输入：像素时钟（摄像头1）
-    .rst_n                  (hdmi_video_rst_n           ),
-
-    .img_vs                 (vs_in_test                 ),   // 输入：场同步信号
-    .img_data_valid         (de_in_test                 ),   // 输入：数据有效信号
-    .img_data               (i_rgb565                   ),   // 输入：RGB565格式图像数据
-   
-    .img_data_valid_out     (ch1_write_data_valid      ),   // 输出：格式化后的数据有效信号
-    .img_data_out           (ch1_write_data            )    // 输出：格式化后的16bit图像数据
+    .clk                    (pclk_in_test),
+    .rst_n                  (hdmi_video_rst_n),
+    .img_vs                 (vs_in_test),
+    .img_data_valid         (de_in_test),
+    .img_data               (i_rgb565),
+    .img_data_valid_out     (ch1_write_data_valid),
+    .img_data_out           (ch1_write_data)
 );
 
-// 通道2图像整形：处理摄像头2的RGB565数据，输出16bit格式化的图像数据
 img_data_stream_reducer dl_ch2_image_reshape(
-    .clk                    (pclk_in_test_2             ),   // 输入：像素时钟（摄像头2）
-    .rst_n                  (hdmi_video_rst_n           ),
-
-    .img_vs                 (vs_in_test_2               ),   // 输入：场同步信号（摄像头2）
-    .img_data_valid         (de_in_test_2               ),   // 输入：数据有效信号（摄像头2）
-    .img_data               (i_rgb565_2                 ),   // 输入：RGB565格式图像数据（摄像头2）
-   
-    .img_data_valid_out     (ch2_write_data_valid      ),   // 输出：格式化后的数据有效信号
-    .img_data_out           (ch2_write_data            )    // 输出：格式化后的16bit图像数据
+    .clk                    (pclk_in_test_2),
+    .rst_n                  (hdmi_video_rst_n),
+    .img_vs                 (vs_in_test_2),
+    .img_data_valid         (de_in_test_2),
+    .img_data               (i_rgb565_2),
+    .img_data_valid_out     (ch2_write_data_valid),
+    .img_data_out           (ch2_write_data)
 );
 
-// 通道3图像整形：fmc数据源
 img_data_stream_reducer dl_ch3_image_reshape(
-    .clk                    (fmc_pclk                   ),   // 输入：像素时钟（摄像头2）
-    .rst_n                  (hdmi_video_rst_n           ),
-
-    .img_vs                 (fmc_vs                     ),   // 输入：场同步信号（摄像头2）
-    .img_data_valid         (fmc_de                     ),   // 输入：数据有效信号（摄像头2）
-    .img_data               (fmc_rgb565                 ),   // 输入：RGB565格式图像数据（摄像头2）
-   
-    .img_data_valid_out     (ch3_write_data_valid      ),   // 输出：格式化后的数据有效信号
-    .img_data_out           (ch3_write_data            )    // 输出：格式化后的16bit图像数据
+    .clk                    (fmc_pclk),
+    .rst_n                  (hdmi_video_rst_n),
+    .img_vs                 (fmc_vs),
+    .img_data_valid         (fmc_de),
+    .img_data               (fmc_rgb565),
+    .img_data_valid_out     (ch3_write_data_valid),
+    .img_data_out           (ch3_write_data)
 );
 
 
-// PCIe图像选择模块：从4个通道中选择数据并通过PCIe DMA传输
+
 pcie_image_channel_selector dl_pcie_img_select_inst(
+<<<<<<< HEAD:code_26_2/fpga/FPGA_HDMIIN_1/project/source/dl_fpga_prj.v
     .clk                         (pclk_div2                                 ),     // 输入：PCIe时钟域（125MHz）
     .rst_n                       (core_rst_n                                ),     // 输入：核心复位信号
     
@@ -1197,10 +1415,33 @@ pcie_image_channel_selector dl_pcie_img_select_inst(
     // DMA写接口：输出到PCIe DMA控制器
     .dma_wr_data_req             (dma_write_req                      ),     // 输出：DMA写数据请求
     .dma_wr_data                 (dma_write_data                          )      // 输出：DMA写数据（128bit）
+=======
+    .clk                         (pclk_div2),
+    .rst_n                       (core_rst_n),
+    .dma_sim_vs                  (ch0_read_frame_req),
+    .line_full_flag              (ch0_line_full_flag),
+    .ch0_data_req                (ch0_read_data_en),
+    .ch0_data                    (ch0_read_data),
+    .ch1_data_req                (ch1_read_data_en),
+    .ch1_data                    (ch1_read_data),
+    .ch2_data_req                (ch2_read_data_en),
+    .ch2_data                    (ch2_read_data),
+    .ch3_data_req                (ch3_read_data_en),
+    .ch3_data                    (ch3_read_data),
+    .dma_wr_data_req             (dma_write_req),
+    .dma_wr_data                 (dma_write_data),
+    .debug_read_line_index       (debug_read_line_index),
+    .debug_read_beat_index       (debug_read_beat_index),
+    .debug_dma_req_line_count    (debug_dma_req_line_count),
+    .debug_dma_req_beat_count    (debug_dma_req_beat_count),
+    .debug_dma_underflow_count   (debug_dma_underflow_count),
+    .debug_dma_zero_output_count (debug_dma_zero_output_count),
+    .debug_ch0_data_nonzero_count(debug_ch0_data_nonzero_count),
+    .debug_read_frame_active     (debug_read_frame_active)
+>>>>>>> 142256c861bf7492833c91a9aacc6afd94f45d52:code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/source/dl_fpga_prj.v
 );
-//*==============================================================================
-// AXI控制器例化：管理DDR3的读写操作，支持4个通道的图像数据缓存
-//*==============================================================================
+
+
 mem_axi_burst_ctrl_core dl_axi_ctrl_inst
 (
 	  .ARESETN                     (ddr_init_done                             ),
@@ -1249,10 +1490,10 @@ mem_axi_burst_ctrl_core dl_axi_ctrl_inst
 	  .M_AXI_RVALID                (axi_rvalid                                ),
 	  .M_AXI_RREADY                (                                          ),  
 
-      // key
+
       .key                         ({1'b1,3'b111,4'b0000}                     ),
 
-      // 通道0   
+
       .ch0_wframe_pclk             (hdmi_pix_clk                              ),
       .ch0_wframe_rst_n            (hdmi_video_rst_n                          ),
       .ch0_wframe_vsync            (hdmi_vs                                   ),
@@ -1269,7 +1510,7 @@ mem_axi_burst_ctrl_core dl_axi_ctrl_inst
       .ch0_rframe_data_valid       (                                          ),
       .ch0_read_line_full          (ch0_line_full_flag                          ),
 
-        // 通道1
+
       .ch1_wframe_pclk             (pclk_in_test                              ),
       .ch1_wframe_rst_n            (hdmi_video_rst_n                          ),
       .ch1_wframe_vsync            (vs_in_test                                ),
@@ -1286,7 +1527,7 @@ mem_axi_burst_ctrl_core dl_axi_ctrl_inst
       .ch1_rframe_data_valid       (                                          ),
       .ch1_read_line_full          (ch1_line_full_flag                          ),
 
-        // 通道2
+
       .ch2_wframe_pclk             (pclk_in_test_2                            ),
       .ch2_wframe_rst_n            (hdmi_video_rst_n                          ),
       .ch2_wframe_vsync            (vs_in_test_2                              ),
@@ -1303,7 +1544,7 @@ mem_axi_burst_ctrl_core dl_axi_ctrl_inst
       .ch2_rframe_data_valid       (                                          ),
       .ch2_read_line_full          (ch2_line_full_flag                          ),
 
-      // 通道3
+
       .ch3_wframe_pclk             (fmc_pclk                                 ),  
       .ch3_wframe_rst_n            (hdmi_video_rst_n                          ),
       .ch3_wframe_vsync            (fmc_vs                                   ),
@@ -1322,10 +1563,10 @@ mem_axi_burst_ctrl_core dl_axi_ctrl_inst
 );
 
 
-//*==============================================================================
-// PCIe接口模块：实现PCIe数据通信和DMA传输功能
-//*==============================================================================
-// 复位消抖和同步：消除复位信号的毛刺并同步到不同时钟域
+
+
+
+
 hsst_rst_cross_sync_v1_0 #(
     `ifdef IPS2L_PCIE_SPEEDUP_SIM
     .RST_CNTR_VALUE     (16'h10             )
@@ -1366,59 +1607,53 @@ hsst_rst_sync_v1_0  dl_u_pclk_core_rstn_sync   (
     .sig_synced         (s_pclk_rstn        )
 );
 
-//===============================================================================
-// PCIe参考时钟LED控制：在PCIe链路建立后闪烁，指示参考时钟运行状态
-//===============================================================================
+
+
 always @(posedge ref_clk or negedge sync_perst_n) begin
 	if (!sync_perst_n) begin
-		// PCIe复位期间：计数器清零，LED保持高电平
-		ref_led_cnt <= 23'd0;
+        ref_led_cnt <= 23'd0;
 		ref_led <= 1'b1;
 	end else if (smlh_link_up & rdlh_link_up) begin
-		// PCIe链路已建立：计数器递增，当计数器全1时翻转LED
+
 		ref_led_cnt <= ref_led_cnt + 23'd1;
-		if(&ref_led_cnt)  // 如果计数器所有位都为1（约8.3M次计数），翻转LED
+		if(&ref_led_cnt)
 			ref_led <= ~ref_led;
 	end
 end
 
-//===============================================================================
-// PCIe用户时钟LED控制：在PCIe链路建立后闪烁，指示用户时钟运行状态
-//===============================================================================
+
+
 always @(posedge pclk or negedge s_pclk_rstn) begin
 	if (!s_pclk_rstn) begin
-		// PCIe复位期间：计数器清零，LED保持高电平
-		pclk_led_cnt <= 27'd0;
+        pclk_led_cnt <= 27'd0;
 		pclk_led <= 1'b1;
 	end else if (smlh_link_up & rdlh_link_up) begin
-		// PCIe链路已建立：计数器递增，当计数器全1时翻转LED
+
 		pclk_led_cnt <= pclk_led_cnt + 27'd1;
-		if(&pclk_led_cnt)  // 如果计数器所有位都为1（约134M次计数），翻转LED
+		if(&pclk_led_cnt)
 			pclk_led <= ~pclk_led;
 	end
 end
 
 
-//===============================================================================
-// PCIe DMA控制器模块：实现PCIe DMA数据传输功能
-//===============================================================================
-// DMA控制器基地址：0x8000（通过APB接口访问）
-// 功能：从DDR3读取图像数据，通过PCIe传输到上位机
-pcie_dma_core #(
-	.DEVICE_TYPE			(DEVICE_TYPE),                  // PCIe设备类型
-	.AXIS_SLAVE_NUM			(AXIS_SLAVE_NUM)                 // AXI-Stream从设备数量（3个）
-) dl_u_ips2l_pcie_dma (
-	// 时钟和复位
-	.clk					(pclk_div2),			         // 输入：PCIe时钟域（125MHz或62.5MHz）
-	.rst_n					(core_rst_n),                    // 输入：核心复位信号（高有效）				
 
-	// Num
+
+
+
+pcie_dma_core #(
+	.DEVICE_TYPE			(DEVICE_TYPE),
+	.AXIS_SLAVE_NUM			(AXIS_SLAVE_NUM)
+) dl_u_ips2l_pcie_dma (
+    .clk                    (pclk_div2),
+    .rst_n                  (core_rst_n),
+
+
 	.i_cfg_pbus_num			(cfg_pbus_num),				
 	.i_cfg_pbus_dev_num		(cfg_pbus_dev_num),			
 	.i_cfg_max_rd_req_size	(cfg_max_rd_req_size),		
 	.i_cfg_max_payload_size	(cfg_max_payload_size),		
 
-	// AXI4-Stream master interface
+
 	.i_axis_master_tvld		(axis_master_tvalid_mem),	
 	.o_axis_master_trdy		(axis_master_tready_mem),	
 	.i_axis_master_tdata	(axis_master_tdata_mem),	
@@ -1427,28 +1662,28 @@ pcie_dma_core #(
 	.i_axis_master_tlast	(axis_master_tlast_mem),	
 	.i_axis_master_tuser	(axis_master_tuser_mem),	
 
-	// AXI4-Stream slave0 interface
+
 	.i_axis_slave0_trdy		(axis_slave0_tready),		
 	.o_axis_slave0_tvld		(dma_axis_slave0_tvalid),	
 	.o_axis_slave0_tdata	(dma_axis_slave0_tdata),	
 	.o_axis_slave0_tlast	(dma_axis_slave0_tlast),	
 	.o_axis_slave0_tuser	(dma_axis_slave0_tuser),	
 
-	// AXI4-Stream slave1 interface
+
 	.i_axis_slave1_trdy		(axis_slave1_tready),		
 	.o_axis_slave1_tvld		(axis_slave1_tvalid),		
 	.o_axis_slave1_tdata	(axis_slave1_tdata),		
 	.o_axis_slave1_tlast	(axis_slave1_tlast),		
 	.o_axis_slave1_tuser	(axis_slave1_tuser),		
 
-	// AXI4-Stream slave2 interface
+
 	.i_axis_slave2_trdy		(axis_slave2_tready),		
 	.o_axis_slave2_tvld		(axis_slave2_tvalid),		
 	.o_axis_slave2_tdata	(axis_slave2_tdata),		
 	.o_axis_slave2_tlast	(axis_slave2_tlast),		
 	.o_axis_slave2_tuser	(axis_slave2_tuser),		
 
-	// From pcie
+
 	.i_cfg_ido_req_en		(cfg_ido_req_en),			
 	.i_cfg_ido_cpl_en		(cfg_ido_cpl_en),			
 	.i_xadm_ph_cdts			(xadm_ph_cdts),				
@@ -1458,7 +1693,7 @@ pcie_dma_core #(
 	.i_xadm_cplh_cdts		(xadm_cplh_cdts),			
 	.i_xadm_cpld_cdts		(xadm_cpld_cdts),			
 
-	// APB interface
+
 	.i_apb_psel				(p_sel_dma),				
 	.i_apb_paddr			(p_addr[8:0]),				
 	.i_apb_pwdata			(p_wdata),					
@@ -1467,9 +1702,9 @@ pcie_dma_core #(
 	.i_apb_penable			(p_ce),						
 	.o_apb_prdy				(p_rdy_dma),				
 	.o_apb_prdata			(p_rdata_dma),				
-	.o_cross_4kb_boundary	(cross_4kb_boundary),		//4k边界
-    //**********************************************************************
-    // dma write interface
+	.o_cross_4kb_boundary	(cross_4kb_boundary),
+
+
     .o_dma_write_data_req   (dma_write_req  ),
     .o_dma_write_addr       (dma_write_addr      ),
     .i_dma_write_data       (dma_write_data      )
@@ -1477,41 +1712,30 @@ pcie_dma_core #(
 
 
 
-//===============================================================================
-// APB配置接口固定赋值（当前未使用配置寄存器）
-//===============================================================================
-assign p_rdy_cfg               = 1'b0;                         // 配置寄存器就绪信号（固定为未就绪）
-assign p_rdata_cfg             = 32'b0;                        // 配置寄存器读数据（固定为0）
 
-//===============================================================================
-// AXI-Stream信号连接：将DMA输出连接到PCIe IP核的从设备接口
-//===============================================================================
-assign axis_slave0_tvalid      = dma_axis_slave0_tvalid;       // 从设备0有效信号：来自DMA控制器
-assign axis_slave0_tlast       = dma_axis_slave0_tlast;        // 从设备0最后数据：来自DMA控制器
-assign axis_slave0_tuser       = dma_axis_slave0_tuser;        // 从设备0用户信号：来自DMA控制器
-assign axis_slave0_tdata       = dma_axis_slave0_tdata;        // 从设备0数据：来自DMA控制器
 
-//===============================================================================
-// AXI-Stream信号连接：将PCIe IP核的主设备接口连接到DMA控制器
-//===============================================================================
-assign axis_master_tvalid_mem  = axis_master_tvalid;            // 主设备有效信号：连接到DMA控制器
-assign axis_master_tdata_mem   = axis_master_tdata;             // 主设备数据：连接到DMA控制器
-assign axis_master_tkeep_mem   = axis_master_tkeep;            // 主设备数据有效字节：连接到DMA控制器
-assign axis_master_tlast_mem   = axis_master_tlast;             // 主设备最后数据：连接到DMA控制器
-assign axis_master_tuser_mem   = axis_master_tuser;             // 主设备用户信号：连接到DMA控制器
-
-// 主设备就绪信号：从DMA控制器反馈到PCIe IP核
-assign axis_master_tready      = axis_master_tready_mem;
+assign p_rdy_cfg              = 1'b0;
+assign p_rdata_cfg            = 32'b0;
+assign axis_slave0_tvalid     = dma_axis_slave0_tvalid;
+assign axis_slave0_tlast      = dma_axis_slave0_tlast;
+assign axis_slave0_tuser      = dma_axis_slave0_tuser;
+assign axis_slave0_tdata      = dma_axis_slave0_tdata;
+assign axis_master_tvalid_mem = axis_master_tvalid;
+assign axis_master_tdata_mem  = axis_master_tdata;
+assign axis_master_tkeep_mem  = axis_master_tkeep;
+assign axis_master_tlast_mem  = axis_master_tlast;
+assign axis_master_tuser_mem  = axis_master_tuser;
+assign axis_master_tready     = axis_master_tready_mem;
 
 
 
-// PCIe IP TOP : HSSTLP : 0x0000~6000 PCIe BASE ADDR : 0x7000
+
 pcie_test dl_u_ips2l_pcie_wrap (
 	.button_rst_n				(1'b1),	
 	.power_up_rst_n				(1'b1),			
 	.perst_n					(1'b1),			
 
-	// The clock and reset signals
+
 	.pclk						(pclk),					
 	.pclk_div2					(pclk_div2),			
 	.ref_clk					(ref_clk),				
@@ -1519,7 +1743,7 @@ pcie_test dl_u_ips2l_pcie_wrap (
 	.ref_clk_p					(pcie_refclk_p),			
 	.core_rst_n					(core_rst_n),			
 
-	// APB interface to DBI config
+
 	.p_sel						(p_sel_pcie),			
 	.p_strb						(uart_p_strb),			
 	.p_addr						(uart_p_addr),			
@@ -1529,7 +1753,7 @@ pcie_test dl_u_ips2l_pcie_wrap (
 	.p_rdy						(p_rdy_pcie),			
 	.p_rdata					(p_rdata_pcie),			
 
-	// PHY diff signals
+
 	.rxn						(pcie_rxn),					
 	.rxp						(pcie_rxp),					
 	.txn						(pcie_txn),					
@@ -1538,7 +1762,7 @@ pcie_test dl_u_ips2l_pcie_wrap (
 	.pma_nearend_ploop			({4{1'b0}}),			
 	.pma_nearend_sloop			({4{1'b0}}),			
 
-	// AXI4-Stream master interface
+
 	.axis_master_tvalid			(axis_master_tvalid),	
 	.axis_master_tready			(axis_master_tready),	
 	.axis_master_tdata			(axis_master_tdata),	
@@ -1547,21 +1771,21 @@ pcie_test dl_u_ips2l_pcie_wrap (
 	.axis_master_tlast			(axis_master_tlast),	
 	.axis_master_tuser			(axis_master_tuser),	
 
-	// AXI4-Stream slave 0 interface
+
 	.axis_slave0_tready			(axis_slave0_tready),	
 	.axis_slave0_tvalid			(axis_slave0_tvalid),	
 	.axis_slave0_tdata			(axis_slave0_tdata),	
 	.axis_slave0_tlast			(axis_slave0_tlast),	
 	.axis_slave0_tuser			(axis_slave0_tuser),	
 
-	// AXI4-Stream slave 1 interface
+
 	.axis_slave1_tready			(axis_slave1_tready),	
 	.axis_slave1_tvalid			(axis_slave1_tvalid),	
 	.axis_slave1_tdata			(axis_slave1_tdata),	
 	.axis_slave1_tlast			(axis_slave1_tlast),	
 	.axis_slave1_tuser			(axis_slave1_tuser),	
 
-	// AXI4-Stream slave 2 interface
+
 	.axis_slave2_tready			(axis_slave2_tready),	
 	.axis_slave2_tvalid			(axis_slave2_tvalid),	
 	.axis_slave2_tdata			(axis_slave2_tdata),	
@@ -1576,10 +1800,10 @@ pcie_test dl_u_ips2l_pcie_wrap (
 	.cfg_sys_err_rc				(),						
 	.cfg_aer_rc_err_mux			(),						
 
-	// The radm timeout
+
 	.radm_cpl_timeout			(),						
 
-	// Configuration signals
+
 	.cfg_max_rd_req_size		(cfg_max_rd_req_size),	
 	.cfg_bus_master_en			(),						
 	.cfg_max_payload_size		(cfg_max_payload_size),	
@@ -1598,7 +1822,7 @@ pcie_test dl_u_ips2l_pcie_wrap (
 	.cfg_pbus_num				(cfg_pbus_num),			
 	.cfg_pbus_dev_num			(cfg_pbus_dev_num),		
 
-	// Debug signals
+
 	.radm_idle					(),						
 	.radm_q_not_empty			(),						
 	.radm_qoverflow				(),						
@@ -1612,14 +1836,15 @@ pcie_test dl_u_ips2l_pcie_wrap (
 	.dyn_debug_info_sel			(4'b0),					
 	.debug_info_mux				(),
 
-	// System signal
-	.smlh_link_up				(smlh_link_up),			//link状态
-	.rdlh_link_up				(rdlh_link_up),			//link状态
+
+	.smlh_link_up				(smlh_link_up),
+	.rdlh_link_up				(rdlh_link_up),
 	.smlh_ltssm_state			(smlh_ltssm_state)
 );
 
 
 
+<<<<<<< HEAD:code_26_2/fpga/FPGA_HDMIIN_1/project/source/dl_fpga_prj.v
 //===============================================================================
 // DMA写地址延迟和帧请求控制逻辑
 //===============================================================================
@@ -1628,6 +1853,20 @@ reg  [11:0]  dma_write_addr_dly1;              // 延迟一拍
 reg  [11:0]  dma_write_addr_dly2;              // 延迟两拍
 // DMA写帧计数器：用于计数写入的帧数，每完成一帧（720行）发送一次读请求
 reg  [11:0]  dma_frame_write_cnt;              // 计数dma写入的帧数（720行/帧）
+=======
+
+
+
+reg         hdmi_vs_pclk_meta;
+reg         hdmi_vs_pclk_d0;
+reg         hdmi_vs_pclk_d1;
+reg         frame_ready                     /*synthesis PAP_MARK_DEBUG="1"*/;
+reg         read_frame_active               /*synthesis PAP_MARK_DEBUG="1"*/;
+reg [11:0]  read_line_index                 /*synthesis PAP_MARK_DEBUG="1"*/;
+reg [11:0]  read_beat_index                 /*synthesis PAP_MARK_DEBUG="1"*/;
+reg [31:0]  ddr_write_frame_count           /*synthesis PAP_MARK_DEBUG="1"*/;
+reg [31:0]  ddr_read_frame_count            /*synthesis PAP_MARK_DEBUG="1"*/;
+>>>>>>> 142256c861bf7492833c91a9aacc6afd94f45d52:code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/source/dl_fpga_prj.v
 
 // DMA写地址延迟：用于检测地址从0x9f到0xa0的跳变（表示一帧写入完成）
 always @(posedge pclk_div2) begin
@@ -1675,3 +1914,4 @@ always @(posedge pclk_div2) begin
 end
 
 endmodule
+

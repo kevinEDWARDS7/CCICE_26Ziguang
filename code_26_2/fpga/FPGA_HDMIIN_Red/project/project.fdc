@@ -1,3 +1,4 @@
+<<<<<<< HEAD:code_26_2/fpga/FPGA_HDMIIN_Red/project/project.fdc
 #region agent log
 proc agent_debug_log {runId hypothesisId location message} {
     if {[catch {
@@ -8,6 +9,9 @@ proc agent_debug_log {runId hypothesisId location message} {
 }
 agent_debug_log post-fix H5 project/project.fdc:1 {project.fdc loaded}
 #endregion
+=======
+
+>>>>>>> 142256c861bf7492833c91a9aacc6afd94f45d52:code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc
 create_clock -name {ref_clk} [get_ports {sys_clk}] -period {40.000} -waveform {0.000 20.000}
 
 create_generated_clock -name {rst_clk} -source [get_ports {sys_clk}] [get_pins {dl_I_ips_ddr_top.u_ddrphy_top.rst_clk_gpll/clkout0}] -master_clock [get_clocks {ref_clk}] -multiply_by {84} -divide_by {84}
@@ -30,6 +34,44 @@ set_clock_groups -name phy_dq_clk_1 -asynchronous -group [get_clocks {phy_dq_clk
 define_attribute {i:dl_I_ips_ddr_top.u_ddrphy_top.u_ddrphy_cpd} {PAP_LOC} {DDRPHY_CPD_369_466}
 define_attribute {i:dl_I_ips_ddr_top.u_ddrphy_top.ddrphy_reset_ctrl.ddrphy_ioclk_gate[0]} {PAP_LOC} {CLMA_357_354:FF3}
 define_attribute {i:dl_I_ips_ddr_top.u_ddrphy_top.ddrphy_reset_ctrl.ddrphy_ioclk_gate[1]} {PAP_LOC} {CLMA_357_660:FF3}
+<<<<<<< HEAD:code_26_2/fpga/FPGA_HDMIIN_Red/project/project.fdc
+=======
+###==== END Logical
+
+###==== BEGIN Io Table
+
+##HSSTÁöÑÁ∫¶Êù?###==== BEGIN Clocks 
+#create_clock -name {free_clk} [get_ports {i_free_clk}] -period {10} -waveform {0.000 5.000}
+###==== END Clocks
+###==== BEGIN "set_clock_groups"
+#set_clock_groups -name free_clk        -asynchronous -group [get_clocks {free_clk}]
+###==== END "set_clock_groups"
+###==== BEGIN "Inputs/Outpusts"
+###==== END "Inputs/Outpusts"
+###==== BEGIN "Delay Paths"
+###==== END "Delay Paths"
+###==== BEGIN Attributes - (Populated from tab in SCOPE, do not edit)
+### The Q3 Location Constraint
+
+
+#define_attribute {p:i_p_refckn_0} {PAP_IO_DIRECTION} {INPUT}
+#define_attribute {p:i_p_refckn_0} {PAP_IO_LOC} {E6}
+#define_attribute {p:i_p_refckn_0} {PAP_IO_UNUSED} {TRUE}
+#define_attribute {p:i_p_refckp_0} {PAP_IO_DIRECTION} {INPUT}
+#define_attribute {p:i_p_refckp_0} {PAP_IO_LOC} {F6}
+#define_attribute {p:i_p_refckp_0} {PAP_IO_UNUSED} {TRUE}
+#define_attribute {p:i_p_refckn_1} {PAP_IO_DIRECTION} {INPUT}
+#define_attribute {p:i_p_refckn_1} {PAP_IO_LOC} {E10}
+#define_attribute {p:i_p_refckn_1} {PAP_IO_UNUSED} {TRUE}
+#define_attribute {p:i_p_refckp_1} {PAP_IO_DIRECTION} {INPUT}
+#define_attribute {p:i_p_refckp_1} {PAP_IO_LOC} {F10}
+#define_attribute {p:i_p_refckp_1} {PAP_IO_UNUSED} {TRUE}
+###==== END Attributes
+###==== BEGIN Attributes - (Populated from tab in SCOPE, do not edit)
+###==== END Attributes
+###==== BEGIN Attributes - IO table (Populated from tab in SCOPE, do not edit)
+####==== END Attributes(IO table)
+>>>>>>> 142256c861bf7492833c91a9aacc6afd94f45d52:code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc
 
 define_attribute {p:ddr3_dqs[0]} {PAP_IO_DIRECTION} {INOUT}
 define_attribute {p:ddr3_dqs[0]} {PAP_IO_LOC} {P5}
@@ -481,13 +523,83 @@ define_attribute {p:pcie_perst_n} {PAP_IO_NONE} {TRUE}
 define_attribute {p:pcie_refclk_p} {PAP_IO_LOC} {F6}
 define_attribute {p:pcie_refclk_n} {PAP_IO_LOC} {E6}
 
+<<<<<<< HEAD:code_26_2/fpga/FPGA_HDMIIN_Red/project/project.fdc
 create_generated_clock -name {clk_10m} -source [get_ports {sys_clk}] [get_nets {dl_pll_inst.clkout0}] -master_clock [get_clocks {ref_clk}] -multiply_by {2} -divide_by {5}
 create_generated_clock -name {clk_25m} -source [get_ports {sys_clk}] [get_nets {dl_pll_inst.clkout1}] -master_clock [get_clocks {ref_clk}] -multiply_by {1} -divide_by {1}
 create_generated_clock -name {clk_50m} -source [get_ports {sys_clk}] [get_nets {dl_pll_inst.clkout2}] -master_clock [get_clocks {ref_clk}] -multiply_by {2} -divide_by {1}
+=======
+
+###==== BEGIN Attributes
+
+create_generated_clock -name {clk_10m} -source [get_ports {sys_clk}] [get_nets {dl_pll_inst.clkout0}] -master_clock [get_clocks {ref_clk}] -multiply_by {2} -divide_by {5}
+create_generated_clock -name {clk_25m} -source [get_ports {sys_clk}] [get_nets {dl_pll_inst.clkout1}] -master_clock [get_clocks {ref_clk}] -multiply_by {1} -divide_by {1}
+create_generated_clock -name {clk_50m} -source [get_ports {sys_clk}] [get_nets {dl_pll_inst.clkout2}] -master_clock [get_clocks {ref_clk}] -multiply_by {2} -divide_by {1}
+#  ±ÔøΩ”≤ÔøΩ»∑ÔøΩÔøΩÔøΩÔøΩ (ÔøΩÔøΩ‘≠ÔøΩƒºÔøΩ 0.200ns)
+# ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ DDR / PCIe ÔøΩÔøΩ»´ÔøΩÔøΩÔøΩÏ≤ΩÔøΩÔøΩÔøΩÈ£¨ÔøΩÔøΩÔøΩ‚π§ÔøΩÔøΩÔøΩ∆µÔøΩÔøΩÔøΩÔøΩÔøΩ ±ÔøΩÔøΩ
+
+
+
+
+
+
+
+
+
+>>>>>>> 142256c861bf7492833c91a9aacc6afd94f45d52:code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc
 
 # =========================================================
 # ÁúüÊ≠£ÁöÑ HDMI I2C Êé•Âè£ (MS7200 ÈÄö‰ø°ÂºïËÑö)
 # =========================================================
+<<<<<<< HEAD:code_26_2/fpga/FPGA_HDMIIN_Red/project/project.fdc
+=======
+# =========================================================
+
+# -----------------
+#  ±÷”‘º ¯
+# -----------------
+# ???? ◊¢“‚£∫’‚¿Ôƒ¨»œ∞¥’’ V1.1 ◊”ø®≈‰÷√£¨hdmi_pix_clk Œ™ W19°£
+# ???? »Áπ˚ « V1.0 ◊”ø®£¨«ÎΩ´ W19 ∏ƒŒ™ W20°£
+create_clock -name {hdmi_pix_clk} [get_ports {hdmi_pix_clk}] -period {6.670} -waveform {0.000 3.335}
+define_attribute {p:hdmi_pix_clk} {PAP_IO_DIRECTION} {INPUT}
+define_attribute {p:hdmi_pix_clk} {PAP_IO_LOC} {W19} 
+define_attribute {p:hdmi_pix_clk} {PAP_IO_VCCIO} {3.3}
+define_attribute {p:hdmi_pix_clk} {PAP_IO_STANDARD} {LVCMOS33}
+define_attribute {p:hdmi_pix_clk} {PAP_IO_NONE} {TRUE}
+# ±‹√‚ ±÷”≤ºœﬂ±®¥Ì£¨‘ –Ì∑«»´æ÷ ±÷”π‹Ω≈≤ºœﬂ
+define_attribute {n:hdmi_pix_clk} {PAP_CLOCK_DEDICATED_ROUTE} {false}
+
+# -----------------
+#  ”∆µÕ¨≤Ω–≈∫≈
+# -----------------
+# hdmi_de
+define_attribute {p:hdmi_de} {PAP_IO_DIRECTION} {INPUT}
+define_attribute {p:hdmi_de} {PAP_IO_LOC} {P16}
+define_attribute {p:hdmi_de} {PAP_IO_VCCIO} {3.3}
+define_attribute {p:hdmi_de} {PAP_IO_STANDARD} {LVCMOS33}
+define_attribute {p:hdmi_de} {PAP_IO_NONE} {TRUE}
+
+# hdmi_hs
+define_attribute {p:hdmi_hs} {PAP_IO_DIRECTION} {INPUT}
+define_attribute {p:hdmi_hs} {PAP_IO_LOC} {U17}
+define_attribute {p:hdmi_hs} {PAP_IO_VCCIO} {3.3}
+define_attribute {p:hdmi_hs} {PAP_IO_STANDARD} {LVCMOS33}
+define_attribute {p:hdmi_hs} {PAP_IO_NONE} {TRUE}
+
+# hdmi_vs
+define_attribute {p:hdmi_vs} {PAP_IO_DIRECTION} {INPUT}
+define_attribute {p:hdmi_vs} {PAP_IO_LOC} {R17}
+define_attribute {p:hdmi_vs} {PAP_IO_VCCIO} {3.3}
+define_attribute {p:hdmi_vs} {PAP_IO_STANDARD} {LVCMOS33}
+define_attribute {p:hdmi_vs} {PAP_IO_NONE} {TRUE}
+
+# -----------------
+# I2C º∞∏¥Œª
+# -----------------
+# ‘€√«÷Æ«∞”√µƒ « L13£¨œ÷‘⁄Œ“∞—À¸ª÷∏¥≥…πŸ∑Ω“™«Ûµƒ–¸ø’◊¥Ã¨£¨ªÚ’ﬂƒ„’“∏ˆø’œ–“˝Ω≈
+# ’‚¿ÔŒ“‘› ±∑÷≈‰∏¯ L13£¨»Áπ˚◊€∫œ±®¥ÌÀµπ‹Ω≈≥ÂÕª£¨ƒ„ÀÊ±„ªª“ª∏ˆ¿©’πø⁄…œ√ª”√µΩµƒπ‹Ω≈º¥ø…°£
+
+# hdmi_rx_sda
+>>>>>>> 142256c861bf7492833c91a9aacc6afd94f45d52:code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc
 define_attribute {p:hdmi_rx_sda} {PAP_IO_DIRECTION} {INOUT}
 define_attribute {p:hdmi_rx_sda} {PAP_IO_LOC} {AA20}
 define_attribute {p:hdmi_rx_sda} {PAP_IO_VCCIO} {3.3}
@@ -504,6 +616,7 @@ define_attribute {p:hdmi_rx_scl} {PAP_IO_DRIVE} {4}
 define_attribute {p:hdmi_rx_scl} {PAP_IO_NONE} {TRUE}
 define_attribute {p:hdmi_rx_scl} {PAP_IO_SLEW} {FAST}
 
+<<<<<<< HEAD:code_26_2/fpga/FPGA_HDMIIN_Red/project/project.fdc
 # G25 is not placeable for the current device/package. Leave rstn_out
 # unconstrained until the board-specific MS7200 reset pin is confirmed.
 # A partial IO constraint block (VCCIO/IOSTANDARD without LOC) is rejected
@@ -548,6 +661,12 @@ define_attribute {p:hdmi_vs} {PAP_IO_VCCIO} {3.3}
 define_attribute {p:hdmi_vs} {PAP_IO_STANDARD} {LVCMOS33}
 define_attribute {p:hdmi_vs} {PAP_IO_NONE} {TRUE}
 
+=======
+# -----------------
+#  ˝æ›Õ®µ¿
+# -----------------
+# hdmi_r[7:0]
+>>>>>>> 142256c861bf7492833c91a9aacc6afd94f45d52:code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc
 define_attribute {p:hdmi_r[7]} {PAP_IO_DIRECTION} {INPUT}
 define_attribute {p:hdmi_r[7]} {PAP_IO_LOC} {AB21}
 define_attribute {p:hdmi_r[7]} {PAP_IO_VCCIO} {3.3}
@@ -630,6 +749,12 @@ define_attribute {p:hdmi_g[0]} {PAP_IO_VCCIO} {3.3}
 define_attribute {p:hdmi_g[0]} {PAP_IO_STANDARD} {LVCMOS33}
 define_attribute {p:hdmi_g[0]} {PAP_IO_NONE} {TRUE}
 
+<<<<<<< HEAD:code_26_2/fpga/FPGA_HDMIIN_Red/project/project.fdc
+=======
+# hdmi_b[7:0]
+# ???? ◊¢“‚£∫’‚¿Ôƒ¨»œ∞¥’’ V1.1 ◊”ø®≈‰÷√£¨hdmi_b[1] Œ™ W20°£
+# ???? »Áπ˚ « V1.0 ◊”ø®£¨«ÎΩ´ W20 ∏ƒŒ™ W19°£
+>>>>>>> 142256c861bf7492833c91a9aacc6afd94f45d52:code_26_2/fpga/template_projects/DL_HDMI40IN_PCIE_RK3568/project/project.fdc
 define_attribute {p:hdmi_b[7]} {PAP_IO_DIRECTION} {INPUT}
 define_attribute {p:hdmi_b[7]} {PAP_IO_LOC} {AB18}
 define_attribute {p:hdmi_b[7]} {PAP_IO_VCCIO} {3.3}
