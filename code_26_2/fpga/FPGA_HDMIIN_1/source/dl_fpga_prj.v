@@ -256,25 +256,30 @@ wire frame_done_pulse = (~hdmi_vs_d2) & hdmi_vs_d3;
 wire pcie_frame_output_done;
 reg  pcie_read_busy;
 reg  pcie_frame_pending;
-
-wire pcie_frame_start_pulse = (frame_done_pulse && (!pcie_read_busy || pcie_frame_output_done)) ||
-                              (pcie_frame_output_done && pcie_frame_pending);
+reg  pcie_frame_start_pulse;
 
 always @(posedge pclk_div2) begin
     if (!core_rst_n) begin
         pcie_read_busy <= 1'b0;
         pcie_frame_pending <= 1'b0;
+        pcie_frame_start_pulse <= 1'b0;
     end else begin
-        if (pcie_frame_start_pulse) begin
-            pcie_read_busy <= 1'b1;
-        end else if (pcie_frame_output_done) begin
-            pcie_read_busy <= 1'b0;
-        end
+        pcie_frame_start_pulse <= 1'b0;
 
-        if (frame_done_pulse && pcie_read_busy && !pcie_frame_output_done) begin
-            pcie_frame_pending <= 1'b1;
-        end else if (pcie_frame_start_pulse) begin
+        if (pcie_frame_output_done) begin
+            if (pcie_frame_pending || frame_done_pulse) begin
+                pcie_frame_start_pulse <= 1'b1;
+                pcie_read_busy <= 1'b1;
+                pcie_frame_pending <= 1'b0;
+            end else begin
+                pcie_read_busy <= 1'b0;
+            end
+        end else if (!pcie_read_busy && frame_done_pulse) begin
+            pcie_frame_start_pulse <= 1'b1;
+            pcie_read_busy <= 1'b1;
             pcie_frame_pending <= 1'b0;
+        end else if (pcie_read_busy && frame_done_pulse) begin
+            pcie_frame_pending <= 1'b1;
         end
     end
 end
