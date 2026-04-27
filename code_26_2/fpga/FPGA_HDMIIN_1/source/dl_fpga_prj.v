@@ -203,6 +203,7 @@ wire [127:0] axis_slave2_tdata;
 wire dma_write_req;
 wire [11:0] dma_write_addr;
 wire [127:0] dma_write_data;
+wire pcie_dma_write_valid;
 
 reg [2:0] ddr_init_done_pclk_sync;
 wire      ch0_rframe_rst_n;
@@ -221,7 +222,7 @@ assign ch0_rframe_rst_n = core_rst_n && ddr_init_done_pclk_sync[2];
 // 🚀 修复版：PCIe DMA 帧同步逻辑 (原生场同步信号触发)
 // ===============================================================================
 reg          ch0_read_frame_req;
-wire         ch0_read_req_ack, ch0_read_data_en, ch0_line_full_flag;
+wire         ch0_read_req_ack, ch0_read_data_en, ch0_read_data_valid, ch0_line_full_flag;
 wire [127:0] ch0_read_data;
 
 reg ch0_read_req_ack_d1, ch0_read_req_ack_d2;
@@ -251,15 +252,15 @@ always @(posedge pclk_div2) begin
     end
 end
 
-// 2. 检测 hdmi_vs 的下降沿（代表一帧图像从 HDMI 接收完毕，已存入 DDR3）
-wire frame_done_pulse = (~hdmi_vs_d2) & hdmi_vs_d3;
+// 2. DDR 写通道使用 ~hdmi_vs 的下降沿切帧，因此这里用 hdmi_vs 上升沿作为可读帧完成点
+wire frame_done_pulse = hdmi_vs_d2 & (~hdmi_vs_d3);
 reg  pcie_read_busy;
 reg  pcie_frame_pending;
 reg  pcie_frame_start_pulse;
 reg  [17:0] pcie_frame_word_cnt;
 
 localparam [17:0] PCIE_FRAME_WORDS = 18'd259200; // 1920*1080*16/128
-wire pcie_frame_output_done = pcie_read_busy && dma_write_req &&
+wire pcie_frame_output_done = pcie_read_busy && pcie_dma_write_valid &&
                               (pcie_frame_word_cnt == PCIE_FRAME_WORDS - 18'd1);
 
 always @(posedge pclk_div2) begin
@@ -287,7 +288,7 @@ always @(posedge pclk_div2) begin
             pcie_frame_word_cnt <= 18'd0;
         end else if (pcie_read_busy && frame_done_pulse) begin
             pcie_frame_pending <= 1'b1;
-        end else if (pcie_read_busy && dma_write_req) begin
+        end else if (pcie_read_busy && pcie_dma_write_valid) begin
             pcie_frame_word_cnt <= pcie_frame_word_cnt + 18'd1;
         end
     end
@@ -314,6 +315,7 @@ pcie_image_channel_selector dl_pcie_img_select_inst(
 
     .ch0_data_req                (ch0_read_data_en),     
     .ch0_data                    (ch0_read_data),     
+    .ch0_data_valid              (ch0_read_data_valid),
     
     // 空闲通道 1,2,3 安全接地处理
     .ch1_data_req                (),     
@@ -324,7 +326,8 @@ pcie_image_channel_selector dl_pcie_img_select_inst(
     .ch3_data                    (128'd0),     
 
     .dma_wr_data_req             (dma_write_req),     
-    .dma_wr_data                 (dma_write_data)
+    .dma_wr_data                 (dma_write_data),
+    .dma_wr_data_valid           (pcie_dma_write_valid)
 );
 
 //===============================================================================
@@ -374,6 +377,7 @@ mem_axi_burst_ctrl_core dl_axi_ctrl_inst (
       .ch0_rframe_req_ack          (ch0_read_req_ack),
       .ch0_rframe_data_en          (ch0_read_data_en),
       .ch0_rframe_data             (ch0_read_data),      
+    .ch0_rframe_data_valid       (ch0_read_data_valid),
       .ch0_read_line_full          (ch0_line_full_flag),
 
       // 通道1,2,3 安全屏蔽

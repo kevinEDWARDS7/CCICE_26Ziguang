@@ -54,6 +54,7 @@ HDMI IN -> FPGA -> PCIe DMA -> RK3568 -> DRM/KMS -> HDMI OUT
 - `PCI_MAP_BAR0_CMD`
 - `PCI_MAP_ADDR_CMD`
 - `PCI_DMA_WRITE_CMD`
+- `PCI_DMA_SYNC_CMD`
 - `PCI_READ_FROM_KERNEL_CMD`
 - `PCI_UMAP_ADDR_CMD`
 
@@ -72,6 +73,7 @@ for each line:
     memset(dma.data.read_buf, 0, DMA_MAX_PACKET_SIZE);
     ioctl(fd, PCI_DMA_WRITE_CMD, &dma);
     busy_delay(delay_loops);
+    ioctl(fd, PCI_DMA_SYNC_CMD, &dma);
     ioctl(fd, PCI_READ_FROM_KERNEL_CMD, &dma);
     memcpy(frame + line * line_bytes, dma.data.read_buf, line_bytes);
 

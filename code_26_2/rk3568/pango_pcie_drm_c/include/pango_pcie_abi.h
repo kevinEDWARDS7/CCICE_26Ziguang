@@ -23,6 +23,7 @@ extern "C" {
 #define PCI_PERFORMANCE_END_CMD       _IOWR(PANGO_PCIE_IOCTL_TYPE, 9, int)
 #define PCI_MAP_BAR0_CMD              _IOWR(PANGO_PCIE_IOCTL_TYPE, 10, int)
 #define PCI_SET_CONFIG                _IOWR(PANGO_PCIE_IOCTL_TYPE, 11, int)
+#define PCI_DMA_SYNC_CMD              _IOWR(PANGO_PCIE_IOCTL_TYPE, 12, int)
 
 #define IMAGE_WIDTH                   1920U
 #define IMAGE_HEIGHT                  1080U
@@ -34,6 +35,9 @@ extern "C" {
 
 #define DMA_CMD_SENTINEL_ENABLE       0x80000000U
 #define DMA_CMD_SENTINEL_MASK         0x000000ffU
+#define DMA_CMD_SYNC_TIMEOUT_MASK     0x00ffff00U
+#define DMA_CMD_SYNC_TIMEOUT_SHIFT    8U
+#define DMA_CMD_SYNC_TIMEOUT_DEFAULT  10000U
 
 typedef struct _BAR_INFO_ {
     unsigned long bar_base;

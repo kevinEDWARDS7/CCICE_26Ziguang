@@ -25,6 +25,7 @@
 #define PCI_PERFORMANCE_END_CMD       _IOWR(TYPE, 9, int)
 #define PCI_MAP_BAR0_CMD              _IOWR(TYPE, 10, int)
 #define PCI_SET_CONFIG                _IOWR(TYPE, 11, int)
+#define PCI_DMA_SYNC_CMD              _IOWR(TYPE, 12, int)
 
 #define MAX_BLOCK_SIZE                1024
 #define DMA_MAX_PACKET_SIZE           4096
@@ -32,6 +33,9 @@
 
 #define DMA_CMD_SENTINEL_ENABLE       0x80000000U
 #define DMA_CMD_SENTINEL_MASK         0x000000ffU
+#define DMA_CMD_SYNC_TIMEOUT_MASK     0x00ffff00U
+#define DMA_CMD_SYNC_TIMEOUT_SHIFT    8U
+#define DMA_CMD_SYNC_TIMEOUT_DEFAULT  10000U
 
 #define CMD_REG_OFFSET                0x100
 #define RW_ADDR_LO_OFFSET             0x110

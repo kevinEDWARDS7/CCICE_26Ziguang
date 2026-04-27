@@ -3,6 +3,15 @@ set -eu
 
 cd "$(dirname "$0")/.."
 
+require_cmd() {
+    if ! command -v "$1" >/dev/null 2>&1; then
+        echo "error: required command not found: $1" >&2
+        exit 1
+    fi
+}
+
+require_cmd make
+
 if command -v nproc >/dev/null 2>&1; then
     JOBS="$(nproc)"
 else
@@ -37,4 +46,8 @@ echo
 echo "== artifacts =="
 cd ..
 ls -l pcie_probe_only pango_pcie_drm_c driver/pango_pci_driver.ko
-file pcie_probe_only pango_pcie_drm_c driver/pango_pci_driver.ko
+if command -v file >/dev/null 2>&1; then
+    file pcie_probe_only pango_pcie_drm_c driver/pango_pci_driver.ko
+else
+    echo "file command not found; skipped artifact type summary"
+fi

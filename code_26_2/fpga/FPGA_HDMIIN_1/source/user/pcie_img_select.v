@@ -9,6 +9,7 @@ module pcie_image_channel_selector (
     // 通道0读数据请求
     output reg                      ch0_data_req            /*synthesis PAP_MARK_DEBUG="1"*/,
     input      [127:0]              ch0_data                /*synthesis PAP_MARK_DEBUG="1"*/,
+    input                           ch0_data_valid          /*synthesis PAP_MARK_DEBUG="1"*/,
     // 通道1读数据请求
     output reg                      ch1_data_req            /*synthesis PAP_MARK_DEBUG="1"*/,
     input      [127:0]              ch1_data                /*synthesis PAP_MARK_DEBUG="1"*/,
@@ -21,7 +22,8 @@ module pcie_image_channel_selector (
 
     // dma写数据接口
     input                           dma_wr_data_req        /*synthesis PAP_MARK_DEBUG="1"*/,
-    output reg [127:0]              dma_wr_data            /*synthesis PAP_MARK_DEBUG="1"*/
+    output reg [127:0]              dma_wr_data            /*synthesis PAP_MARK_DEBUG="1"*/,
+    output                          dma_wr_data_valid      /*synthesis PAP_MARK_DEBUG="1"*/
 );
 
 
@@ -43,11 +45,13 @@ reg [127:0]           ch0_data_dly        ;
 reg [127:0]           ch1_data_dly        ;
 reg [127:0]           ch2_data_dly        ;
 reg [127:0]           ch3_data_dly        ;
+reg                   ch0_data_valid_dly  ;
 
 reg [11:0]            col_cnt             ;
 reg [11:0]            row_cnt             ;
 
 assign dma_sim_vs_start = dma_sim_vs & ~dma_sim_vs_raw_dly;
+assign dma_wr_data_valid = dma_wr_data_req & stream_ready & (ch0_data_valid | ch0_data_valid_dly);
 
 
 always @(posedge clk)begin
@@ -67,14 +71,29 @@ always @(posedge clk)begin
     else if (dma_sim_vs_start == 1'b1)begin
         stream_ready <= 1'b0;
     end
-    else if (dma_wr_data_req == 1'b1 && stream_ready == 1'b1 && col_cnt == COL_NUM && row_cnt == ROW_NUM)begin
+    else if (dma_wr_data_valid == 1'b1 && col_cnt == COL_NUM && row_cnt == ROW_NUM)begin
         stream_ready <= 1'b0;
     end
     else if (dma_data_req_ahead_dly == 1'b1)begin
         stream_ready <= 1'b1;
     end
+    else if (ch0_data_valid == 1'b1)begin
+        stream_ready <= 1'b1;
+    end
     else begin
         stream_ready <= stream_ready;
+    end
+end
+
+always @(posedge clk)begin
+    if (!rst_n)begin
+        ch0_data_valid_dly <= 1'b0;
+    end
+    else if (dma_sim_vs_start == 1'b1)begin
+        ch0_data_valid_dly <= 1'b0;
+    end
+    else begin
+        ch0_data_valid_dly <= ch0_data_valid;
     end
 end
 
@@ -84,13 +103,13 @@ always @(posedge clk)begin
     if (!rst_n)begin
         col_cnt <= 12'd1;
     end
-    else if (dma_wr_data_req == 1'b1 && stream_ready == 1'b1 && col_cnt == COL_NUM)begin
+    else if (dma_wr_data_valid == 1'b1 && col_cnt == COL_NUM)begin
         col_cnt <= 12'd1;
     end
     else if (dma_sim_vs_start == 1'b1)begin
         col_cnt <= 12'd1;
     end
-    else if (dma_wr_data_req == 1'b1 && stream_ready == 1'b1)begin
+    else if (dma_wr_data_valid == 1'b1)begin
         col_cnt <= col_cnt + 12'd1;
     end
     else begin
@@ -102,13 +121,13 @@ always @(posedge clk)begin
     if (!rst_n)begin
         row_cnt <= 12'd1;
     end
-    else if (dma_wr_data_req == 1'b1 && stream_ready == 1'b1 && col_cnt == COL_NUM && row_cnt == ROW_NUM)begin
+    else if (dma_wr_data_valid == 1'b1 && col_cnt == COL_NUM && row_cnt == ROW_NUM)begin
         row_cnt <= 12'd1;
     end
     else if (dma_sim_vs_start == 1'b1)begin
         row_cnt <= 12'd1;
     end
-    else if (dma_wr_data_req == 1'b1 && stream_ready == 1'b1 && col_cnt == COL_NUM)begin
+    else if (dma_wr_data_valid == 1'b1 && col_cnt == COL_NUM)begin
         row_cnt <= row_cnt + 12'd1;
     end
     else begin
@@ -135,6 +154,9 @@ always @(posedge clk)begin
     if (!rst_n)begin
         dma_data_req_ahead <= 1'b0;
     end
+    else if (dma_sim_vs_start == 1'b1)begin
+        dma_data_req_ahead <= 1'b0;
+    end
     else if (frame_start_pending == 1'b1 && line_full_flag == 1'b1)begin
         dma_data_req_ahead <= 1'b1;
     end
@@ -145,6 +167,9 @@ end
 
 always @(posedge clk)begin
     if (!rst_n)begin
+        dma_data_req_ahead_dly <= 1'b0;
+    end
+    else if (dma_sim_vs_start == 1'b1)begin
         dma_data_req_ahead_dly <= 1'b0;
     end
     else begin
@@ -185,7 +210,10 @@ always @(posedge clk)begin
     if (!rst_n)begin
         ch0_data_dly <= 128'd0;
     end
-    else if (ch0_data_req == 1'b1)begin
+    else if (dma_sim_vs_start == 1'b1)begin
+        ch0_data_dly <= 128'd0;
+    end
+    else if (ch0_data_valid == 1'b1)begin
         ch0_data_dly <= ch0_data;
     end
     else begin
@@ -195,6 +223,9 @@ end
 
 always @(posedge clk)begin
     if (!rst_n)begin
+        ch1_data_dly <= 128'd0;
+    end
+    else if (dma_sim_vs_start == 1'b1)begin
         ch1_data_dly <= 128'd0;
     end
     else if (ch1_data_req == 1'b1)begin
@@ -209,6 +240,9 @@ always @(posedge clk)begin
     if (!rst_n)begin
         ch2_data_dly <= 128'd0;
     end
+    else if (dma_sim_vs_start == 1'b1)begin
+        ch2_data_dly <= 128'd0;
+    end
     else if (ch2_data_req == 1'b1)begin
         ch2_data_dly <= ch2_data;
     end
@@ -219,6 +253,9 @@ end
 
 always @(posedge clk)begin
     if (!rst_n)begin
+        ch3_data_dly <= 128'd0;
+    end
+    else if (dma_sim_vs_start == 1'b1)begin
         ch3_data_dly <= 128'd0;
     end
     else if (ch3_data_req == 1'b1)begin
@@ -234,11 +271,11 @@ always @(posedge clk)begin
     if (!rst_n)begin
         dma_wr_data <= 128'b0;
     end
-    else if(dma_wr_data_req == 1'b1 && stream_ready == 1'b1 && ~(ch0_data_req || ch1_data_req || ch2_data_req || ch3_data_req))begin  //通道选择判断会消耗一个时钟，因此需要预取数据
-        dma_wr_data <= ch0_data_dly;
-    end
-    else if (dma_wr_data_req == 1'b1 && stream_ready == 1'b1)begin
+    else if(dma_wr_data_req == 1'b1 && stream_ready == 1'b1 && ch0_data_valid == 1'b1)begin
         dma_wr_data <= ch0_data;
+    end
+    else if(dma_wr_data_req == 1'b1 && stream_ready == 1'b1 && ch0_data_valid_dly == 1'b1)begin
+        dma_wr_data <= ch0_data_dly;
     end
     else begin
         dma_wr_data <= 128'b0;

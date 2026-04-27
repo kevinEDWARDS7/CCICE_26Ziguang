@@ -4,6 +4,7 @@
 #include <linux/delay.h>
 #include <linux/err.h>
 #include <linux/io.h>
+#include <linux/jiffies.h>
 #include <linux/slab.h>
 #include <linux/string.h>
 
@@ -129,6 +130,48 @@ static void set_dma_addr(const DMA_ADDR *dma_addr, struct PciPango *pci_pango)
 	if (dma_addr->addr_size)
 		iowrite32(upper_32_bits(dma_addr->addr),
 			  pci_pango->pango_pci_driver.pci_ctrl_io + RW_ADDR_HI_OFFSET);
+}
+
+static u32 dma_write_tail_barrier(unsigned int len_bytes)
+{
+	u8 *buf = dma_info.addr_w.data_buf;
+	u32 tail = 0;
+
+	dma_rmb();
+	if (buf && len_bytes >= sizeof(tail))
+		tail = READ_ONCE(*(u32 *)(buf + len_bytes - sizeof(tail)));
+	dma_rmb();
+	return tail;
+}
+
+static unsigned int dma_sync_timeout_us(unsigned int cmd)
+{
+	unsigned int timeout = (cmd & DMA_CMD_SYNC_TIMEOUT_MASK) >> DMA_CMD_SYNC_TIMEOUT_SHIFT;
+
+	return timeout ? timeout : DMA_CMD_SYNC_TIMEOUT_DEFAULT;
+}
+
+static int wait_dma_write_visible(unsigned int len_bytes, unsigned int cmd)
+{
+	u8 sentinel = cmd & DMA_CMD_SENTINEL_MASK;
+	u32 sentinel_word = (u32)sentinel | ((u32)sentinel << 8) |
+				    ((u32)sentinel << 16) | ((u32)sentinel << 24);
+	unsigned int timeout_us = dma_sync_timeout_us(cmd);
+	unsigned long deadline;
+
+	if (!(cmd & DMA_CMD_SENTINEL_ENABLE)) {
+		dma_write_tail_barrier(len_bytes);
+		return 0;
+	}
+
+	deadline = jiffies + usecs_to_jiffies(timeout_us);
+	do {
+		if (dma_write_tail_barrier(len_bytes) != sentinel_word)
+			return 0;
+		udelay(1);
+	} while (time_before(jiffies, deadline));
+
+	return -ETIMEDOUT;
 }
 
 loff_t pango_cdev_llseek(struct file *filp, loff_t off, int whence)
@@ -419,10 +462,31 @@ long pango_cdev_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 			ret = -EINVAL;
 			break;
 		}
+		ret = wait_dma_write_visible(len_bytes, dma_operation.cmd);
+		if (ret)
+			break;
 		memcpy(dma_operation.data.read_buf, dma_info.addr_w.data_buf, len_bytes);
 		if (copy_to_user((DMA_OPERATION __user *)arg, &dma_operation,
 				 sizeof(DMA_OPERATION)))
 			ret = -EFAULT;
+		break;
+
+	case PCI_DMA_SYNC_CMD:
+		if (copy_from_user(&dma_operation, (DMA_OPERATION __user *)arg,
+				   sizeof(DMA_OPERATION))) {
+			ret = -EFAULT;
+			break;
+		}
+		if (!dma_info.addr_w.data_buf || !dma_len_valid(dma_operation.current_len)) {
+			ret = -EINVAL;
+			break;
+		}
+		len_bytes = dma_operation.current_len * 4U;
+		if (len_bytes > dma_info.mapped_len_bytes) {
+			ret = -EINVAL;
+			break;
+		}
+		ret = wait_dma_write_visible(len_bytes, dma_operation.cmd);
 		break;
 
 	case PCI_UMAP_ADDR_CMD:

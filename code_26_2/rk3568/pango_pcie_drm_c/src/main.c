@@ -4,6 +4,7 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <limits.h>
 #include <signal.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -13,6 +14,13 @@
 #include <sys/mman.h>
 #include <time.h>
 #include <unistd.h>
+
+#if defined(__has_include)
+#if __has_include(<execinfo.h>)
+#define HAVE_EXECINFO 1
+#include <execinfo.h>
+#endif
+#endif
 
 #include <drm.h>
 #include <drm_mode.h>
@@ -42,6 +50,7 @@ struct app_options {
     unsigned int dump_lines;
     int dma_sentinel_enabled;
     unsigned int dma_sentinel_byte;
+    unsigned int dma_sync_timeout_us;
 };
 
 struct dumb_buffer {
@@ -72,6 +81,38 @@ static void on_signal(int signo)
     g_stop = 1;
 }
 
+static void crash_handler(int signo)
+{
+    fprintf(stderr, "fatal signal %d, dumping backtrace\n", signo);
+#if defined(HAVE_EXECINFO)
+    void *frames[32];
+    int count = backtrace(frames, (int)(sizeof(frames) / sizeof(frames[0])));
+    backtrace_symbols_fd(frames, count, STDERR_FILENO);
+#else
+    fprintf(stderr, "backtrace unavailable: execinfo.h not found at build time\n");
+#endif
+    signal(signo, SIG_DFL);
+    raise(signo);
+}
+
+static void install_signal_handlers(void)
+{
+    struct sigaction sa;
+
+    memset(&sa, 0, sizeof(sa));
+    sa.sa_handler = on_signal;
+    sigemptyset(&sa.sa_mask);
+    sigaction(SIGINT, &sa, NULL);
+    sigaction(SIGTERM, &sa, NULL);
+
+    memset(&sa, 0, sizeof(sa));
+    sa.sa_handler = crash_handler;
+    sigemptyset(&sa.sa_mask);
+    sigaction(SIGSEGV, &sa, NULL);
+    sigaction(SIGBUS, &sa, NULL);
+    sigaction(SIGABRT, &sa, NULL);
+}
+
 static void usage(const char *prog)
 {
     fprintf(stderr,
@@ -88,7 +129,10 @@ static void usage(const char *prog)
             "  --no-display         Read PCIe frames and print statistics without opening DRM.\n"
             "  --dump-frame PATH    Dump raw RGB565 bytes read from PCIe.\n"
             "  --dump-lines N       Dump only the first N lines. Default with --dump-frame: full frame.\n"
-            "  --dma-sentinel N     Fill the DMA destination with byte N before FPGA MWr for debug.\n"
+            "  --dma-sentinel N     Fill DMA target with byte N and wait until tail changes. Default: 0xa5\n"
+            "  --no-dma-sentinel    Disable sentinel-based DMA sync polling.\n"
+            "  --dma-sync-timeout-us N\n"
+            "                       Timeout for sentinel polling. 0 uses driver default. Max: 65535\n"
             "  -h, --help           Show this help.\n",
             prog,
             PCIE_DRIVER_FILE_PATH,
@@ -135,8 +179,9 @@ static int parse_args(int argc, char **argv, struct app_options *opts)
     opts->no_display = 0;
     opts->dump_frame_path = NULL;
     opts->dump_lines = 0U;
-    opts->dma_sentinel_enabled = 0;
-    opts->dma_sentinel_byte = 0U;
+    opts->dma_sentinel_enabled = 1;
+    opts->dma_sentinel_byte = 0xa5U;
+    opts->dma_sync_timeout_us = 0U;
 
     for (int i = 1; i < argc; ++i) {
         if (strcmp(argv[i], "--pcie") == 0 && i + 1 < argc) {
@@ -176,6 +221,12 @@ static int parse_args(int argc, char **argv, struct app_options *opts)
                 return -1;
             }
             opts->dma_sentinel_enabled = 1;
+        } else if (strcmp(argv[i], "--no-dma-sentinel") == 0) {
+            opts->dma_sentinel_enabled = 0;
+        } else if (strcmp(argv[i], "--dma-sync-timeout-us") == 0 && i + 1 < argc) {
+            if (parse_u32(argv[++i], &opts->dma_sync_timeout_us) != 0) {
+                return -1;
+            }
         } else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
             usage(argv[0]);
             exit(0);
@@ -196,7 +247,8 @@ static int parse_args(int argc, char **argv, struct app_options *opts)
         fprintf(stderr, "line bytes must be 4-byte aligned because the driver uses DWORD length\n");
         return -1;
     }
-    if (opts->line_bytes < opts->input_width * 2U) {
+    if (opts->input_width > UINT_MAX / 2U || opts->line_bytes < opts->input_width * 2U)
+    {
         fprintf(stderr, "line bytes must be at least width * 2 for RGB565 input\n");
         return -1;
     }
@@ -206,6 +258,10 @@ static int parse_args(int argc, char **argv, struct app_options *opts)
     }
     if (opts->dma_sentinel_enabled && opts->dma_sentinel_byte > 0xffU) {
         fprintf(stderr, "DMA sentinel byte must be in range 0..255\n");
+        return -1;
+    }
+    if (opts->dma_sync_timeout_us > 0xffffU) {
+        fprintf(stderr, "DMA sync timeout must be in range 0..65535 us\n");
         return -1;
     }
 
@@ -327,6 +383,7 @@ static int pcie_read_frame_rgb565(int fd, unsigned char *frame, const struct app
     if (opts->dma_sentinel_enabled) {
         dma->cmd = DMA_CMD_SENTINEL_ENABLE | (opts->dma_sentinel_byte & DMA_CMD_SENTINEL_MASK);
     }
+    dma->cmd |= (opts->dma_sync_timeout_us << DMA_CMD_SYNC_TIMEOUT_SHIFT) & DMA_CMD_SYNC_TIMEOUT_MASK;
     memset(dma->data.write_buf, 0, DMA_MAX_PACKET_SIZE);
     memset(dma->data.read_buf, 0, DMA_MAX_PACKET_SIZE);
 
@@ -353,6 +410,12 @@ static int pcie_read_frame_rgb565(int fd, unsigned char *frame, const struct app
         }
 
         busy_delay(opts->delay_loops);
+
+        if (ioctl(fd, PCI_DMA_SYNC_CMD, dma) < 0)
+        {
+            fprintf(stderr, "PCI_DMA_SYNC_CMD failed at line %u: %s\n", line, strerror(errno));
+            goto out;
+        }
 
         if (ioctl(fd, PCI_READ_FROM_KERNEL_CMD, dma) < 0) {
             fprintf(stderr, "PCI_READ_FROM_KERNEL_CMD failed at line %u: %s\n", line, strerror(errno));
@@ -840,8 +903,15 @@ int main(int argc, char **argv)
         return 2;
     }
 
-    signal(SIGINT, on_signal);
-    signal(SIGTERM, on_signal);
+    install_signal_handlers();
+
+    if (opts.input_height != 0U && (size_t)opts.line_bytes > SIZE_MAX / opts.input_height)
+    {
+        fprintf(stderr, "frame buffer size overflow: line_bytes=%u height=%u\n",
+                opts.line_bytes,
+                opts.input_height);
+        return 1;
+    }
 
     frame_bytes = (size_t)opts.line_bytes * opts.input_height;
     frame_rgb565 = malloc(frame_bytes);
