@@ -21,7 +21,8 @@ module pcie_image_channel_selector (
 
     // dma写数据接口
     input                           dma_wr_data_req        /*synthesis PAP_MARK_DEBUG="1"*/,
-    output reg [127:0]              dma_wr_data            /*synthesis PAP_MARK_DEBUG="1"*/
+    output reg [127:0]              dma_wr_data            /*synthesis PAP_MARK_DEBUG="1"*/,
+    output                          frame_output_done      /*synthesis PAP_MARK_DEBUG="1"*/
 );
 
 
@@ -48,6 +49,7 @@ reg [11:0]            col_cnt             ;
 reg [11:0]            row_cnt             ;
 
 assign dma_sim_vs_start = dma_sim_vs & ~dma_sim_vs_raw_dly;
+assign frame_output_done = dma_wr_data_req == 1'b1 && stream_ready == 1'b1 && col_cnt == COL_NUM && row_cnt == ROW_NUM;
 
 
 always @(posedge clk)begin
