@@ -14,6 +14,7 @@ DRM_DEV=${DRM_DEV:-/dev/dri/card0}
 WIDTH=${WIDTH:-1920}
 HEIGHT=${HEIGHT:-1080}
 LINE_BYTES=${LINE_BYTES:-3840}
+INITIAL_DELAY_LOOPS=${INITIAL_DELAY_LOOPS:-1000000}
 DUMP_PATH=${DUMP_PATH:-/tmp/hdmi_pcie_sentinel.rgb565}
 DUMP_LINES=${DUMP_LINES:-8}
 DMA_SENTINEL=${DMA_SENTINEL:-0xa5}
@@ -42,6 +43,7 @@ usage() {
                 "  PCIE_DEV=$PCIE_DEV" \
                 "  DRM_DEV=$DRM_DEV" \
                 "  WIDTH=$WIDTH HEIGHT=$HEIGHT LINE_BYTES=$LINE_BYTES" \
+                "  INITIAL_DELAY_LOOPS=$INITIAL_DELAY_LOOPS" \
                 "  DUMP_PATH=$DUMP_PATH DUMP_LINES=$DUMP_LINES DMA_SENTINEL=$DMA_SENTINEL" \
                 "  AUTO_STOP_DESKTOP=$AUTO_STOP_DESKTOP"
 }
@@ -189,6 +191,7 @@ run_app() {
         --width "$WIDTH" \
         --height "$HEIGHT" \
         --line-bytes "$LINE_BYTES" \
+        --initial-delay-loops "$INITIAL_DELAY_LOOPS" \
         "$@"
 }
 
@@ -200,6 +203,7 @@ run_dump_test() {
         --width "$WIDTH" \
         --height "$HEIGHT" \
         --line-bytes "$LINE_BYTES" \
+        --initial-delay-loops "$INITIAL_DELAY_LOOPS" \
         --no-display \
         --frames 1 \
         --dump-lines "$DUMP_LINES" \

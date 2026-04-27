@@ -33,6 +33,7 @@
 #define DEFAULT_DRM_CARD "/dev/dri/card0"
 #define DEFAULT_FRAME_COUNT 0U
 #define DEFAULT_DELAY_LOOPS 50000U
+#define DEFAULT_INITIAL_DELAY_LOOPS 1000000U
 #define XRGB_ALPHA 0xff000000U
 
 static volatile sig_atomic_t g_stop = 0;
@@ -45,6 +46,7 @@ struct app_options {
     unsigned int line_bytes;
     unsigned int frame_count;
     unsigned int delay_loops;
+    unsigned int initial_delay_loops;
     int no_display;
     const char *dump_frame_path;
     unsigned int dump_lines;
@@ -126,6 +128,8 @@ static void usage(const char *prog)
             "  --line-bytes N       Input line bytes. Default: %u\n"
             "  --frames N           Frames to display. 0 means run until Ctrl+C. Default: %u\n"
             "  --delay-loops N      Busy-wait loops before and after PCI_DMA_WRITE_CMD. Default: %u\n"
+            "  --initial-delay-loops N\n"
+            "                       Busy-wait loops before the first line DMA. Default: %u\n"
             "  --no-display         Read PCIe frames and print statistics without opening DRM.\n"
             "  --dump-frame PATH    Dump raw RGB565 bytes read from PCIe.\n"
             "  --dump-lines N       Dump only the first N lines. Default with --dump-frame: full frame.\n"
@@ -141,7 +145,8 @@ static void usage(const char *prog)
             IMAGE_HEIGHT,
             LINE_BYTES,
             DEFAULT_FRAME_COUNT,
-            DEFAULT_DELAY_LOOPS);
+            DEFAULT_DELAY_LOOPS,
+            DEFAULT_INITIAL_DELAY_LOOPS);
 }
 
 static int parse_u32(const char *text, unsigned int *out)
@@ -176,6 +181,7 @@ static int parse_args(int argc, char **argv, struct app_options *opts)
     opts->line_bytes = LINE_BYTES;
     opts->frame_count = DEFAULT_FRAME_COUNT;
     opts->delay_loops = DEFAULT_DELAY_LOOPS;
+    opts->initial_delay_loops = DEFAULT_INITIAL_DELAY_LOOPS;
     opts->no_display = 0;
     opts->dump_frame_path = NULL;
     opts->dump_lines = 0U;
@@ -208,29 +214,52 @@ static int parse_args(int argc, char **argv, struct app_options *opts)
             if (parse_u32(argv[++i], &opts->delay_loops) != 0) {
                 return -1;
             }
-        } else if (strcmp(argv[i], "--no-display") == 0) {
+        }
+        else if (strcmp(argv[i], "--initial-delay-loops") == 0 && i + 1 < argc)
+        {
+            if (parse_u32(argv[++i], &opts->initial_delay_loops) != 0)
+            {
+                return -1;
+            }
+        }
+        else if (strcmp(argv[i], "--no-display") == 0)
+        {
             opts->no_display = 1;
-        } else if (strcmp(argv[i], "--dump-frame") == 0 && i + 1 < argc) {
+        }
+        else if (strcmp(argv[i], "--dump-frame") == 0 && i + 1 < argc)
+        {
             opts->dump_frame_path = argv[++i];
-        } else if (strcmp(argv[i], "--dump-lines") == 0 && i + 1 < argc) {
+        }
+        else if (strcmp(argv[i], "--dump-lines") == 0 && i + 1 < argc)
+        {
             if (parse_u32(argv[++i], &opts->dump_lines) != 0) {
                 return -1;
             }
-        } else if (strcmp(argv[i], "--dma-sentinel") == 0 && i + 1 < argc) {
+        }
+        else if (strcmp(argv[i], "--dma-sentinel") == 0 && i + 1 < argc)
+        {
             if (parse_u32(argv[++i], &opts->dma_sentinel_byte) != 0) {
                 return -1;
             }
             opts->dma_sentinel_enabled = 1;
-        } else if (strcmp(argv[i], "--no-dma-sentinel") == 0) {
+        }
+        else if (strcmp(argv[i], "--no-dma-sentinel") == 0)
+        {
             opts->dma_sentinel_enabled = 0;
-        } else if (strcmp(argv[i], "--dma-sync-timeout-us") == 0 && i + 1 < argc) {
+        }
+        else if (strcmp(argv[i], "--dma-sync-timeout-us") == 0 && i + 1 < argc)
+        {
             if (parse_u32(argv[++i], &opts->dma_sync_timeout_us) != 0) {
                 return -1;
             }
-        } else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
+        }
+        else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
+        {
             usage(argv[0]);
             exit(0);
-        } else {
+        }
+        else
+        {
             return -1;
         }
     }
@@ -392,6 +421,11 @@ static int pcie_read_frame_rgb565(int fd, unsigned char *frame, const struct app
         goto out;
     }
     mapped = 1;
+
+    if (opts->initial_delay_loops != 0U)
+    {
+        busy_delay(opts->initial_delay_loops);
+    }
 
     for (unsigned int line = 0; line < opts->input_height; ++line) {
         if (g_stop) {
@@ -941,13 +975,14 @@ int main(int argc, char **argv)
         }
     }
 
-    printf("Start %s loop: input=%ux%u line_bytes=%u frames=%u delay_loops=%u\n",
+    printf("Start %s loop: input=%ux%u line_bytes=%u frames=%u delay_loops=%u initial_delay_loops=%u\n",
            opts.no_display ? "capture" : "display",
            opts.input_width,
            opts.input_height,
            opts.line_bytes,
            opts.frame_count,
-           opts.delay_loops);
+           opts.delay_loops,
+           opts.initial_delay_loops);
 
     while (!g_stop) {
         int fr = pcie_read_frame_rgb565(pcie_fd, frame_rgb565, &opts);

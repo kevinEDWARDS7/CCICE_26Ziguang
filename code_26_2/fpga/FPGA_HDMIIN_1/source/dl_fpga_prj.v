@@ -237,18 +237,7 @@ reg          ch0_read_frame_req;
 wire         ch0_read_req_ack, ch0_read_data_en, ch0_read_data_valid, ch0_line_full_flag;
 wire [127:0] ch0_read_data;
 
-reg ch0_read_req_ack_d1, ch0_read_req_ack_d2;
-wire ch0_read_req_ack_pclk = ch0_read_req_ack_d2;
-
-always @(posedge pclk_div2) begin
-    if (!core_rst_n) begin
-        ch0_read_req_ack_d1 <= 1'b0;
-        ch0_read_req_ack_d2 <= 1'b0;
-    end else begin
-        ch0_read_req_ack_d1 <= ch0_read_req_ack;
-        ch0_read_req_ack_d2 <= ch0_read_req_ack_d1;
-    end
-end
+wire ch0_read_req_ack_pclk = ch0_read_req_ack;
 
 // 1. 将 hdmi_vs 信号跨时钟域同步到 PCIe 时钟域 (pclk_div2)，并消除亚稳态
 reg hdmi_vs_d1, hdmi_vs_d2, hdmi_vs_d3;
