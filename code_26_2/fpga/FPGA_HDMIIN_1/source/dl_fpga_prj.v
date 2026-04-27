@@ -253,13 +253,51 @@ end
 
 // 2. 检测 hdmi_vs 的下降沿（代表一帧图像从 HDMI 接收完毕，已存入 DDR3）
 wire frame_done_pulse = (~hdmi_vs_d2) & hdmi_vs_d3;
+reg  pcie_read_busy;
+reg  pcie_frame_pending;
+reg  pcie_frame_start_pulse;
+reg  [17:0] pcie_frame_word_cnt;
 
-// 3. 使用真实的帧结束脉冲来触发 DMA 读取
+localparam [17:0] PCIE_FRAME_WORDS = 18'd259200; // 1920*1080*16/128
+wire pcie_frame_output_done = pcie_read_busy && dma_write_req &&
+                              (pcie_frame_word_cnt == PCIE_FRAME_WORDS - 18'd1);
+
+always @(posedge pclk_div2) begin
+    if (!core_rst_n) begin
+        pcie_read_busy <= 1'b0;
+        pcie_frame_pending <= 1'b0;
+        pcie_frame_start_pulse <= 1'b0;
+        pcie_frame_word_cnt <= 18'd0;
+    end else begin
+        pcie_frame_start_pulse <= 1'b0;
+
+        if (pcie_frame_output_done) begin
+            pcie_frame_word_cnt <= 18'd0;
+            if (pcie_frame_pending || frame_done_pulse) begin
+                pcie_frame_start_pulse <= 1'b1;
+                pcie_read_busy <= 1'b1;
+                pcie_frame_pending <= 1'b0;
+            end else begin
+                pcie_read_busy <= 1'b0;
+            end
+        end else if (!pcie_read_busy && frame_done_pulse) begin
+            pcie_frame_start_pulse <= 1'b1;
+            pcie_read_busy <= 1'b1;
+            pcie_frame_pending <= 1'b0;
+            pcie_frame_word_cnt <= 18'd0;
+        end else if (pcie_read_busy && frame_done_pulse) begin
+            pcie_frame_pending <= 1'b1;
+        end else if (pcie_read_busy && dma_write_req) begin
+            pcie_frame_word_cnt <= pcie_frame_word_cnt + 18'd1;
+        end
+    end
+end
+
+// 3. 只在 PCIe 输出空闲时接受新的 HDMI 帧，避免 RK 逐行 DMA 未完成时重启读帧
 always @(posedge pclk_div2) begin
     if (!core_rst_n) begin
         ch0_read_frame_req <= 1'b0;
-    end else if (frame_done_pulse) begin
-        // 真正的“发令枪”！一帧存满，立刻通知 PCIe 抽水！
+    end else if (pcie_frame_start_pulse) begin
         ch0_read_frame_req <= 1'b1; 
     end else if (ch0_read_req_ack_pclk) begin
         ch0_read_frame_req <= 1'b0;
@@ -271,7 +309,7 @@ end
 pcie_image_channel_selector dl_pcie_img_select_inst(
     .clk                         (pclk_div2),     
     .rst_n                       (core_rst_n),     
-    .dma_sim_vs                  (frame_done_pulse),     
+    .dma_sim_vs                  (pcie_frame_start_pulse),
     .line_full_flag              (ch0_line_full_flag), 
 
     .ch0_data_req                (ch0_read_data_en),     
@@ -286,7 +324,7 @@ pcie_image_channel_selector dl_pcie_img_select_inst(
     .ch3_data                    (128'd0),     
 
     .dma_wr_data_req             (dma_write_req),     
-    .dma_wr_data                 (dma_write_data)      
+    .dma_wr_data                 (dma_write_data)
 );
 
 //===============================================================================
